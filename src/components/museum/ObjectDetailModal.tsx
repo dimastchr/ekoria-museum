@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, Bookmark, Check, Sparkles, X } from 'lucide-react';
+import { Volume2, Bookmark, Check, Sparkles, X, ArrowLeft } from 'lucide-react';
 import { Organism, AbioticFactor } from '../../types';
 import { audioManager } from '../../utils/audioManager';
 import { EkoBiotaIcon } from '../common/EkoIcons';
@@ -53,21 +53,21 @@ export const ObjectDetailModal: React.FC<ObjectDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4" onClick={onClose}>
       {/* Cream card with rounded corners, soft shadow, spring pop-up and glowing border */}
-      <div className="bg-[#F6F1E3] text-[#0F3D2E] rounded-3xl max-w-lg w-full p-6 shadow-2xl border-2 border-[#3FA34D] relative animate-pop-spring animate-glow-ring">
+      <div onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" className="bg-[#F6F1E3] text-[#0F3D2E] rounded-3xl max-w-lg w-full max-h-[92dvh] overflow-y-auto p-5 sm:p-6 shadow-2xl border-2 border-[#3FA34D] relative animate-pop-spring animate-glow-ring">
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white hover:bg-[#E8DEC9] text-[#0F3D2E] flex items-center justify-center border border-[#E8DEC9] shadow-sm transition"
+          className="absolute top-3 right-3 w-12 h-12 rounded-full bg-white hover:bg-[#E8DEC9] text-[#0F3D2E] flex items-center justify-center border border-[#E8DEC9] shadow-sm transition"
           aria-label="Tutup"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header: 3D Biota Icon, Name & Badges */}
-        <div className="flex items-start gap-4 mb-4 pr-8">
+        <div className="flex items-start gap-4 mb-4 pr-12">
           <div className="w-16 h-16 rounded-2xl bg-white border-2 border-[#3FA34D] flex items-center justify-center shadow-md shrink-0 p-1">
             <EkoBiotaIcon
               id={item.id}
@@ -126,10 +126,18 @@ export const ObjectDetailModal: React.FC<ObjectDetailModalProps> = ({
         </div>
 
         {/* Action Buttons: Voice Narration & Save to Journal */}
-        <div className="flex items-center justify-between gap-3 pt-2 border-t border-[#E8DEC9]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#E8DEC9]">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex items-center gap-2 px-4 min-h-[48px] rounded-xl border border-[#E8DEC9] bg-white text-[#0F3D2E] hover:bg-[#E8DEC9] text-sm font-bold transition"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Kembali</span>
+          </button>
           <button
             onClick={handleSpeak}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#3FA34D] text-[#1B5E3F] hover:bg-emerald-50 text-xs font-bold transition ${
+            className={`flex items-center gap-2 px-4 min-h-[48px] rounded-xl border border-[#3FA34D] text-[#1B5E3F] hover:bg-emerald-50 text-xs font-bold transition ${
               isSpeaking ? 'bg-emerald-100 ring-2 ring-[#3FA34D]' : ''
             }`}
             title="Dengarkan penjelasan suara"
@@ -141,7 +149,7 @@ export const ObjectDetailModal: React.FC<ObjectDetailModalProps> = ({
           <button
             onClick={handleSave}
             disabled={isSaved}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-heading font-extrabold text-xs shadow-md transition cursor-pointer ${
+            className={`flex items-center gap-2 px-5 min-h-[48px] rounded-xl font-heading font-extrabold text-xs shadow-md transition cursor-pointer ${
               isSaved
                 ? 'bg-[#3FA34D] text-white cursor-default'
                 : 'bg-[#3FA34D] hover:bg-[#348840] text-white active:scale-95'

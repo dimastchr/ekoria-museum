@@ -93,7 +93,13 @@ export const QuizCenter: React.FC<QuizCenterProps> = ({
       setIsChecked(false);
     } else {
       // Finished all questions!
-      const correctCount = Object.values(answersHistory).filter(a => a.isCorrect).length + (selectedOption === currentQ.correctIndex ? 1 : 0);
+      // answersHistory already holds the last answer (saved when "Periksa" was pressed),
+      // so it must not be counted a second time.
+      const history = { ...answersHistory };
+      if (!history[currentIndex] && selectedOption !== null) {
+        history[currentIndex] = { selected: selectedOption, isCorrect: selectedOption === currentQ.correctIndex };
+      }
+      const correctCount = Object.values(history).filter(a => a.isCorrect).length;
       const finalScore = Math.round((correctCount / totalQuestions) * 100);
       setIsFinished(true);
       onCompleteQuiz(selectedCategory, finalScore);
@@ -126,10 +132,10 @@ export const QuizCenter: React.FC<QuizCenterProps> = ({
       
       {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-[#E8DEC9]">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 bg-white hover:bg-[#E8DEC9] text-[#0F3D2E] px-4 py-2 rounded-xl border border-[#E8DEC9] text-xs font-bold transition shadow-sm"
+            className="flex items-center gap-2 bg-white hover:bg-[#E8DEC9] text-[#0F3D2E] px-4 min-h-[48px] rounded-xl border border-[#E8DEC9] text-sm font-bold transition shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Kembali</span>
@@ -148,10 +154,10 @@ export const QuizCenter: React.FC<QuizCenterProps> = ({
         </div>
 
         {/* Category Selector Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-xl no-scrollbar">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 w-full lg:w-auto lg:max-w-xl min-w-0 no-scrollbar">
           <button
             onClick={() => { setSelectedCategory('pretest'); handleRestartQuiz(); }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition ${
+            className={`px-3 min-h-[44px] rounded-xl text-xs font-bold shrink-0 transition ${
               selectedCategory === 'pretest' ? 'bg-[#0F3D2E] text-white shadow' : 'bg-white text-[#0F3D2E] border border-[#E8DEC9]'
             }`}
           >
@@ -159,7 +165,7 @@ export const QuizCenter: React.FC<QuizCenterProps> = ({
           </button>
           <button
             onClick={() => { setSelectedCategory('posttest'); handleRestartQuiz(); }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition ${
+            className={`px-3 min-h-[44px] rounded-xl text-xs font-bold shrink-0 transition ${
               selectedCategory === 'posttest' ? 'bg-[#0F3D2E] text-white shadow' : 'bg-white text-[#0F3D2E] border border-[#E8DEC9]'
             }`}
           >
@@ -169,7 +175,7 @@ export const QuizCenter: React.FC<QuizCenterProps> = ({
             <button
               key={z.id}
               onClick={() => { setSelectedCategory(z.id); handleRestartQuiz(); }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition flex items-center gap-1.5 ${
+              className={`px-3 min-h-[44px] rounded-xl text-xs font-bold shrink-0 transition flex items-center gap-1.5 ${
                 selectedCategory === z.id ? 'bg-[#3FA34D] text-white shadow' : 'bg-white text-[#0F3D2E] border border-[#E8DEC9]'
               }`}
             >
@@ -203,7 +209,7 @@ export const QuizCenter: React.FC<QuizCenterProps> = ({
           </div>
 
           {/* CREAM QUESTION CARD */}
-          <div className="bg-[#F6F1E3] rounded-3xl p-6 md:p-8 border-2 border-[#E8DEC9] shadow-lg relative">
+          <div className="bg-[#F6F1E3] rounded-3xl p-4 sm:p-6 md:p-8 border-2 border-[#E8DEC9] shadow-lg relative">
             
             {/* Question Header & Voice Button */}
             <div className="flex items-start justify-between gap-4 mb-5">
@@ -218,7 +224,8 @@ export const QuizCenter: React.FC<QuizCenterProps> = ({
 
               <button
                 onClick={handleSpeakQuestion}
-                className={`p-2.5 rounded-2xl bg-white hover:bg-emerald-50 text-[#0F3D2E] border border-[#E8DEC9] shadow-sm transition shrink-0 ${
+                aria-label="Dengarkan soal"
+                className={`w-12 h-12 flex items-center justify-center rounded-2xl bg-white hover:bg-emerald-50 text-[#0F3D2E] border border-[#E8DEC9] shadow-sm transition shrink-0 ${
                   isSpeaking ? 'text-[#3FA34D] ring-2 ring-[#3FA34D]' : ''
                 }`}
                 title="Dengarkan Soal Bersama Ozi"

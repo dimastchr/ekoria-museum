@@ -161,7 +161,7 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
       
       {/* OZI DIALOG MODAL CARD WITH SPRING POP-UP */}
-      <div className="bg-[#F6F1E3] text-[#0F3D2E] rounded-3xl w-full max-w-xl h-[90vh] max-h-[680px] shadow-2xl border-2 border-[#3FA34D] flex flex-col overflow-hidden relative font-sans animate-pop-spring animate-glow-ring">
+      <div className="bg-[#F6F1E3] text-[#0F3D2E] rounded-3xl w-full max-w-xl h-[90dvh] max-h-[680px] shadow-2xl border-2 border-[#3FA34D] flex flex-col overflow-hidden relative font-sans animate-pop-spring animate-glow-ring">
         
         {/* HEADER */}
         <div className="bg-[#0F3D2E] text-white p-4 flex items-center justify-between border-b border-[#1B5E3F]">
@@ -192,8 +192,9 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
 
             <button
               onClick={handleResetChat}
-              className="p-2 rounded-xl hover:bg-[#1B5E3F] text-emerald-200 transition"
+              className="w-11 h-11 flex items-center justify-center rounded-xl hover:bg-[#1B5E3F] text-emerald-200 transition"
               title="Mulai Ulang Percakapan"
+              aria-label="Mulai ulang percakapan"
             >
               <RotateCcw className="w-4 h-4" />
             </button>
@@ -203,10 +204,11 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
                 audioManager.stopSpeaking();
                 onClose();
               }}
-              className="p-2 rounded-xl hover:bg-rose-900/60 text-white transition ml-1"
+              className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/10 border border-white/20 hover:bg-rose-900/60 text-white transition ml-1"
               title="Tutup Obrolan"
+              aria-label="Tutup obrolan Ozi"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
           </div>
         </div>

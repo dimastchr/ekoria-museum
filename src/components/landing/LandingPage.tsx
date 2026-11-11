@@ -40,21 +40,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       
       {/* 1. Rounded White Floating Navbar */}
       <header className="sticky top-4 z-40 max-w-6xl mx-auto px-4">
-        <div className="bg-white/95 backdrop-blur-md rounded-full shadow-lg border border-[#1B5E3F]/15 px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+        <div className="bg-white/95 backdrop-blur-md rounded-full shadow-lg border border-[#1B5E3F]/15 px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Logo with Leaf Icon & Subtitle */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#1B5E3F] to-[#3FA34D] flex items-center justify-center text-white shadow-sm">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="w-10 h-10 shrink-0 rounded-full bg-gradient-to-tr from-[#1B5E3F] to-[#3FA34D] flex items-center justify-center text-white shadow-sm">
               <span className="text-xl">🌱</span>
             </div>
             <div>
               <div className="font-extrabold text-xl tracking-tight text-[#0F3D2E] leading-none flex items-center gap-1.5">
                 <span>EkoRia</span>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E2F8EC] text-[#1B5E3F] border border-[#3FA34D]/30">
+                <span className="hidden sm:inline text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E2F8EC] text-[#1B5E3F] border border-[#3FA34D]/30">
                   SD Kelas V
                 </span>
               </div>
-              <div className="text-[11px] font-bold text-[#3FA34D] tracking-wider uppercase">
+              <div className="hidden sm:block text-[11px] font-bold text-[#3FA34D] tracking-wider uppercase">
                 Museum Sains Virtual
               </div>
             </div>
@@ -95,16 +95,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <SoundToggle variant="light" className="rounded-full" />
             <button
               onClick={() => {
                 audioManager.playClick();
                 onOpenLogin();
               }}
-              className="px-4 py-2 rounded-full border-2 border-[#1B5E3F] text-[#1B5E3F] hover:bg-[#1B5E3F] hover:text-white font-bold text-xs sm:text-sm cursor-pointer transition-all"
+              className="hidden sm:flex items-center min-h-[44px] px-4 rounded-full border-2 border-[#1B5E3F] text-[#1B5E3F] hover:bg-[#1B5E3F] hover:text-white font-bold text-xs sm:text-sm cursor-pointer transition-all"
             >
-              {studentName ? `Profil (${studentName})` : 'Masuk'}
+              {studentName ? `Akun (${studentName})` : 'Masuk'}
             </button>
 
             <button
@@ -112,9 +112,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 audioManager.playClick();
                 onStartExploration();
               }}
-              className="px-5 py-2.5 rounded-full bg-[#1B5E3F] hover:bg-[#0F3D2E] text-white font-black text-xs sm:text-sm shadow-md cursor-pointer transition-transform hover:scale-105 flex items-center gap-1.5"
+              className="min-h-[44px] px-3 sm:px-5 rounded-full bg-[#1B5E3F] hover:bg-[#0F3D2E] text-white font-black text-xs sm:text-sm shadow-md cursor-pointer transition-transform hover:scale-105 flex items-center gap-1.5"
             >
-              <span>Mulai Eksplorasi</span>
+              <span><span className="sm:hidden">Mulai</span><span className="hidden sm:inline">Mulai Eksplorasi</span></span>
               <span>▶</span>
             </button>
           </div>

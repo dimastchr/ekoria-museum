@@ -56,7 +56,7 @@ export const ExplorerJournal: React.FC<ExplorerJournalProps> = ({
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 bg-white hover:bg-[#E8DEC9] text-[#0F3D2E] px-4 py-2 rounded-xl border border-[#E8DEC9] text-xs font-bold transition shadow-sm"
+            className="flex items-center gap-2 bg-white hover:bg-[#E8DEC9] text-[#0F3D2E] px-4 min-h-[48px] rounded-xl border border-[#E8DEC9] text-sm font-bold transition shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Kembali</span>
@@ -204,7 +204,7 @@ export const ExplorerJournal: React.FC<ExplorerJournalProps> = ({
             Belum Ada Catatan Jurnal
           </h3>
           <p className="text-xs text-[#52796F] max-w-sm mb-6 leading-relaxed">
-            Masuklah ke salah satu zona ekosistem di museum, ketuk hewan atau tumbuhan yang kamu temui, lalu klik tombol <strong>"📖 Simpan ke Jurnal"</strong>!
+            Masuklah ke salah satu zona ekosistem di museum, ketuk hewan atau tumbuhan yang kamu temui, lalu ketuk tombol <strong>"📖 Simpan ke Jurnal"</strong>!
           </p>
           <button
             onClick={() => onGoToZone('hutan')}

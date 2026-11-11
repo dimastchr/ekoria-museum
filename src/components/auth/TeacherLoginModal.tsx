@@ -81,7 +81,7 @@ export const TeacherLoginModal: React.FC<TeacherLoginModalProps> = ({
               audioManager.playClick();
               onClose();
             }}
-            className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-800 rounded-full hover:bg-slate-100 cursor-pointer transition-colors"
+            className="w-12 h-12 flex items-center justify-center text-slate-400 hover:text-slate-800 rounded-full hover:bg-slate-100 cursor-pointer transition-colors"
           >
             <X className="w-6 h-6" />
           </button>

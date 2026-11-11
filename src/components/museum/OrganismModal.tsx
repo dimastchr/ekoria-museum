@@ -76,7 +76,7 @@ export const OrganismModal: React.FC<OrganismModalProps> = ({
                 audioManager.playClick();
                 onClose();
               }}
-              className="p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-slate-100 cursor-pointer transition-colors"
+              className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-slate-800 rounded-xl hover:bg-slate-100 cursor-pointer transition-colors"
             >
               <X className="w-6 h-6" />
             </button>

@@ -144,3 +144,88 @@ body {
   animation: glow-ring-pulse 2.5s ease-in-out infinite;
 }
 
+
+/* -------------------------------------------------------------------------- */
+/* Touch-friendly layout (tablet, Chromebook, phone)                          */
+/* -------------------------------------------------------------------------- */
+
+/* Never scroll sideways, even on a 360px phone.
+   body already has overflow-x: hidden (it propagates to the viewport);
+   'clip' here does not create a scroll container, so sticky bars keep working. */
+#root {
+  max-width: 100%;
+  overflow-x: clip;
+}
+img, svg, video {
+  max-width: 100%;
+}
+
+/*
+ * The app shell exposes two variables:
+ *   --app-nav-h       space the global navigation takes (top bar or bottom bar)
+ *   --app-nav-bottom  space the bottom bar takes (phones only, 0 on wider screens)
+ */
+.app-shell {
+  --app-nav-h: 0px;
+  --app-nav-bottom: 0px;
+}
+.app-shell.has-nav {
+  --app-nav-h: calc(68px + env(safe-area-inset-bottom, 0px));
+  --app-nav-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: var(--app-nav-bottom);
+}
+@media (min-width: 768px) {
+  .app-shell.has-nav {
+    --app-nav-h: 64px;
+    --app-nav-bottom: 0px;
+  }
+  /* On the dashboard the sidebar is the navigation on wide screens */
+  .app-shell.has-nav.nav-top-off {
+    --app-nav-h: 0px;
+  }
+}
+
+/* Full-height scenes (Aula Pusat, panorama zona) leave room for the navigation */
+@utility h-app-screen {
+  height: calc(100vh - var(--app-nav-h, 0px));
+  height: calc(100dvh - var(--app-nav-h, 0px));
+}
+@utility min-h-app-screen {
+  min-height: calc(100vh - var(--app-nav-h, 0px));
+  min-height: calc(100dvh - var(--app-nav-h, 0px));
+}
+
+/* Stick above the bottom bar on phones */
+@utility bottom-above-nav {
+  bottom: calc(var(--app-nav-bottom, 0px) + 1rem);
+}
+
+/* Big tap targets on any touch screen (tablet, Chromebook touch, phone) */
+@media (any-pointer: coarse) {
+  button:not(.tap-exempt),
+  [role="button"]:not(.tap-exempt),
+  a:not(.tap-exempt),
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  input[type="range"] {
+    min-height: 44px;
+  }
+}
+
+/* Visible keyboard focus for every control */
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible {
+  outline: 3px solid #F5C518;
+  outline-offset: 2px;
+}
+
+/* Remove the grey flash on tap and the 300ms delay on old tablets */
+button, [role="button"], a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}

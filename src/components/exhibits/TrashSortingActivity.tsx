@@ -155,7 +155,7 @@ export const TrashSortingActivity: React.FC<TrashSortingActivityProps> = ({
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 bg-white hover:bg-[#E8DEC9] text-[#0F3D2E] px-4 py-2 rounded-xl border border-[#E8DEC9] text-xs font-bold transition shadow-sm"
+            className="flex items-center gap-2 bg-white hover:bg-[#E8DEC9] text-[#0F3D2E] px-4 min-h-[48px] rounded-xl border border-[#E8DEC9] text-sm font-bold transition shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Kembali ke Zona</span>

@@ -15,7 +15,8 @@ import {
   Layers,
   FlaskConical,
   Activity,
-  Heart
+  Heart,
+  X
 } from 'lucide-react';
 import { ZoneId, ZoneData, Organism, AbioticFactor, StudentProgress, StudentProfile } from '../../types';
 import { MUSEUM_ZONES } from '../../data/museumZonesData';
@@ -25,6 +26,9 @@ import { SoundToggle } from '../common/SoundToggle';
 import { EkoHeart, EkoBiotaIcon } from '../common/EkoIcons';
 import naraAvatar from '../../assets/images/avatar_nara_explorer_1794244206279.jpg';
 import oziAvatar from '../../assets/images/avatar_ozi_robot_1794244205679.jpg';
+
+/** Interactive activity per zone (shown in the phone sub-bar). */
+const ZONE_ACTIVITY: Partial<Record<ZoneId, { type: 'decomposer' | 'food-chain' | 'simulation' | 'trash-sorting'; label: string }>> = { hutan: { type: 'decomposer', label: 'Lab Pengurai' }, 'rantai-makanan': { type: 'food-chain', label: 'Rakit Rantai' }, 'keseimbangan-ekosistem': { type: 'simulation', label: 'Simulasi Ekosistem' }, 'pelestarian-lingkungan': { type: 'trash-sorting', label: 'Aksi Pelestarian' } };
 
 interface ZoneViewProps {
   zoneId: ZoneId;
@@ -53,7 +57,10 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
   const [selectedItem, setSelectedItem] = useState<Organism | AbioticFactor | null>(null);
   const [filterType, setFilterType] = useState<'all' | 'biotik' | 'abiotik'>('all');
   const [isSpeakingWelcome, setIsSpeakingWelcome] = useState(false);
-  const [showMissions, setShowMissions] = useState(true);
+  // Mission card starts open on wide screens, closed on phones (it would cover the panorama)
+  const [showMissions, setShowMissions] = useState(() => typeof window === 'undefined' || window.innerWidth >= 768);
+  // True when the last mouse press moved the panorama, so the release is not a tap on a hotspot
+  const dragMovedRef = useRef(false);
 
   // Mouse drag panning state
   const [isDragging, setIsDragging] = useState(false);
@@ -104,6 +111,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
     setIsDragging(true);
+    dragMovedRef.current = false;
     setStartX(e.pageX - containerRef.current.offsetLeft);
     setScrollLeft(containerRef.current.scrollLeft);
   };
@@ -113,6 +121,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
     e.preventDefault();
     const x = e.pageX - containerRef.current.offsetLeft;
     const walk = (x - startX) * 1.5; // Drag speed multiplier
+    if (Math.abs(x - startX) > 6) dragMovedRef.current = true;
     containerRef.current.scrollLeft = scrollLeft - walk;
   };
 
@@ -128,22 +137,29 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#0F3D2E] text-white flex flex-col font-sans select-none">
+    <div className="relative w-full h-app-screen overflow-hidden bg-[#0F3D2E] text-white flex flex-col font-sans select-none">
       
       {/* TOP HUD BAR */}
-      <header className="relative z-30 flex items-center justify-between px-3 md:px-6 py-2.5 bg-[#0F3D2E]/90 backdrop-blur-md border-b border-[#1B5E3F]">
+      <header className="relative z-30 flex items-center justify-between gap-2 px-3 md:px-6 py-2 md:py-2.5 bg-[#0F3D2E]/90 backdrop-blur-md border-b border-[#1B5E3F]">
         
         {/* Top-Left: Nara Avatar + Hearts + Student Name */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <button
             onClick={onBackToHub}
-            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-bold px-2.5 py-1.5 rounded-xl border border-white/20 text-xs transition"
+            aria-label="Kembali ke Aula Pusat"
+            className="flex items-center gap-1.5 min-h-[44px] shrink-0 bg-white/10 hover:bg-white/20 text-white font-bold px-3 rounded-xl border border-white/20 text-sm transition"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Aula Pusat</span>
+            <ArrowLeft className="w-5 h-5" />
+            <span>Kembali</span>
           </button>
 
-          <div className="flex items-center gap-2.5 bg-black/30 px-3 py-1 rounded-2xl border border-white/10">
+          {/* Phones: just the zone name */}
+          <div className="sm:hidden min-w-0">
+            <div className="text-[10px] text-[#8BC34A] font-bold leading-none">Zona #{zone.zoneNumber}</div>
+            <div className="text-sm font-heading font-extrabold text-white leading-tight truncate">{zone.title}</div>
+          </div>
+
+          <div className="hidden sm:flex items-center gap-2.5 bg-black/30 px-3 py-1 rounded-2xl border border-white/10 min-w-0">
             <img 
               src={naraAvatar} 
               alt="Nara" 
@@ -172,31 +188,31 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
         <div className="hidden md:flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/10 text-xs font-semibold">
           <button
             onClick={() => setFilterType('all')}
-            className={`px-2.5 py-1 rounded-lg transition ${filterType === 'all' ? 'bg-[#F5C518] text-[#0F3D2E] font-bold' : 'text-gray-300 hover:text-white'}`}
+            className={`px-3 min-h-[40px] rounded-lg transition ${filterType === 'all' ? 'bg-[#F5C518] text-[#0F3D2E] font-bold' : 'text-gray-300 hover:text-white'}`}
           >
             Semua ({zone.organisms.length + zone.abioticFactors.length})
           </button>
           <button
             onClick={() => setFilterType('biotik')}
-            className={`px-2.5 py-1 rounded-lg transition ${filterType === 'biotik' ? 'bg-[#3FA34D] text-white font-bold' : 'text-gray-300 hover:text-white'}`}
+            className={`px-3 min-h-[40px] rounded-lg transition ${filterType === 'biotik' ? 'bg-[#3FA34D] text-white font-bold' : 'text-gray-300 hover:text-white'}`}
           >
             Biotik ({zone.organisms.length})
           </button>
           <button
             onClick={() => setFilterType('abiotik')}
-            className={`px-2.5 py-1 rounded-lg transition ${filterType === 'abiotik' ? 'bg-blue-600 text-white font-bold' : 'text-gray-300 hover:text-white'}`}
+            className={`px-3 min-h-[40px] rounded-lg transition ${filterType === 'abiotik' ? 'bg-blue-600 text-white font-bold' : 'text-gray-300 hover:text-white'}`}
           >
             Abiotik ({zone.abioticFactors.length})
           </button>
         </div>
 
         {/* Top-Right Tools */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Interactive Feature Launcher based on Zone */}
           {zone.id === 'hutan' && onLaunchInteractive && (
             <button
               onClick={() => onLaunchInteractive('decomposer')}
-              className="flex items-center gap-1.5 bg-[#3FA34D] hover:bg-[#348840] text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md transition"
+              className="hidden sm:flex items-center gap-1.5 min-h-[44px] bg-[#3FA34D] hover:bg-[#348840] text-white px-3 rounded-xl text-xs font-bold shadow-md transition"
             >
               <FlaskConical className="w-3.5 h-3.5" />
               <span>Lab Pengurai</span>
@@ -206,7 +222,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
           {zone.id === 'rantai-makanan' && onLaunchInteractive && (
             <button
               onClick={() => onLaunchInteractive('food-chain')}
-              className="flex items-center gap-1.5 bg-[#F5C518] hover:bg-[#ffe066] text-[#0F3D2E] px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md transition"
+              className="hidden sm:flex items-center gap-1.5 min-h-[44px] bg-[#F5C518] hover:bg-[#ffe066] text-[#0F3D2E] px-3 rounded-xl text-xs font-extrabold shadow-md transition"
             >
               <Layers className="w-3.5 h-3.5" />
               <span>Rakit Rantai</span>
@@ -216,7 +232,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
           {zone.id === 'keseimbangan-ekosistem' && onLaunchInteractive && (
             <button
               onClick={() => onLaunchInteractive('simulation')}
-              className="flex items-center gap-1.5 bg-[#3FA34D] hover:bg-[#348840] text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md transition"
+              className="hidden sm:flex items-center gap-1.5 min-h-[44px] bg-[#3FA34D] hover:bg-[#348840] text-white px-3 rounded-xl text-xs font-bold shadow-md transition"
             >
               <Activity className="w-3.5 h-3.5" />
               <span>Simulasi Ekosistem</span>
@@ -226,7 +242,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
           {zone.id === 'pelestarian-lingkungan' && onLaunchInteractive && (
             <button
               onClick={() => onLaunchInteractive('trash-sorting')}
-              className="flex items-center gap-1.5 bg-[#F5C518] hover:bg-[#ffe066] text-[#0F3D2E] px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md transition"
+              className="hidden sm:flex items-center gap-1.5 min-h-[44px] bg-[#F5C518] hover:bg-[#ffe066] text-[#0F3D2E] px-3 rounded-xl text-xs font-extrabold shadow-md transition"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Aksi Pelestarian</span>
@@ -237,13 +253,57 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
 
           <button
             onClick={onOpenOzi}
-            className="flex items-center gap-1.5 bg-[#F5C518] hover:bg-[#ffe066] text-[#0F3D2E] px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md transition"
+            aria-label="Tanya Ozi"
+            className="hidden sm:flex items-center gap-1.5 min-h-[44px] bg-[#F5C518] hover:bg-[#ffe066] text-[#0F3D2E] px-3 rounded-xl text-xs font-extrabold shadow-md transition"
           >
-            <img src={oziAvatar} alt="Ozi" className="w-4 h-4 rounded-full border border-[#0F3D2E]" />
+            <img src={oziAvatar} alt="" className="w-6 h-6 rounded-full border border-[#0F3D2E]" />
             <span className="hidden sm:inline">Tanya Ozi</span>
           </button>
         </div>
       </header>
+
+      {/* SUB-BAR for phones and small tablets: filter, activity and mission buttons (tap-friendly) */}
+      <div className="md:hidden relative z-30 flex items-center gap-2 px-3 py-2 bg-[#0F3D2E]/85 border-b border-[#1B5E3F] overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+        {([
+          { id: 'all', label: `Semua (${zone.organisms.length + zone.abioticFactors.length})`, active: 'bg-[#F5C518] text-[#0F3D2E]' },
+          { id: 'biotik', label: `Biotik (${zone.organisms.length})`, active: 'bg-[#3FA34D] text-white' },
+          { id: 'abiotik', label: `Abiotik (${zone.abioticFactors.length})`, active: 'bg-blue-600 text-white' },
+        ] as const).map((f) => (
+          <button
+            key={f.id}
+            type="button"
+            onClick={() => setFilterType(f.id)}
+            aria-pressed={filterType === f.id}
+            className={`shrink-0 min-h-[44px] px-3 rounded-xl text-xs font-bold border border-white/15 transition ${
+              filterType === f.id ? f.active : 'bg-black/30 text-gray-200'
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+        {onLaunchInteractive && ZONE_ACTIVITY[zone.id] && (
+          <button
+            type="button"
+            onClick={() => onLaunchInteractive(ZONE_ACTIVITY[zone.id]!.type)}
+            className="shrink-0 min-h-[44px] px-3 rounded-xl text-xs font-extrabold bg-[#F5C518] text-[#0F3D2E] shadow-md flex items-center gap-1.5"
+          >
+            <Sparkles className="w-4 h-4" />
+            {ZONE_ACTIVITY[zone.id]!.label}
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => setShowMissions((v) => !v)}
+          aria-pressed={showMissions}
+          className="shrink-0 min-h-[44px] px-3 rounded-xl text-xs font-bold bg-[#F6F1E3] text-[#0F3D2E] border border-[#3FA34D] flex items-center gap-1.5"
+        >
+          <Compass className="w-4 h-4 text-[#1B5E3F]" />
+          {showMissions ? 'Tutup Misi' : 'Misi Zona'}
+        </button>
+      </div>
+
+      {/* PANORAMA AREA (arrows and mission card are positioned inside it) */}
+      <div className="relative flex-1 min-h-0 flex flex-col">
 
       {/* PANORAMIC SCENE CONTAINER (TOUCH / MOUSE DRAGGABLE) */}
       <div 
@@ -278,8 +338,13 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
             return (
               <div
                 key={org.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`Amati ${org.name}`}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedItem(org); } }}
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (dragMovedRef.current) return;
                   setSelectedItem(org);
                 }}
                 className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-20"
@@ -314,8 +379,13 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
             return (
               <div
                 key={abio.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`Amati ${abio.name}`}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedItem(abio); } }}
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (dragMovedRef.current) return;
                   setSelectedItem(abio);
                 }}
                 className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-20"
@@ -324,7 +394,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
                 <div className="relative flex items-center justify-center">
                   <span className="absolute -inset-2 rounded-full bg-blue-400 opacity-60 animate-ping pointer-events-none" />
                   
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-700/90 text-white border-2 border-white flex items-center justify-center shadow-2xl transition-all duration-300 transform group-hover:scale-125">
+                  <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-blue-700/90 text-white border-2 border-white flex items-center justify-center shadow-2xl transition-all duration-300 transform group-hover:scale-125">
                     <EkoBiotaIcon id={abio.id} name={abio.name} category="abiotik" size="md" />
                   </div>
 
@@ -342,7 +412,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
       {/* PANNING ARROW BUTTONS (LEFT / RIGHT) */}
       <button
         onClick={() => panStep('left')}
-        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0F3D2E]/80 hover:bg-[#1B5E3F] text-white border border-[#3FA34D] flex items-center justify-center shadow-lg active:scale-95 transition"
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-[#0F3D2E]/80 hover:bg-[#1B5E3F] text-white border border-[#3FA34D] flex items-center justify-center shadow-lg active:scale-95 transition"
         aria-label="Geser kiri"
       >
         <ChevronLeft className="w-6 h-6" />
@@ -350,7 +420,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
 
       <button
         onClick={() => panStep('right')}
-        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0F3D2E]/80 hover:bg-[#1B5E3F] text-white border border-[#3FA34D] flex items-center justify-center shadow-lg active:scale-95 transition"
+        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-[#0F3D2E]/80 hover:bg-[#1B5E3F] text-white border border-[#3FA34D] flex items-center justify-center shadow-lg active:scale-95 transition"
         aria-label="Geser kanan"
       >
         <ChevronRight className="w-6 h-6" />
@@ -358,7 +428,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
 
       {/* TOP-RIGHT FLOATING MISSION CARD: "Misi Zona [Nama]" */}
       {showMissions && (
-        <div className="absolute top-16 right-4 z-20 w-72 bg-[#F6F1E3]/95 backdrop-blur-md text-[#0F3D2E] p-3.5 rounded-2xl border-2 border-[#3FA34D] shadow-xl animate-pop-spring">
+        <div className="absolute top-3 right-3 z-20 w-[min(18rem,calc(100%-1.5rem))] max-h-[calc(100%-1.5rem)] overflow-y-auto bg-[#F6F1E3]/95 backdrop-blur-md text-[#0F3D2E] p-3.5 rounded-2xl border-2 border-[#3FA34D] shadow-xl animate-pop-spring">
           <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-[#E8DEC9]">
             <div className="flex items-center gap-1.5">
               <Compass className="w-4 h-4 text-[#1B5E3F]" />
@@ -368,9 +438,10 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
             </div>
             <button
               onClick={() => setShowMissions(false)}
-              className="text-xs text-gray-500 hover:text-gray-800"
+              aria-label="Tutup misi zona"
+              className="w-11 h-11 shrink-0 rounded-full bg-white border border-[#E8DEC9] text-[#0F3D2E] hover:bg-[#E8DEC9] flex items-center justify-center"
             >
-              ✕
+              <X className="w-5 h-5" />
             </button>
           </div>
 
@@ -427,20 +498,23 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
       {!showMissions && (
         <button
           onClick={() => setShowMissions(true)}
-          className="absolute top-16 right-4 z-20 bg-[#F6F1E3] text-[#0F3D2E] text-xs font-bold px-3 py-1.5 rounded-xl border border-[#3FA34D] shadow-md flex items-center gap-1.5"
+          className="hidden md:flex absolute top-3 right-3 z-20 min-h-[44px] bg-[#F6F1E3] text-[#0F3D2E] text-xs font-bold px-3 rounded-xl border border-[#3FA34D] shadow-md items-center gap-1.5"
         >
           <Compass className="w-3.5 h-3.5 text-[#1B5E3F]" />
           <span>Buka Misi Zona</span>
         </button>
       )}
 
+      </div>
+      {/* END PANORAMA AREA */}
+
       {/* BOTTOM OVERLAY: Minimap (Bottom-Right) & Navigation Hint */}
-      <footer className="relative z-20 px-4 md:px-6 py-2.5 bg-[#0F3D2E]/90 backdrop-blur-md border-t border-[#1B5E3F] flex items-center justify-between text-xs text-[#E0E7E2]">
+      <footer className="relative z-20 px-3 md:px-6 py-2 md:py-2.5 gap-3 bg-[#0F3D2E]/90 backdrop-blur-md border-t border-[#1B5E3F] flex items-center justify-between text-xs text-[#E0E7E2]">
         
         {/* Left: Drag hint */}
-        <div className="flex items-center gap-2">
-          <Compass className="w-4 h-4 text-[#F5C518]" />
-          <span className="text-[11px] text-[#F6F1E3]/90">
+        <div className="flex items-center gap-2 min-w-0">
+          <Compass className="w-4 h-4 text-[#F5C518] shrink-0" />
+          <span className="text-[11px] leading-snug text-[#F6F1E3]/90 line-clamp-2">
             Geser panorama ke kiri atau ke kanan untuk menjelajah, lalu ketuk titik yang berkedip untuk mengamati.
           </span>
         </div>
@@ -452,7 +526,7 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
             <span className="text-[10px] text-gray-300">Panorama 360°</span>
           </div>
 
-          <div className="relative w-32 h-7 bg-black/60 rounded-lg border border-[#3FA34D] overflow-hidden p-0.5">
+          <div className="relative w-20 sm:w-32 h-7 bg-black/60 rounded-lg border border-[#3FA34D] overflow-hidden p-0.5">
             {/* Dots for all items in minimap */}
             {zone.organisms.map((o) => (
               <span

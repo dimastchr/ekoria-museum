@@ -126,7 +126,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               audioManager.playClick();
               onClose();
             }}
-            className="min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-400 hover:text-[#1F2D3D] rounded-xl hover:bg-slate-100 cursor-pointer transition-colors"
+            className="min-h-[48px] min-w-[48px] flex items-center justify-center text-slate-400 hover:text-[#1F2D3D] rounded-xl hover:bg-slate-100 cursor-pointer transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -382,7 +382,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 }}
                 className="text-base font-bold text-[#1E7A50] hover:underline cursor-pointer"
               >
-                {mode === 'login' ? 'Belum punya akun? Klik untuk mendaftar' : 'Sudah punya akun? Klik untuk masuk'}
+                {mode === 'login' ? 'Belum punya akun? Ketuk untuk mendaftar' : 'Sudah punya akun? Ketuk untuk masuk'}
               </button>
             </div>
           </div>

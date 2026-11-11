@@ -230,7 +230,7 @@ export const EcosystemSimulation: React.FC<EcosystemSimulationProps> = ({ onBack
                 audioManager.speakNarration(
                   balanced
                     ? 'Ekosistem sedang seimbang! Semua makhluk hidup mendapatkan makanan cukup dan alam berjalan harmonis.'
-                    : 'Ekosistem sedang tidak seimbang. Coba klik tombol "Perbaiki Ekosistem" untuk menyeimbangkannya kembali!'
+                    : 'Ekosistem sedang tidak seimbang. Coba ketuk tombol "Perbaiki Ekosistem" untuk menyeimbangkannya kembali!'
                 );
               }}
               className="p-2.5 rounded-2xl bg-white border border-current shadow-sm hover:scale-105 cursor-pointer shrink-0"

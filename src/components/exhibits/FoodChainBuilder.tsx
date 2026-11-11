@@ -108,17 +108,17 @@ export const FoodChainBuilder: React.FC<FoodChainBuilderProps> = ({
     <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 animate-in fade-in duration-300 text-[#1F2D3D]">
       
       {/* Header Banner */}
-      <div className="p-6 rounded-3xl bg-[#FFFDF9] border-3 border-[#1E7A50] shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-3xl bg-[#FFFDF9] border-3 border-[#1E7A50] shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="text-xs font-bold text-[#1E7A50] uppercase tracking-wider mb-1 flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-amber-500" />
             Laboratorium Rantai Makanan
           </div>
-          <h2 className="font-['Outfit'] text-2xl sm:text-3xl font-black text-[#1E7A50]">
+          <h2 className="font-['Outfit'] text-2xl sm:text-3xl font-black text-[#1E7A50] break-words">
             Susun Rantai Makanan – {roomTitle}
           </h2>
           <p className="text-base sm:text-lg text-[#1F2D3D] mt-1 max-w-xl font-medium">
-            Ayo, susun urutan siapa memakan siapa! Klik hewan atau tumbuhan di bawah untuk memasukkannya ke dalam rantai.
+            Ayo, susun urutan siapa memakan siapa! Ketuk hewan atau tumbuhan di bawah untuk memasukkannya ke dalam rantai. Ketuk lagi kartu di rantai untuk mengeluarkannya.
           </p>
         </div>
 
@@ -150,22 +150,23 @@ export const FoodChainBuilder: React.FC<FoodChainBuilderProps> = ({
               'Ingat aturan sains: Arah panah selalu dari yang dimakan ke yang memakan, artinya energi berpindah ke pemakannya.'
             );
           }}
-          className="p-2.5 rounded-xl bg-white border border-[#1E7A50] hover:scale-105 cursor-pointer shrink-0"
+          className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-[#1E7A50] hover:scale-105 cursor-pointer shrink-0"
           title="Dengarkan Aturan"
+          aria-label="Dengarkan aturan arah panah"
         >
           <Volume2 className="w-5 h-5 text-[#1E7A50]" />
         </button>
       </div>
 
       {/* Assembly Canvas (Target Slot Chain) */}
-      <div className="p-6 rounded-3xl bg-[#FFFDF9] border-3 border-slate-200 shadow-md space-y-4">
+      <div className="p-4 sm:p-6 rounded-3xl bg-[#FFFDF9] border-3 border-slate-200 shadow-md space-y-4">
         <div className="flex items-center justify-between">
           <div className="text-sm font-bold text-slate-700 uppercase tracking-wider">
             Urutan Aliran Energi:
           </div>
           <button
             onClick={handleReset}
-            className="flex items-center gap-1.5 text-sm font-bold text-slate-600 hover:text-slate-900 cursor-pointer"
+            className="flex items-center gap-1.5 min-h-[44px] px-3 rounded-xl border border-slate-300 bg-white text-sm font-bold text-slate-600 hover:text-slate-900 cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
             Ulangi
@@ -173,18 +174,20 @@ export const FoodChainBuilder: React.FC<FoodChainBuilderProps> = ({
         </div>
 
         {/* Chain Sequence Display */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 min-h-[140px] p-5 rounded-2xl bg-[#F8FAF7] border-2 border-dashed border-emerald-300">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 min-h-[140px] p-3 sm:p-5 rounded-2xl bg-[#F8FAF7] border-2 border-dashed border-emerald-300">
           {selectedChain.length === 0 ? (
             <div className="text-center text-sm sm:text-base text-slate-500 py-6 font-medium">
-              Klik kartu makhluk hidup di bawah untuk mulai menyusun rantai makanan dari produsen!
+              Ketuk kartu makhluk hidup di bawah untuk mulai menyusun rantai makanan dari produsen!
             </div>
           ) : (
             selectedChain.map((organism, idx) => (
               <React.Fragment key={organism.id}>
-                <div
+                <button
+                  type="button"
                   onClick={() => handleRemoveFromChain(idx)}
+                  aria-label={`Keluarkan ${organism.localName} dari rantai`}
                   className="group relative p-3 sm:p-4 rounded-2xl bg-white hover:bg-rose-50 border-2 border-emerald-300 hover:border-rose-400 text-center cursor-pointer transition-all hover:scale-105 shadow-md min-w-[100px]"
-                  title="Klik untuk membatalkan pilihan ini"
+                  title="Ketuk untuk membatalkan pilihan ini"
                 >
                   <span className="text-3xl sm:text-4xl block mb-1">{organism.icon}</span>
                   <div className="font-bold text-sm text-[#1F2D3D] max-w-[110px] truncate">
@@ -193,10 +196,10 @@ export const FoodChainBuilder: React.FC<FoodChainBuilderProps> = ({
                   <div className="text-xs text-[#1E7A50] font-bold uppercase mt-0.5">
                     {organism.role.replace('-', ' ')}
                   </div>
-                  <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-300 group-hover:bg-rose-500 text-xs text-white flex items-center justify-center">
+                  <span className="absolute -top-2.5 -right-2.5 w-7 h-7 rounded-full bg-rose-500 text-sm text-white flex items-center justify-center shadow" aria-hidden="true">
                     ✕
-                  </div>
-                </div>
+                  </span>
+                </button>
 
                 {idx < selectedChain.length - 1 && (
                   <div className="flex flex-col items-center justify-center text-[#1E7A50] shrink-0">
@@ -228,8 +231,9 @@ export const FoodChainBuilder: React.FC<FoodChainBuilderProps> = ({
             </div>
             <button
               onClick={() => audioManager.speakNarration(validationResult.message)}
-              className="p-2 rounded-xl bg-white border border-current hover:scale-105 cursor-pointer shrink-0"
+              className="w-11 h-11 flex items-center justify-center rounded-xl bg-white border border-current hover:scale-105 cursor-pointer shrink-0"
               title="Dengarkan Umpan Balik"
+              aria-label="Dengarkan umpan balik"
             >
               <Volume2 className="w-4 h-4" />
             </button>
@@ -254,14 +258,14 @@ export const FoodChainBuilder: React.FC<FoodChainBuilderProps> = ({
       </div>
 
       {/* Available Pool of Organisms */}
-      <div className="p-6 rounded-3xl bg-[#FFFDF9] border-3 border-slate-200 shadow-md">
+      <div className="p-4 sm:p-6 rounded-3xl bg-[#FFFDF9] border-3 border-slate-200 shadow-md">
         <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">
           Pilihan Makhluk Hidup Tersedia ({availableItems.length}):
         </h4>
         
         {availableItems.length === 0 ? (
           <p className="text-sm text-slate-500 italic">
-            Semua makhluk hidup sudah masuk ke rantai! Klik tombol "Periksa Rantai Makanan" di atas.
+            Semua makhluk hidup sudah masuk ke rantai! Ketuk tombol "Periksa Rantai Makanan" di atas.
           </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">

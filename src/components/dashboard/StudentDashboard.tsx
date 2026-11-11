@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Compass, 
   Map as MapIcon, 
@@ -9,14 +9,15 @@ import {
   Home, 
   CheckCircle2, 
   Bell, 
-  Settings, 
   Sparkles, 
   LogOut,
   ChevronRight,
   Flame,
   ShieldAlert,
-  Play
+  Play,
+  UserCircle2
 } from 'lucide-react';
+import { LogoutConfirmDialog } from '../common/AppNav';
 import { StudentProgress, StudentProfile, ZoneId, ViewState } from '../../types';
 import { MUSEUM_ZONES, MUSEUM_BADGES } from '../../data/museumZonesData';
 import { EkoHeart, EkoZoneIcon, EkoLogoIcon } from '../common/EkoIcons';
@@ -32,6 +33,7 @@ interface StudentDashboardProps {
   onSelectZone: (zoneId: ZoneId) => void;
   onLogout: () => void;
   onOpenOzi: () => void;
+  onOpenProfile?: () => void;
 }
 
 export const StudentDashboard: React.FC<StudentDashboardProps> = ({
@@ -42,7 +44,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   onSelectZone,
   onLogout,
   onOpenOzi,
+  onOpenProfile,
 }) => {
+  const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false);
   const completedCount = progress.completedRooms?.length || 0;
   const progressPercent = Math.min(100, Math.round((completedCount / 8) * 100));
   
@@ -96,7 +100,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                       onNavigate(item.id);
                     }
                   }}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                  className={`w-full min-h-[48px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                     isActive
                       ? 'bg-[#F5C518] text-[#0F3D2E] shadow-md font-bold'
                       : 'text-[#E0E7E2] hover:bg-[#1B5E3F] hover:text-white'
@@ -107,14 +111,26 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 </button>
               );
             })}
+            {onOpenProfile && (
+              <button
+                type="button"
+                onClick={onOpenProfile}
+                className="w-full min-h-[48px] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-[#E0E7E2] hover:bg-[#1B5E3F] hover:text-white"
+              >
+                <UserCircle2 className="w-5 h-5 shrink-0" />
+                <span>Profil Saya</span>
+              </button>
+            )}
           </nav>
         </div>
 
         {/* Ozi AI companion card in sidebar */}
         <div className="space-y-3 pt-4 border-t border-[#1B5E3F]">
-          <div 
+          <button
+            type="button"
             onClick={onOpenOzi}
-            className="bg-[#1B5E3F] hover:bg-[#256f4d] p-3 rounded-2xl cursor-pointer transition-all border border-[#3FA34D]/30 flex items-center gap-3 group shadow"
+            aria-label="Tanya Ozi"
+            className="w-full text-left bg-[#1B5E3F] hover:bg-[#256f4d] p-3 rounded-2xl cursor-pointer transition-all border border-[#3FA34D]/30 flex items-center gap-3 group shadow"
           >
             <img 
               src={oziAvatar} 
@@ -128,11 +144,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
               <div className="text-sm font-bold text-white truncate">Tanya Ozi</div>
               <div className="text-[11px] text-emerald-200 truncate">Siap membantumu 24/7!</div>
             </div>
-          </div>
+          </button>
 
           <button
-            onClick={onLogout}
-            className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs text-emerald-200 hover:text-white hover:bg-[#1B5E3F]/60 rounded-xl transition"
+            type="button"
+            onClick={() => setIsConfirmLogoutOpen(true)}
+            className="w-full min-h-[48px] flex items-center justify-center gap-2 py-2 px-3 text-sm font-bold text-emerald-100 hover:text-white hover:bg-rose-600/70 border border-white/15 rounded-xl transition"
           >
             <LogOut className="w-4 h-4" />
             <span>Keluar</span>
@@ -141,24 +158,24 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
       </aside>
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 flex flex-col min-h-screen overflow-y-auto pb-24 md:pb-8">
+      <main className="flex-1 min-w-0 flex flex-col min-h-screen pb-8">
         
         {/* HEADER */}
-        <header className="bg-white border-b border-[#E8DEC9] px-6 py-4 flex items-center justify-between shadow-sm sticky top-0 z-10">
-          <div className="flex items-center gap-3.5">
-            <div className="relative">
+        <header className="bg-white border-b border-[#E8DEC9] px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2 shadow-sm sticky top-0 z-10">
+          <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+            <div className="relative shrink-0">
               <img 
                 src={naraAvatar} 
                 alt="Avatar Nara" 
-                className="w-12 h-12 rounded-full border-2 border-[#3FA34D] object-cover shadow-sm"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#3FA34D] object-cover shadow-sm"
               />
               <span className="absolute -bottom-1 -right-1 bg-[#3FA34D] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full uppercase">
                 V
               </span>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg md:text-xl font-heading font-extrabold text-[#0F3D2E]">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <h1 className="text-base sm:text-lg md:text-xl font-heading font-extrabold text-[#0F3D2E] break-words">
                   Halo, {profile.fullName || profile.username}! 👋
                 </h1>
                 {/* Heart bar HUD */}
@@ -168,17 +185,17 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                   ))}
                 </div>
               </div>
-              <p className="text-xs text-[#52796F] font-medium">
+              <p className="hidden sm:block text-xs text-[#52796F] font-medium">
                 Siap melanjutkan petualangan di EkoRia? Kelas {profile.className || '5 SD'}
               </p>
             </div>
           </div>
 
           {/* Quick Header Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button 
               onClick={() => onNavigate('pretest')}
-              className={`hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition ${
+              className={`hidden lg:flex items-center gap-1.5 text-xs font-bold px-3 min-h-[44px] rounded-xl border transition ${
                 progress.preTestCompleted 
                   ? 'bg-emerald-50 text-[#1B5E3F] border-[#3FA34D]/30' 
                   : 'bg-[#FFF9E6] text-[#0F3D2E] border-[#F5C518]'
@@ -189,7 +206,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
             <button 
               onClick={() => onNavigate('posttest')}
-              className={`hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl border transition ${
+              className={`hidden lg:flex items-center gap-1.5 text-xs font-bold px-3 min-h-[44px] rounded-xl border transition ${
                 progress.postTestCompleted 
                   ? 'bg-emerald-50 text-[#1B5E3F] border-[#3FA34D]/30' 
                   : 'bg-[#FFF9E6] text-[#0F3D2E] border-[#F5C518]'
@@ -202,20 +219,24 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
             <button 
               onClick={onOpenOzi}
-              className="p-2 rounded-xl text-[#0F3D2E] hover:bg-[#F6F1E3] transition relative"
+              className="hidden sm:flex w-11 h-11 items-center justify-center rounded-xl text-[#0F3D2E] hover:bg-[#F6F1E3] transition relative"
               title="Pemberitahuan & Tips Ozi"
+              aria-label="Tips dari Ozi"
             >
               <Bell className="w-5 h-5" />
               <span className="w-2 h-2 rounded-full bg-[#F5C518] absolute top-1.5 right-1.5 ring-2 ring-white"></span>
             </button>
 
-            <button 
-              onClick={() => onNavigate('dashboard')}
-              className="p-2 rounded-xl text-[#0F3D2E] hover:bg-[#F6F1E3] transition"
-              title="Pengaturan"
-            >
-              <Settings className="w-5 h-5" />
-            </button>
+            {onOpenProfile && (
+              <button 
+                onClick={onOpenProfile}
+                className="hidden md:flex min-h-[44px] items-center gap-1.5 px-3 rounded-xl border border-[#E8DEC9] text-[#0F3D2E] hover:bg-[#F6F1E3] text-xs font-bold transition"
+                title="Profil Saya"
+              >
+                <UserCircle2 className="w-5 h-5" />
+                <span>Profil</span>
+              </button>
+            )}
           </div>
         </header>
 
@@ -353,6 +374,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             {/* Card 1: Peta Museum */}
             <div 
               onClick={() => onNavigate('museum-hub')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (() => onNavigate('museum-hub'))(); } }}
               className="bg-white hover:bg-[#FFFDF7] p-5 rounded-2xl border border-[#E8DEC9] shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
             >
               <div>
@@ -371,6 +395,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             {/* Card 2: Misi Aktif */}
             <div 
               onClick={() => onSelectZone(lastZone.id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (() => onSelectZone(lastZone.id))(); } }}
               className="bg-white hover:bg-[#FFFDF7] p-5 rounded-2xl border border-[#E8DEC9] shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
             >
               <div>
@@ -389,6 +416,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             {/* Card 3: Koleksi Temuan */}
             <div 
               onClick={() => onNavigate('journal')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (() => onNavigate('journal'))(); } }}
               className="bg-white hover:bg-[#FFFDF7] p-5 rounded-2xl border border-[#E8DEC9] shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
             >
               <div>
@@ -407,6 +437,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             {/* Card 4: Lencana & Prestasi */}
             <div 
               onClick={() => onNavigate('achievements')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (() => onNavigate('achievements'))(); } }}
               className="bg-white hover:bg-[#FFFDF7] p-5 rounded-2xl border border-[#E8DEC9] shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
             >
               <div>
@@ -453,6 +486,9 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                   <div
                     key={zone.id}
                     onClick={() => onSelectZone(zone.id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); (() => onSelectZone(zone.id))(); } }}
                     className="group bg-white rounded-2xl border border-[#E8DEC9] overflow-hidden shadow-sm hover:shadow-md hover:border-[#3FA34D] transition-all cursor-pointer flex flex-col"
                   >
                     {/* Zone Image */}
@@ -512,39 +548,15 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
 
       </main>
 
-      {/* MOBILE BOTTOM NAVIGATION BAR */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0F3D2E] text-white px-2 py-2 border-t border-[#1B5E3F] z-30 flex items-center justify-around shadow-2xl">
-        {navItems.slice(0, 5).map((item) => {
-          const Icon = item.icon;
-          const isActive = currentView === item.id || (item.id === 'zone-view' && currentView === 'zone-view');
-          return (
-            <button
-              key={item.id}
-              onClick={() => {
-                if (item.id === 'zone-view') {
-                  onSelectZone(lastZoneId);
-                } else {
-                  onNavigate(item.id);
-                }
-              }}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-xl transition ${
-                isActive ? 'text-[#F5C518] font-bold' : 'text-emerald-200 hover:text-white'
-              }`}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="text-[10px] truncate max-w-[56px]">{item.label}</span>
-            </button>
-          );
-        })}
-        {/* Quick Ozi Bot Button on Mobile */}
-        <button
-          onClick={onOpenOzi}
-          className="flex flex-col items-center gap-0.5 px-2 py-1 text-white hover:text-[#F5C518]"
-        >
-          <img src={oziAvatar} alt="Ozi" className="w-5 h-5 rounded-full border border-[#F5C518]" />
-          <span className="text-[10px] font-bold text-[#F5C518]">Ozi</span>
-        </button>
-      </nav>
+      {isConfirmLogoutOpen && (
+        <LogoutConfirmDialog
+          onCancel={() => setIsConfirmLogoutOpen(false)}
+          onConfirm={() => {
+            setIsConfirmLogoutOpen(false);
+            onLogout();
+          }}
+        />
+      )}
 
     </div>
   );

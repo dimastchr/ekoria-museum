@@ -30,6 +30,8 @@ import {
 import { StorageService } from './services/storageService';
 import { audioManager } from './utils/audioManager';
 import { SoundToggle } from './components/common/SoundToggle';
+import { AppNav } from './components/common/AppNav';
+import { ProfileModal } from './components/profile/ProfileModal';
 
 /** Empty progress used only while nobody is logged in (never saved). */
 const EMPTY_PROGRESS: StudentProgress = {
@@ -75,6 +77,7 @@ export default function App() {
   const [isTeacherLoginOpen, setIsTeacherLoginOpen] = useState(false);
   const [isOziOpen, setIsOziOpen] = useState(false);
   const [oziQuery, setOziQuery] = useState<string | undefined>(undefined);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // Guard: the museum can only be used after registering and logging in
   const setCurrentView = (view: ViewState) => {
@@ -102,6 +105,8 @@ export default function App() {
     audioManager.stopSpeaking();
     audioManager.stopAmbient();
     StorageService.setActiveUser(null);
+    setIsProfileOpen(false);
+    setIsOziOpen(false);
     setActiveUser(null);
     setCurrentViewRaw('landing');
     setIsLoginOpen(true);
@@ -188,8 +193,33 @@ export default function App() {
   // Nothing but the landing/login page renders until someone is logged in
   const view: ViewState = activeUser ? currentView : 'landing';
 
+  // Global touch-friendly navigation: pupils only, on every screen except the landing page
+  const showNav = !!activeUser && activeUser.role === 'student' && view !== 'landing' && view !== 'teacher-dashboard';
+
+  // Scroll to the top when switching screens (important on phones)
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [view]);
+
   return (
-    <div className="min-h-screen bg-[#F6F1E3] text-[#0F3D2E] font-sans selection:bg-[#F5C518] selection:text-[#0F3D2E]">
+    <div
+      className={`app-shell ${showNav ? 'has-nav' : ''} ${view === 'dashboard' ? 'nav-top-off' : ''} min-h-screen max-w-full overflow-x-clip bg-[#F6F1E3] text-[#0F3D2E] font-sans selection:bg-[#F5C518] selection:text-[#0F3D2E]`}
+    >
+      {/* 0. GLOBAL NAVIGATION (top bar on tablet/Chromebook, bottom bar on phones) */}
+      {showNav && (
+        <AppNav
+          currentView={view}
+          onNavigate={(next) => {
+            setIsProfileOpen(false);
+            setCurrentView(next);
+          }}
+          onOpenOzi={() => handleOpenOzi()}
+          onOpenProfile={() => setIsProfileOpen(true)}
+          onLogout={handleLogout}
+          hideTopOnDesktop={view === 'dashboard'}
+          isProfileOpen={isProfileOpen}
+        />
+      )}
       
       {/* 1. LANDING PAGE */}
       {view === 'landing' && (
@@ -212,6 +242,7 @@ export default function App() {
           onSelectZone={handleSelectZone}
           onLogout={handleLogout}
           onOpenOzi={() => handleOpenOzi()}
+          onOpenProfile={() => setIsProfileOpen(true)}
         />
       )}
 
@@ -276,7 +307,15 @@ export default function App() {
               badges.push('detektif-ekosistem');
             }
 
+            // Zone quizzes: keep the best score per zone in the existing quizScores field
+            const quizScores = { ...(progress.quizScores || {}) };
+            if (!isPre && !isPost) {
+              const prev = typeof quizScores[type] === 'number' ? quizScores[type] : -1;
+              quizScores[type] = Math.max(prev, score);
+            }
+
             handleUpdateProgress({
+              quizScores,
               preTestCompleted: isPre ? true : progress.preTestCompleted,
               preTestScore: isPre ? score : progress.preTestScore,
               postTestCompleted: isPost ? true : progress.postTestCompleted,
@@ -385,13 +424,29 @@ export default function App() {
       )}
 
       {/* GLOBAL SOUND SWITCH for views that have no sound button in their own header */}
-      {!['landing', 'dashboard', 'museum-hub', 'zone-view'].includes(view) && (
+      {!showNav && !['landing', 'dashboard', 'museum-hub', 'zone-view'].includes(view) && (
         <div className="fixed bottom-4 left-4 z-40 shadow-lg rounded-xl">
           <SoundToggle variant="light" showLabel />
         </div>
       )}
 
       {/* GLOBAL MODALS */}
+      {isProfileOpen && activeUser && activeUser.role === 'student' && (
+        <ProfileModal
+          profile={activeUser}
+          progress={progress}
+          onClose={() => setIsProfileOpen(false)}
+          onGoToJournal={() => {
+            setIsProfileOpen(false);
+            setCurrentView('journal');
+          }}
+          onGoToQuiz={() => {
+            setIsProfileOpen(false);
+            setCurrentView('quiz');
+          }}
+        />
+      )}
+
       {isOziOpen && (
         <EcoBotModal
           onClose={() => setIsOziOpen(false)}

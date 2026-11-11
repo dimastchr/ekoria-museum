@@ -10,7 +10,8 @@ import {
   ChevronRight,
   Compass,
   Award,
-  BookOpen
+  BookOpen,
+  X
 } from 'lucide-react';
 import { ZoneId, StudentProgress } from '../../types';
 import { MUSEUM_ZONES } from '../../data/museumZonesData';
@@ -55,18 +56,18 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
 
   const scrollLeft = () => {
     if (containerRef.current) {
-      containerRef.current.scrollBy({ left: -360, behavior: 'smooth' });
+      containerRef.current.scrollBy({ left: -Math.min(360, containerRef.current.clientWidth * 0.8), behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (containerRef.current) {
-      containerRef.current.scrollBy({ left: 360, behavior: 'smooth' });
+      containerRef.current.scrollBy({ left: Math.min(360, containerRef.current.clientWidth * 0.8), behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#0F3D2E] text-white flex flex-col font-sans select-none">
+    <div className="relative w-full min-h-app-screen md:h-app-screen overflow-x-hidden md:overflow-hidden bg-[#0F3D2E] text-white flex flex-col font-sans select-none">
       
       {/* BACKGROUND GRAND HALL IMAGE WITH SUNBEAMS AND DRIFTING MIST */}
       <div 
@@ -84,23 +85,23 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
       </div>
 
       {/* TOP HUD BAR */}
-      <header className="relative z-20 flex items-center justify-between px-4 md:px-8 py-3.5 bg-[#0F3D2E]/85 backdrop-blur-md border-b border-[#1B5E3F]/80">
-        <div className="flex items-center gap-3">
+      <header className="relative z-20 flex items-center justify-between gap-2 px-3 md:px-8 py-2.5 md:py-3.5 bg-[#0F3D2E]/85 backdrop-blur-md border-b border-[#1B5E3F]/80">
+        <div className="flex items-center gap-2 md:gap-3 min-w-0">
           <button
             onClick={onBackToDashboard}
-            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-3 py-1.5 rounded-xl border border-white/20 text-xs transition"
+            className="flex items-center gap-2 min-h-[44px] shrink-0 bg-white/10 hover:bg-white/20 text-white font-bold px-3 rounded-xl border border-white/20 text-sm transition"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Dasbor Siswa</span>
+            <ArrowLeft className="w-5 h-5" />
+            <span>Kembali</span>
           </button>
 
-          <div className="flex items-center gap-2.5">
-            <EkoLogoIcon size={30} className="shrink-0 drop-shadow" />
-            <div>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <EkoLogoIcon size={30} className="shrink-0 drop-shadow hidden sm:block" />
+            <div className="min-w-0">
               <h1 className="text-sm md:text-base font-heading font-extrabold text-white leading-tight">
                 Aula Pusat Museum EkoRia
               </h1>
-              <p className="text-[10px] text-[#8BC34A] font-semibold uppercase tracking-wider">
+              <p className="hidden sm:block text-[10px] text-[#8BC34A] font-semibold uppercase tracking-wider">
                 Bab 3: Harmoni dalam Ekosistem (8 Zona)
               </p>
             </div>
@@ -108,11 +109,12 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
         </div>
 
         {/* Top Right Controls: Info, Map, Ozi */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
           {onOpenEncyclopedia && (
             <button
               onClick={onOpenEncyclopedia}
-              className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-xl text-xs font-semibold border border-white/20 transition"
+              aria-label="Ensiklopedia"
+              className="hidden sm:flex items-center gap-1.5 min-h-[44px] min-w-[44px] justify-center bg-white/10 hover:bg-white/20 text-white px-3 rounded-xl text-xs font-semibold border border-white/20 transition"
               title="Buka Ensiklopedia Istilah"
             >
               <BookOpen className="w-4 h-4 text-[#F5C518]" />
@@ -124,24 +126,26 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
 
           <button
             onClick={() => setShowInfoModal(true)}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition"
+            className="w-11 h-11 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition"
             title="Informasi Museum & Bab 3"
+            aria-label="Informasi museum"
           >
-            <Info className="w-4 h-4" />
+            <Info className="w-5 h-5" />
           </button>
 
           <button
             onClick={onOpenOzi}
-            className="flex items-center gap-2 bg-[#F5C518] hover:bg-[#ffe066] text-[#0F3D2E] px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-md transition cursor-pointer"
+            aria-label="Tanya Ozi"
+            className="hidden sm:flex items-center gap-2 min-h-[44px] bg-[#F5C518] hover:bg-[#ffe066] text-[#0F3D2E] px-3 rounded-xl text-xs font-extrabold shadow-md transition cursor-pointer"
           >
-            <img src={oziAvatar} alt="Ozi" className="w-4 h-4 rounded-full border border-[#0F3D2E]" />
+            <img src={oziAvatar} alt="" className="w-6 h-6 rounded-full border border-[#0F3D2E]" />
             <span className="hidden sm:inline">Tanya Ozi</span>
           </button>
         </div>
       </header>
 
       {/* CENTRAL SCROLLABLE PORTALS AREA */}
-      <div className="relative z-10 flex-1 flex flex-col justify-center px-4 md:px-12 py-4 overflow-hidden">
+      <div className="relative z-10 flex-1 flex flex-col justify-center px-2 sm:px-4 md:px-12 py-3 md:py-4 overflow-hidden">
         
         {/* Title banner */}
         <div className="text-center mb-4 max-w-2xl mx-auto">
@@ -152,7 +156,7 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
             Pilih Portal Petualanganmu
           </h2>
           <p className="text-xs md:text-sm text-[#F6F1E3]/90 drop-shadow">
-            Geser ke kiri atau kanan untuk memilih salah satu dari 8 gerbang ekosistem.
+            Geser atau ketuk tombol panah untuk memilih salah satu dari 8 gerbang ekosistem.
           </p>
         </div>
 
@@ -187,7 +191,11 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
               <div
                 key={zone.id}
                 onClick={() => onSelectZone(zone.id)}
-                className="snap-center shrink-0 w-64 md:w-72 h-[390px] rounded-t-full rounded-b-3xl bg-gradient-to-b from-[#1B5E3F]/90 to-[#0F3D2E]/95 border-2 border-[#8BC34A]/40 hover:border-[#F5C518] shadow-2xl hover:shadow-[#F5C518]/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer flex flex-col items-center justify-between p-4 group relative overflow-hidden backdrop-blur-md"
+                role="button"
+                tabIndex={0}
+                aria-label={`Masuk Zona ${zone.zoneNumber}: ${zone.title}`}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelectZone(zone.id); } }}
+                className="snap-center shrink-0 w-[min(16rem,78vw)] md:w-72 h-[360px] sm:h-[390px] rounded-t-full rounded-b-3xl bg-gradient-to-b from-[#1B5E3F]/90 to-[#0F3D2E]/95 border-2 border-[#8BC34A]/40 hover:border-[#F5C518] shadow-2xl hover:shadow-[#F5C518]/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer flex flex-col items-center justify-between p-4 group relative overflow-hidden backdrop-blur-md"
               >
                 {/* Glowing portal arch background image */}
                 <div 
@@ -237,7 +245,7 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
                   </div>
 
                   {/* Enter Button (Yellow with dark green text) */}
-                  <button className="w-full py-2.5 rounded-xl bg-[#F5C518] text-[#0F3D2E] font-heading font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md group-hover:bg-[#ffe066] transition cursor-pointer">
+                  <button type="button" tabIndex={-1} className="w-full min-h-[48px] py-2.5 rounded-xl bg-[#F5C518] text-[#0F3D2E] font-heading font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md group-hover:bg-[#ffe066] transition cursor-pointer">
                     <Compass className="w-3.5 h-3.5" />
                     <span>Masuk Portal Ini</span>
                   </button>
@@ -247,13 +255,33 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
           })}
         </div>
 
+        {/* Arrow buttons for phones (swiping also works) */}
+        <div className="md:hidden flex items-center justify-center gap-4 pb-1">
+          <button
+            type="button"
+            onClick={scrollLeft}
+            className="w-12 h-12 rounded-full bg-[#0F3D2E]/90 text-white border border-[#3FA34D] shadow-xl flex items-center justify-center active:scale-95"
+            aria-label="Geser ke kiri"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            type="button"
+            onClick={scrollRight}
+            className="w-12 h-12 rounded-full bg-[#0F3D2E]/90 text-white border border-[#3FA34D] shadow-xl flex items-center justify-center active:scale-95"
+            aria-label="Geser ke kanan"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+        </div>
+
       </div>
 
       {/* BOTTOM FOOTER OVERLAY: Ozi Speech Bubble & Mission Card */}
       <footer className="relative z-20 px-4 md:px-8 py-3 bg-[#0F3D2E]/90 backdrop-blur-md border-t border-[#1B5E3F] flex flex-col sm:flex-row items-center justify-between gap-3">
         
         {/* Bottom Left: Mission Card (Misi: Jelajahi 8 zona x/8) */}
-        <div className="flex items-center gap-3 bg-[#1B5E3F]/80 px-4 py-2 rounded-2xl border border-[#3FA34D]/40 shadow-sm shrink-0">
+        <div className="flex items-center gap-3 bg-[#1B5E3F]/80 px-4 py-2 rounded-2xl border border-[#3FA34D]/40 shadow-sm w-full sm:w-auto sm:shrink-0">
           <div className="w-8 h-8 rounded-xl bg-[#F5C518] text-[#0F3D2E] flex items-center justify-center font-bold">
             <Compass className="w-4 h-4" />
           </div>
@@ -268,7 +296,7 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
         </div>
 
         {/* Bottom Center / Right: Ozi Speech Bubble */}
-        <div className="flex items-center gap-3 bg-white text-[#0F3D2E] px-4 py-2.5 rounded-2xl border-2 border-[#F5C518] shadow-lg max-w-xl">
+        <div className="flex items-center gap-3 bg-white text-[#0F3D2E] px-3 sm:px-4 py-2.5 rounded-2xl border-2 border-[#F5C518] shadow-lg w-full sm:w-auto max-w-xl">
           <button
             type="button"
             onClick={onOpenOzi}
@@ -294,7 +322,8 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
           </div>
           <button
             onClick={handleSpeakWelcome}
-            className={`p-1.5 rounded-lg text-[#0F3D2E] hover:bg-[#F6F1E3] transition ${
+            aria-label={isSpeaking ? 'Hentikan suara Ozi' : 'Dengarkan suara Ozi'}
+            className={`w-11 h-11 shrink-0 flex items-center justify-center rounded-xl text-[#0F3D2E] hover:bg-[#F6F1E3] transition ${
               isSpeaking ? 'text-[#3FA34D] animate-pulse' : ''
             }`}
             title="Dengarkan Suara Ozi"
@@ -307,8 +336,8 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
 
       {/* INFO MODAL */}
       {showInfoModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#F6F1E3] text-[#0F3D2E] rounded-3xl max-w-lg w-full p-6 shadow-2xl border-2 border-[#3FA34D] animate-pop-spring">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowInfoModal(false)}>
+          <div onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" className="bg-[#F6F1E3] text-[#0F3D2E] rounded-3xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-6 shadow-2xl border-2 border-[#3FA34D] animate-pop-spring">
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#E8DEC9]">
               <div className="flex items-center gap-2.5">
                 <EkoLogoIcon size={32} className="shrink-0" />
@@ -318,9 +347,10 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
               </div>
               <button 
                 onClick={() => setShowInfoModal(false)}
-                className="text-gray-500 hover:text-gray-700 font-bold text-lg p-1"
+                aria-label="Tutup"
+                className="w-12 h-12 shrink-0 rounded-full bg-white border border-[#E8DEC9] text-[#0F3D2E] hover:bg-[#E8DEC9] flex items-center justify-center shadow-sm"
               >
-                ✕
+                <X className="w-6 h-6" />
               </button>
             </div>
 
@@ -346,7 +376,7 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
             <div className="mt-5 pt-3 border-t border-[#E8DEC9] flex justify-end">
               <button
                 onClick={() => setShowInfoModal(false)}
-                className="bg-[#F5C518] text-[#0F3D2E] font-heading font-extrabold px-5 py-2 rounded-xl hover:bg-[#ffe066] transition text-xs"
+                className="bg-[#F5C518] text-[#0F3D2E] font-heading font-extrabold px-5 min-h-[48px] rounded-xl hover:bg-[#ffe066] transition text-sm"
               >
                 Mengerti, Lanjutkan Petualangan
               </button>
