@@ -1,4 +1,12 @@
 import { Badge, ZoneData, RoomData } from '../types';
+import img_room_hutan_harmoni from '../assets/images/room_hutan_harmoni_1794113870103.jpg';
+import img_room_laut_karang from '../assets/images/room_laut_karang_1794113870846.jpg';
+import img_room_sawah_kebun from '../assets/images/room_sawah_kebun_1794113871188.jpg';
+import img_room_sungai_bersih from '../assets/images/room_sungai_bersih_1794113871226.jpg';
+import img_zone_keseimbangan_ekosistem from '../assets/images/zone_keseimbangan_ekosistem_1794244221728.jpg';
+import img_zone_padang_rumput from '../assets/images/zone_padang_rumput_1794244189815.jpg';
+import img_zone_pelestarian_lingkungan from '../assets/images/zone_pelestarian_lingkungan_1794244190564.jpg';
+import img_zone_rantai_makanan from '../assets/images/zone_rantai_makanan_1794244222145.jpg';
 
 export const MUSEUM_ZONES: ZoneData[] = [
   // 1. Hutan
@@ -9,7 +17,7 @@ export const MUSEUM_ZONES: ZoneData[] = [
     theme: 'Ekosistem Hutan Hujan Tropis',
     tagline: 'Pohon-pohon rimbun dengan kanopi raksasa, tempat berteduh aneka satwa liar.',
     curriculumTopic: 'Produsen Hutan, Herbivora, Karnivora, dan Dekomposer Serasah',
-    bgImage: '/src/assets/images/room_hutan_harmoni_1794113870103.jpg',
+    bgImage: img_room_hutan_harmoni,
     accentColor: '#1B5E3F',
     portalGlow: 'from-emerald-500 to-green-700',
     portalIcon: '🌲',
@@ -164,7 +172,7 @@ export const MUSEUM_ZONES: ZoneData[] = [
     theme: 'Ekosistem Sabana Tropis',
     tagline: 'Hamparan rumput emas dengan pohon akasia dan satwa perumput.',
     curriculumTopic: 'Interaksi Padang Rumput Baluran Jawa Timur: Produsen Rumput, Banteng, Belalang, dan Predator',
-    bgImage: '/src/assets/images/zone_padang_rumput_1794244189815.jpg',
+    bgImage: img_zone_padang_rumput,
     accentColor: '#8BC34A',
     portalGlow: 'from-lime-500 to-amber-600',
     portalIcon: '🌾',
@@ -338,7 +346,7 @@ export const MUSEUM_ZONES: ZoneData[] = [
     theme: 'Ekosistem Perairan Tawar',
     tagline: 'Aliran air jernih dan danau tenang dengan kehidupan air yang kaya.',
     curriculumTopic: 'Organisme Air Tawar, Komponen Abiotik Jernih, dan Bioindikator Capung',
-    bgImage: '/src/assets/images/room_sungai_bersih_1794113871226.jpg',
+    bgImage: img_room_sungai_bersih,
     accentColor: '#1C5FC4',
     portalGlow: 'from-blue-500 to-cyan-600',
     portalIcon: '💧',
@@ -474,7 +482,7 @@ export const MUSEUM_ZONES: ZoneData[] = [
     theme: 'Ekosistem Terumbu Karang',
     tagline: 'Surga warna-warni karang dan ikan hias di laut dangkal tropis.',
     curriculumTopic: 'Terumbu Karang Hewan Hidup, Simbiosis Ikan Badut, Bahaya Plastik bagi Penyu',
-    bgImage: '/src/assets/images/room_laut_karang_1794113870846.jpg',
+    bgImage: img_room_laut_karang,
     accentColor: '#0F766E',
     portalGlow: 'from-teal-500 to-blue-700',
     portalIcon: '🪸',
@@ -591,7 +599,7 @@ export const MUSEUM_ZONES: ZoneData[] = [
     theme: 'Aliran Energi Makanan',
     tagline: 'Perpindahan energi kehidupan dari produsen, konsumen, hingga pengurai.',
     curriculumTopic: 'Arah Panah Rantai Makanan (Dimakan → Memakan) dan Jaring-jaring Makanan',
-    bgImage: '/src/assets/images/zone_rantai_makanan_1794244222145.jpg',
+    bgImage: img_zone_rantai_makanan,
     accentColor: '#E68A00',
     portalGlow: 'from-amber-500 to-orange-600',
     portalIcon: '🔗',
@@ -708,7 +716,7 @@ export const MUSEUM_ZONES: ZoneData[] = [
     theme: 'Harmoni & Dinamika Populasi',
     tagline: 'Melihat interaksi sebab-akibat ketika satu populasi bertambah atau berkurang.',
     curriculumTopic: 'Simulasi Keseimbangan Alam, Dampak Perburuan Predator, dan Pemulihan Ekosistem',
-    bgImage: '/src/assets/images/zone_keseimbangan_ekosistem_1794244221728.jpg',
+    bgImage: img_zone_keseimbangan_ekosistem,
     accentColor: '#1B5E3F',
     portalGlow: 'from-green-600 to-emerald-800',
     portalIcon: '⚖️',
@@ -806,7 +814,7 @@ export const MUSEUM_ZONES: ZoneData[] = [
     theme: 'Sawah, Kebun, dan Kolam',
     tagline: 'Harmoni ekosistem pertanian yang dirawat oleh manusia untuk kebutuhan pangan.',
     curriculumTopic: 'Perbedaan Ekosistem Alami dan Buatan, Hama Sawah, dan Predator Pembasmi Alami',
-    bgImage: '/src/assets/images/room_sawah_kebun_1794113871188.jpg',
+    bgImage: img_room_sawah_kebun,
     accentColor: '#D45014',
     portalGlow: 'from-orange-500 to-amber-700',
     portalIcon: '🏡',
@@ -914,7 +922,7 @@ export const MUSEUM_ZONES: ZoneData[] = [
     theme: 'Aksi Nyata Sahabat Bumi',
     tagline: 'Memilah sampah, menanam pohon penghijauan, dan merawat kelestarian alam.',
     curriculumTopic: 'Upaya Manusia Menjaga Keseimbangan Ekosistem: Pemilahan Sampah, Reboisasi, Hemat Air',
-    bgImage: '/src/assets/images/zone_pelestarian_lingkungan_1794244190564.jpg',
+    bgImage: img_zone_pelestarian_lingkungan,
     accentColor: '#1B5E3F',
     portalGlow: 'from-emerald-500 to-teal-700',
     portalIcon: '🌱',

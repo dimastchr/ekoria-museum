@@ -20,6 +20,7 @@ import {
 import { StudentProgress, StudentProfile, ZoneId, ViewState } from '../../types';
 import { MUSEUM_ZONES, MUSEUM_BADGES } from '../../data/museumZonesData';
 import { EkoHeart, EkoZoneIcon, EkoLogoIcon } from '../common/EkoIcons';
+import { SoundToggle } from '../common/SoundToggle';
 import naraAvatar from '../../assets/images/avatar_nara_explorer_1794244206279.jpg';
 import oziAvatar from '../../assets/images/avatar_ozi_robot_1794244205679.jpg';
 
@@ -196,6 +197,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             >
               <span>{progress.postTestCompleted ? `Tes Akhir: ${progress.postTestScore}%` : 'Tes Akhir'}</span>
             </button>
+
+            <SoundToggle variant="light" />
 
             <button 
               onClick={onOpenOzi}

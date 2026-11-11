@@ -25,10 +25,7 @@ export const TeacherLoginModal: React.FC<TeacherLoginModalProps> = ({
     e.preventDefault();
     setErrorMsg('');
 
-    const profiles = StorageService.getProfiles();
-    const teacherProfile = profiles.find(
-      (p) => p.role === 'teacher' && p.username.toLowerCase() === username.trim().toLowerCase() && p.pin === pin.trim()
-    );
+    const teacherProfile = StorageService.authenticate(username, pin, 'teacher');
 
     if (teacherProfile) {
       audioManager.playSuccessChime();
@@ -37,7 +34,7 @@ export const TeacherLoginModal: React.FC<TeacherLoginModalProps> = ({
       onClose();
     } else {
       audioManager.playErrorSound();
-      setErrorMsg('PIN atau nama akun guru belum sesuai. Pastikan menggunakan PIN: 9999');
+      setErrorMsg('Nama pengguna atau PIN guru belum sesuai. Pastikan menggunakan PIN: 9999');
     }
   };
 

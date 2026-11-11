@@ -29,33 +29,87 @@ import {
 } from './types';
 import { StorageService } from './services/storageService';
 import { audioManager } from './utils/audioManager';
+import { SoundToggle } from './components/common/SoundToggle';
+
+/** Empty progress used only while nobody is logged in (never saved). */
+const EMPTY_PROGRESS: StudentProgress = {
+  studentId: 'guest',
+  username: '',
+  className: '',
+  hearts: 4,
+  lastVisitedZone: 'hutan',
+  completedRooms: [],
+  roomProgress: {},
+  totalXP: 0,
+  totalStars: 0,
+  badges: [],
+  hiddenFound: [],
+  discoveredOrganisms: [],
+  journalEntries: [],
+  preTestCompleted: false,
+  preTestScore: 0,
+  postTestCompleted: false,
+  postTestScore: 0,
+  reflectionNotes: '',
+  quizScores: {},
+  timeSpentMinutes: 0,
+  lastActive: new Date(0).toISOString(),
+  syncStatus: 'synced'
+};
+
+/** Views that can be opened without an account (everything else needs a login). */
+const PUBLIC_VIEWS: ViewState[] = ['landing'];
 
 export default function App() {
   const [activeUser, setActiveUser] = useState<StudentProfile | null>(() => StorageService.getActiveUser());
   const [progress, setProgress] = useState<StudentProgress>(() => {
     const user = StorageService.getActiveUser();
-    return StorageService.getProgress(user?.studentId || 'std-5a-01');
+    return user ? StorageService.getProgress(user.studentId) : EMPTY_PROGRESS;
   });
 
-  const [currentView, setCurrentView] = useState<ViewState>('landing');
+  const [currentView, setCurrentViewRaw] = useState<ViewState>('landing');
   const [activeZoneId, setActiveZoneId] = useState<ZoneId>('hutan');
 
-  // Interactive modals
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  // Interactive modals. With nobody logged in, the login page opens first.
+  const [isLoginOpen, setIsLoginOpen] = useState(() => !StorageService.getActiveUser());
   const [isTeacherLoginOpen, setIsTeacherLoginOpen] = useState(false);
   const [isOziOpen, setIsOziOpen] = useState(false);
   const [oziQuery, setOziQuery] = useState<string | undefined>(undefined);
 
-  // Sync progress state when activeUser changes
+  // Guard: the museum can only be used after registering and logging in
+  const setCurrentView = (view: ViewState) => {
+    if (!activeUser && !PUBLIC_VIEWS.includes(view)) {
+      setCurrentViewRaw('landing');
+      setIsLoginOpen(true);
+      return;
+    }
+    setCurrentViewRaw(view);
+  };
+
+  // Sync progress state when activeUser changes; logging out returns to the login page
   useEffect(() => {
     if (activeUser) {
       const p = StorageService.getProgress(activeUser.studentId);
       setProgress(p);
+    } else {
+      setProgress(EMPTY_PROGRESS);
+      setCurrentViewRaw('landing');
     }
   }, [activeUser]);
 
+  const handleLogout = () => {
+    audioManager.playClick();
+    audioManager.stopSpeaking();
+    audioManager.stopAmbient();
+    StorageService.setActiveUser(null);
+    setActiveUser(null);
+    setCurrentViewRaw('landing');
+    setIsLoginOpen(true);
+  };
+
   // Update progress helper
   const handleUpdateProgress = (newValues: Partial<StudentProgress>) => {
+    if (!activeUser) return;
     const updated: StudentProgress = {
       ...progress,
       ...newValues
@@ -131,43 +185,38 @@ export default function App() {
   };
 
   const currentZoneData = MUSEUM_ZONES.find(z => z.id === activeZoneId) || MUSEUM_ZONES[0];
+  // Nothing but the landing/login page renders until someone is logged in
+  const view: ViewState = activeUser ? currentView : 'landing';
 
   return (
     <div className="min-h-screen bg-[#F6F1E3] text-[#0F3D2E] font-sans selection:bg-[#F5C518] selection:text-[#0F3D2E]">
       
       {/* 1. LANDING PAGE */}
-      {currentView === 'landing' && (
+      {view === 'landing' && (
         <LandingPage
           onStartExploration={() => setCurrentView('dashboard')}
           onOpenLogin={() => setIsLoginOpen(true)}
           onOpenTeacherPortal={() => setIsTeacherLoginOpen(true)}
           onOpenOzi={() => handleOpenOzi()}
+          studentName={activeUser ? activeUser.fullName.split(' ')[0] : undefined}
         />
       )}
 
       {/* 2. STUDENT DASHBOARD */}
-      {currentView === 'dashboard' && (
+      {view === 'dashboard' && (
         <StudentDashboard
           progress={progress}
-          profile={activeUser || {
-            studentId: 'std-5a-01',
-            username: progress.username || 'penjelajah_cilik',
-            fullName: progress.username || 'Nara Penjelajah',
-            className: progress.className || 'Kelas 5 SD',
-            avatar: 'nara',
-            role: 'student',
-            pin: '1234'
-          }}
-          currentView={currentView}
-          onNavigate={(view) => setCurrentView(view)}
+          profile={activeUser!}
+          currentView={view}
+          onNavigate={(next) => setCurrentView(next)}
           onSelectZone={handleSelectZone}
-          onLogout={() => setCurrentView('landing')}
+          onLogout={handleLogout}
           onOpenOzi={() => handleOpenOzi()}
         />
       )}
 
       {/* 3. MUSEUM HUB (CENTRAL HALL) */}
-      {currentView === 'museum-hub' && (
+      {view === 'museum-hub' && (
         <MuseumHub
           progress={progress}
           onSelectZone={handleSelectZone}
@@ -178,19 +227,11 @@ export default function App() {
       )}
 
       {/* 4. ZONE PANORAMIC VIEW */}
-      {currentView === 'zone-view' && (
+      {view === 'zone-view' && (
         <ZoneView
           zoneId={activeZoneId}
           progress={progress}
-          profile={activeUser || {
-            studentId: 'std-5a-01',
-            username: progress.username || 'nara',
-            fullName: progress.username || 'Nara',
-            className: progress.className || 'Kelas 5 SD',
-            avatar: 'nara',
-            role: 'student',
-            pin: '1234'
-          }}
+          profile={activeUser!}
           onBackToHub={() => setCurrentView('museum-hub')}
           onOpenOzi={() => handleOpenOzi()}
           onSaveToJournal={handleSaveToJournal}
@@ -204,7 +245,7 @@ export default function App() {
       )}
 
       {/* 5. EXPLORER JOURNAL */}
-      {currentView === 'journal' && (
+      {view === 'journal' && (
         <ExplorerJournal
           progress={progress}
           onBack={() => setCurrentView('dashboard')}
@@ -213,16 +254,16 @@ export default function App() {
       )}
 
       {/* 6. ENCYCLOPEDIA */}
-      {currentView === 'encyclopedia' && (
+      {view === 'encyclopedia' && (
         <EncyclopediaModal
           onBack={() => setCurrentView('dashboard')}
         />
       )}
 
       {/* 7. QUIZ CENTER (Pre-Test, Post-Test, and Zone Quizzes) */}
-      {(currentView === 'quiz' || currentView === 'pretest' || currentView === 'posttest') && (
+      {(view === 'quiz' || view === 'pretest' || view === 'posttest') && (
         <QuizCenter
-          initialMode={currentView === 'pretest' ? 'pretest' : currentView === 'posttest' ? 'posttest' : 'zone'}
+          initialMode={view === 'pretest' ? 'pretest' : view === 'posttest' ? 'posttest' : 'zone'}
           initialZoneId={activeZoneId}
           progress={progress}
           onBack={() => setCurrentView('dashboard')}
@@ -255,24 +296,16 @@ export default function App() {
       )}
 
       {/* 8. ACHIEVEMENTS & CERTIFICATE */}
-      {(currentView === 'achievements' || currentView === 'certificate') && (
+      {(view === 'achievements' || view === 'certificate') && (
         <AchievementsView
           progress={progress}
-          profile={activeUser || {
-            studentId: 'std-5a-01',
-            username: progress.username || 'Nara Penjelajah',
-            fullName: progress.username || 'Nara Penjelajah',
-            className: progress.className || 'Kelas 5 SD',
-            avatar: 'nara',
-            role: 'student',
-            pin: '1234'
-          }}
+          profile={activeUser!}
           onBack={() => setCurrentView('dashboard')}
         />
       )}
 
       {/* 9. FOOD CHAIN BUILDER (Zone 5 Interactive) */}
-      {currentView === 'food-chain' && (
+      {view === 'food-chain' && (
         <div className="p-4 md:p-8 max-w-5xl mx-auto">
           <FoodChainBuilder
             roomOrganisms={currentZoneData.organisms}
@@ -293,7 +326,7 @@ export default function App() {
       )}
 
       {/* 10. ECOSYSTEM SIMULATION (Zone 6 Interactive) */}
-      {currentView === 'simulation' && (
+      {view === 'simulation' && (
         <div className="p-4 md:p-8 max-w-6xl mx-auto">
           <EcosystemSimulation
             onBack={() => setCurrentView('zone-view')}
@@ -311,7 +344,7 @@ export default function App() {
       )}
 
       {/* 11. DECOMPOSER LAB (Zone 1 Interactive) */}
-      {currentView === 'decomposer' && (
+      {view === 'decomposer' && (
         <div className="p-4 md:p-8 max-w-5xl mx-auto">
           <DecomposerLab
             onBack={() => setCurrentView('zone-view')}
@@ -329,7 +362,7 @@ export default function App() {
       )}
 
       {/* 12. TRASH SORTING & GREEN ACTIONS (Zone 8 Interactive) */}
-      {currentView === 'trash-sorting' && (
+      {view === 'trash-sorting' && (
         <TrashSortingActivity
           onBack={() => setCurrentView('zone-view')}
           onRewardXP={(xp) => {
@@ -345,10 +378,17 @@ export default function App() {
       )}
 
       {/* 13. TEACHER DASHBOARD */}
-      {currentView === 'teacher-dashboard' && (
+      {view === 'teacher-dashboard' && (
         <TeacherDashboard
-          onBack={() => setCurrentView('dashboard')}
+          onBack={() => setCurrentView('landing')}
         />
+      )}
+
+      {/* GLOBAL SOUND SWITCH for views that have no sound button in their own header */}
+      {!['landing', 'dashboard', 'museum-hub', 'zone-view'].includes(view) && (
+        <div className="fixed bottom-4 left-4 z-40 shadow-lg rounded-xl">
+          <SoundToggle variant="light" showLabel />
+        </div>
       )}
 
       {/* GLOBAL MODALS */}
@@ -363,12 +403,18 @@ export default function App() {
         <LoginModal
           onClose={() => setIsLoginOpen(false)}
           activeUser={activeUser}
+          onOpenTeacherLogin={() => setIsTeacherLoginOpen(true)}
           onUserChange={(newUser) => {
             setActiveUser(newUser);
             if (newUser) {
               const p = StorageService.getProgress(newUser.studentId);
               setProgress(p);
-              setCurrentView('dashboard');
+              setCurrentViewRaw(newUser.role === 'teacher' ? 'teacher-dashboard' : 'dashboard');
+            } else {
+              audioManager.stopSpeaking();
+              audioManager.stopAmbient();
+              setCurrentViewRaw('landing');
+              setIsLoginOpen(true);
             }
           }}
           onResetProgress={() => {
@@ -388,7 +434,8 @@ export default function App() {
           onSuccess={(teacher) => {
             setActiveUser(teacher);
             setIsTeacherLoginOpen(false);
-            setCurrentView('teacher-dashboard');
+            setIsLoginOpen(false);
+            setCurrentViewRaw('teacher-dashboard');
           }}
         />
       )}

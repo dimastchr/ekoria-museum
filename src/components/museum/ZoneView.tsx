@@ -21,6 +21,7 @@ import { ZoneId, ZoneData, Organism, AbioticFactor, StudentProgress, StudentProf
 import { MUSEUM_ZONES } from '../../data/museumZonesData';
 import { audioManager } from '../../utils/audioManager';
 import { ObjectDetailModal } from './ObjectDetailModal';
+import { SoundToggle } from '../common/SoundToggle';
 import { EkoHeart, EkoBiotaIcon } from '../common/EkoIcons';
 import naraAvatar from '../../assets/images/avatar_nara_explorer_1794244206279.jpg';
 import oziAvatar from '../../assets/images/avatar_ozi_robot_1794244205679.jpg';
@@ -231,6 +232,8 @@ export const ZoneView: React.FC<ZoneViewProps> = ({
               <span>Aksi Pelestarian</span>
             </button>
           )}
+
+          <SoundToggle variant="dark" />
 
           <button
             onClick={onOpenOzi}

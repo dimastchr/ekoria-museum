@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, Sparkles, Volume2, VolumeX, RotateCcw } from 'lucide-react';
+import { X, Send, Sparkles, RotateCcw } from 'lucide-react';
 import { audioManager } from '../../utils/audioManager';
-import { getOfflineEcoBotAnswer } from '../../data/offlineEcoBotKnowledge';
+import { findOfflineEcoBotAnswer } from '../../data/offlineEcoBotKnowledge';
+import { SoundToggle } from '../common/SoundToggle';
 import oziAvatar from '../../assets/images/avatar_ozi_robot_1794244205679.jpg';
 import naraAvatar from '../../assets/images/avatar_nara_explorer_1794244206279.jpg';
 
@@ -10,7 +11,11 @@ interface Message {
   sender: 'ozi' | 'student';
   text: string;
   timestamp: string;
+  /** Greeting / system lines are not sent to Gemini as conversation history. */
+  isSystem?: boolean;
 }
+
+const OFFLINE_PREFIX = 'Maaf, Ozi sedang tidak tersambung ke internet, jadi Ozi belum bisa menjawab dengan lengkap.';
 
 interface EcoBotModalProps {
   onClose: () => void;
@@ -32,12 +37,12 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
       id: 'm-1',
       sender: 'ozi',
       text: 'Halo, penjelajah cilik! Aku Ozi, robot pemandu sains IPAS untukmu. Tanyakan apa saja tentang ekosistem, rantai makanan, atau makhluk hidup di alam, ya! 🌱 Apa yang ingin kamu ketahui hari ini?',
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isSystem: true
     }
   ]);
   const [inputText, setInputText] = useState(initialQuery || '');
   const [isLoading, setIsLoading] = useState(false);
-  const [autoSpeech, setAutoSpeech] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -48,10 +53,14 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
     scrollToBottom();
   }, [messages, isLoading]);
 
+  const sentInitialRef = useRef(false);
   useEffect(() => {
-    if (initialQuery) {
+    if (initialQuery && !sentInitialRef.current) {
+      sentInitialRef.current = true;
       handleSendMessage(initialQuery);
     }
+    // Stop Ozi's voice when the chat closes
+    return () => audioManager.stopSpeaking();
   }, []);
 
   const handleSendMessage = async (queryText?: string) => {
@@ -66,44 +75,65 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
+    // Short conversation history (without greeting/system lines) so Ozi understands follow-ups
+    const history = messages
+      .filter((m) => !m.isSystem)
+      .slice(-8)
+      .map((m) => ({ role: m.sender === 'student' ? 'user' : 'model', text: m.text }));
+
     setMessages((prev) => [...prev, userMsg]);
     setInputText('');
     setIsLoading(true);
 
-    try {
-      let botReply: string | null = null;
+    let botReply: string | null = null;
+    let isOfflineReply = false;
 
-      // Call Server-Side Express API (/api/ecobot/chat)
+    try {
+      // Call Server-Side Express API (/api/ecobot/chat) — the Gemini key stays on the server
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), 25000);
       try {
         const response = await fetch('/api/ecobot/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: textToSend })
+          body: JSON.stringify({ message: textToSend, history }),
+          signal: controller.signal
         });
-        if (response.ok) {
-          const data = await response.json();
-          botReply = data.reply;
+        const data = await response.json().catch(() => null);
+        if (data && typeof data.reply === 'string' && data.reply.trim()) {
+          // Gemini answer, or the server's own friendly message (e.g. "pelan-pelan" rate limit)
+          botReply = data.reply.trim();
+        } else if (data?.fallbackNeeded) {
+          console.warn('Ozi server could not reach Gemini:', data.reason || data.error);
         }
       } catch (err) {
-        console.warn('Network call failed, falling back to offline Ozi knowledge:', err);
+        console.warn('Ozi server unreachable:', err);
+      } finally {
+        window.clearTimeout(timer);
       }
 
-      // If backend offline, fallback to offline knowledge
+      // Offline fallback only when the API truly failed — and say so honestly
       if (!botReply) {
-        botReply = getOfflineEcoBotAnswer(textToSend);
+        isOfflineReply = true;
+        const match = findOfflineEcoBotAnswer(textToSend);
+        botReply = match
+          ? `${OFFLINE_PREFIX} Tapi Ozi punya catatan yang mirip dengan pertanyaanmu: ${match}`
+          : `${OFFLINE_PREFIX} Coba tanyakan lagi sebentar lagi, atau tanyakan kepada gurumu, ya! 🌱`;
       }
 
       const botMsg: Message = {
         id: `ozi-${Date.now()}`,
         sender: 'ozi',
         text: botReply,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        // Offline notices are not real conversation turns for Gemini
+        isSystem: isOfflineReply
       };
 
       setMessages((prev) => [...prev, botMsg]);
 
-      // Speak answer with Ozi narration
-      if (autoSpeech) {
+      // Speak the answer with Ozi's voice (audioManager stays silent when sound is muted)
+      if (!audioManager.getIsMuted()) {
         audioManager.speak(botReply);
       }
     } catch (err) {
@@ -121,7 +151,8 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
         id: `m-${Date.now()}`,
         sender: 'ozi',
         text: 'Percakapan dimulai lagi dari awal! Aku Ozi, siap menjawab pertanyaan tentang materi IPAS Bab 3: Ekosistem. Ayo, tanyakan apa saja!',
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isSystem: true
       }
     ]);
   };
@@ -157,15 +188,7 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
           </div>
 
           <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => setAutoSpeech(!autoSpeech)}
-              className={`p-2 rounded-xl transition ${
-                autoSpeech ? 'bg-[#1B5E3F] text-[#F5C518]' : 'text-gray-400 hover:text-white'
-              }`}
-              title={autoSpeech ? 'Suara Ozi Menyala' : 'Suara Ozi Mati'}
-            >
-              {autoSpeech ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-            </button>
+            <SoundToggle variant="dark" />
 
             <button
               onClick={handleResetChat}
@@ -176,7 +199,10 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
             </button>
 
             <button
-              onClick={onClose}
+              onClick={() => {
+                audioManager.stopSpeaking();
+                onClose();
+              }}
               className="p-2 rounded-xl hover:bg-rose-900/60 text-white transition ml-1"
               title="Tutup Obrolan"
             >

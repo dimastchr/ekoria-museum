@@ -1,12 +1,17 @@
 /**
  * Centralized Audio & Speech Manager for EkoRia Museum
  * Provides:
- * 1. Web Speech API narration in Bahasa Indonesia (rate: 0.9, pitch: 1.1)
+ * 1. Narration with Gemini TTS (cheerful child voice) fetched from the server
+ *    endpoint POST /api/tts. No device speechSynthesis fallback: if TTS fails,
+ *    narration stays silent and the error is logged to the console.
  * 2. Auto-narration toggle and active text tracking
- * 3. Fallback notification if id-ID voice is missing without throwing error
+ * 3. One global mute switch (persisted in localStorage) that silences
+ *    narration, Ozi auto-speech, ambience and sound effects at once
  * 4. Procedural Web Audio API soundscapes for 4 habitats (Hutan, Sungai, Laut, Sawah)
  * 5. Light cheerful sound effects for children (Success chime, discovery, click, cheer)
  */
+
+const STORAGE_KEY_MUTED = 'ekoria_muted_v1';
 
 type HabitatType = 'hutan' | 'sungai' | 'laut' | 'sawah' | 'padang' | 'alam' | 'none';
 
@@ -23,19 +28,28 @@ class MuseumAudioManager {
   private volume: number = 0.85;
   private isSpeaking: boolean = false;
   private activeSpeakingText: string = '';
-  private currentUtterance: SpeechSynthesisUtterance | null = null;
   private speechListeners: Array<(speaking: boolean, text?: string) => void> = [];
-  private voicesLoaded: boolean = false;
+  private muteListeners: Array<(muted: boolean) => void> = [];
+
+  // Gemini TTS playback state
+  private currentAudio: HTMLAudioElement | null = null;
+  private currentAbort: AbortController | null = null;
+  private currentOnEnd: (() => void) | null = null;
+  private speechToken: number = 0;
+  private ttsUrlCache: Map<string, string> = new Map();
 
   constructor() {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        this.voicesLoaded = true;
-      };
-      // Load saved auto-narrate preference
-      const savedAuto = localStorage.getItem('ekoria_auto_narrate');
-      if (savedAuto !== null) {
-        this.autoNarrate = savedAuto === 'true';
+    if (typeof window !== 'undefined') {
+      try {
+        // Load saved auto-narrate preference
+        const savedAuto = localStorage.getItem('ekoria_auto_narrate');
+        if (savedAuto !== null) {
+          this.autoNarrate = savedAuto === 'true';
+        }
+        // Load saved global mute preference
+        this.isMuted = localStorage.getItem(STORAGE_KEY_MUTED) === 'true';
+      } catch {
+        // localStorage may be unavailable (private mode); keep defaults
       }
     }
   }
@@ -67,6 +81,7 @@ class MuseumAudioManager {
 
   public setVolume(vol: number) {
     this.volume = Math.max(0, Math.min(1, vol));
+    if (this.currentAudio) this.currentAudio.volume = this.volume;
     if (this.masterGain && this.audioCtx) {
       this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : this.volume, this.audioCtx.currentTime);
     }
@@ -77,14 +92,35 @@ class MuseumAudioManager {
   }
 
   public toggleMute(): boolean {
-    this.isMuted = !this.isMuted;
-    if (this.masterGain && this.audioCtx) {
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : this.volume, this.audioCtx.currentTime);
-    }
-    if (this.isMuted && this.isSpeaking) {
-      this.stopNarration();
-    }
+    this.setMuted(!this.isMuted);
     return this.isMuted;
+  }
+
+  public setMuted(muted: boolean) {
+    this.isMuted = muted;
+    try {
+      localStorage.setItem(STORAGE_KEY_MUTED, String(muted));
+    } catch {}
+    if (this.masterGain && this.audioCtx) {
+      // Silences ambience + SFX immediately (both run through masterGain)
+      this.masterGain.gain.cancelScheduledValues(this.audioCtx.currentTime);
+      this.masterGain.gain.setValueAtTime(muted ? 0 : this.volume, this.audioCtx.currentTime);
+    }
+    if (muted) {
+      // Stop any narration / Ozi speech right now, including a TTS request still loading
+      this.stopNarration();
+    } else {
+      this.initAudio();
+    }
+    this.muteListeners.forEach((fn) => fn(muted));
+  }
+
+  public addMuteListener(fn: (muted: boolean) => void) {
+    this.muteListeners.push(fn);
+  }
+
+  public removeMuteListener(fn: (muted: boolean) => void) {
+    this.muteListeners = this.muteListeners.filter((l) => l !== fn);
   }
 
   public getIsMuted(): boolean {
@@ -104,10 +140,9 @@ class MuseumAudioManager {
     return this.autoNarrate;
   }
 
+  /** Kept for API compatibility: narration now uses Gemini TTS (always Indonesian). */
   public hasIndonesianVoice(): boolean {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return false;
-    const voices = window.speechSynthesis.getVoices();
-    return voices.some((v) => v.lang.toLowerCase().includes('id'));
+    return true;
   }
 
   // --- AMBIENT PROCEDURAL SOUNDSCAPES ---
@@ -426,109 +461,145 @@ class MuseumAudioManager {
     osc.stop(now + 0.28);
   }
 
-  // --- NARRATION SPEECH (NATURAL CHEERFUL INDONESIAN CHILD/MASCOT VOICE) ---
-  public speakNarration(text: string, onEnd?: () => void) {
-    if (this.isMuted) {
-      if (onEnd) onEnd();
-      return;
-    }
-
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      if (onEnd) onEnd();
-      return;
-    }
-
-    // Stop old narration immediately
-    window.speechSynthesis.cancel();
-
-    // Play cute mascot chime cue
-    this.playBirdChirp();
-
-    // Duck ambient sound slightly during narration
-    if (this.ambientGain && this.audioCtx) {
-      this.ambientGain.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
-    }
-
-    // Clean text & expand abbreviations for natural Indonesian speech
-    let cleanText = text
-      .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2702}-\u{27B0}\u{24C2}-\u{1F251}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '')
-      .replace(/→/g, ' dimakan oleh ')
-      .replace(/➔/g, ' dimakan oleh ')
-      .replace(/IPAS/gi, 'Ipas')
-      .replace(/SD/g, 'Sekolah Dasar')
-      .replace(/XP/gi, 'poin pengalaman')
-      .replace(/vs/gi, 'melawan')
+  // --- NARRATION SPEECH (GEMINI TTS, CHEERFUL CHILD VOICE) ---
+  private cleanForSpeech(text: string): string {
+    return text
+      .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{27BF}\u{24C2}-\u{1F251}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}\u{FE0F}\u{200D}]/gu, '')
+      .replace(/[→➔➜]/g, ' dimakan oleh ')
+      .replace(/\bIPAS\b/gi, 'Ipas')
+      .replace(/\bSD\b/g, 'Sekolah Dasar')
+      .replace(/\bXP\b/gi, 'poin pengalaman')
+      .replace(/\bvs\b/gi, 'melawan')
       .replace(/Bab 3/gi, 'Bab Tiga')
-      .replace(/\*/g, '')
+      .replace(/[*#_`]/g, '')
       .replace(/\n+/g, '. ')
+      .replace(/\s+/g, ' ')
       .trim();
+  }
 
+  private async fetchTtsUrl(cleanText: string, signal: AbortSignal): Promise<string> {
+    const cached = this.ttsUrlCache.get(cleanText);
+    if (cached) return cached;
+    const response = await fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: cleanText }),
+      signal
+    });
+    if (!response.ok) {
+      throw new Error(`TTS HTTP ${response.status}`);
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    this.ttsUrlCache.set(cleanText, url);
+    // Keep the browser-side cache small
+    if (this.ttsUrlCache.size > 60) {
+      const oldestKey = this.ttsUrlCache.keys().next().value;
+      if (oldestKey !== undefined) {
+        const oldUrl = this.ttsUrlCache.get(oldestKey);
+        if (oldUrl) URL.revokeObjectURL(oldUrl);
+        this.ttsUrlCache.delete(oldestKey);
+      }
+    }
+    return url;
+  }
+
+  private restoreAmbient() {
+    if (this.ambientGain && this.audioCtx) {
+      this.ambientGain.gain.setValueAtTime(0.2, this.audioCtx.currentTime);
+    }
+  }
+
+  private finishSpeech(token: number) {
+    if (token !== this.speechToken) return;
+    const onEnd = this.currentOnEnd;
+    this.currentOnEnd = null;
+    this.currentAudio = null;
+    this.currentAbort = null;
+    this.isSpeaking = false;
+    this.activeSpeakingText = '';
+    this.restoreAmbient();
+    this.notifySpeechListeners(false);
+    if (onEnd) onEnd();
+  }
+
+  public speakNarration(text: string, onEnd?: () => void) {
+    // Cancel whatever is playing or loading first
+    this.stopNarration();
+
+    if (this.isMuted || typeof window === 'undefined') {
+      if (onEnd) onEnd();
+      return;
+    }
+
+    const cleanText = this.cleanForSpeech(text);
     if (!cleanText) {
       if (onEnd) onEnd();
       return;
     }
 
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = 'id-ID';
-    utterance.rate = 0.95; // Lively, clear speed for elementary students
-    utterance.pitch = 1.25; // Cheerful, bright, cute mascot pitch
-
-    // Prioritize high-quality Indonesian female/child/natural voices
-    const voices = window.speechSynthesis.getVoices();
-    const indonesianVoices = voices.filter((v) => 
-      v.lang.toLowerCase().includes('id') || v.lang.toLowerCase().includes('ind')
-    );
-
-    const friendlyVoice =
-      indonesianVoices.find((v) =>
-        /gadis|indah|natural|female|wita|google|microsoft/i.test(v.name)
-      ) || indonesianVoices[0];
-
-    if (friendlyVoice) {
-      utterance.voice = friendlyVoice;
-    }
-
-    this.currentUtterance = utterance;
+    this.initAudio();
+    const token = ++this.speechToken;
+    const abort = new AbortController();
+    this.currentAbort = abort;
+    this.currentOnEnd = onEnd || null;
     this.isSpeaking = true;
     this.activeSpeakingText = text;
     this.notifySpeechListeners(true, text);
 
-    utterance.onend = () => {
-      this.isSpeaking = false;
-      this.activeSpeakingText = '';
-      this.currentUtterance = null;
-      if (this.ambientGain && this.audioCtx) {
-        this.ambientGain.gain.setValueAtTime(0.2, this.audioCtx.currentTime);
-      }
-      this.notifySpeechListeners(false);
-      if (onEnd) onEnd();
-    };
+    // Duck ambient sound during narration
+    if (this.ambientGain && this.audioCtx) {
+      this.ambientGain.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
+    }
 
-    utterance.onerror = () => {
-      this.isSpeaking = false;
-      this.activeSpeakingText = '';
-      this.currentUtterance = null;
-      if (this.ambientGain && this.audioCtx) {
-        this.ambientGain.gain.setValueAtTime(0.2, this.audioCtx.currentTime);
-      }
-      this.notifySpeechListeners(false);
-      if (onEnd) onEnd();
-    };
-
-    window.speechSynthesis.speak(utterance);
+    this.fetchTtsUrl(cleanText, abort.signal)
+      .then((url) => {
+        if (token !== this.speechToken || this.isMuted) return;
+        const audio = new Audio(url);
+        audio.volume = this.volume;
+        this.currentAudio = audio;
+        audio.onended = () => this.finishSpeech(token);
+        audio.onerror = () => {
+          console.warn('[EkoRia TTS] Audio playback error');
+          this.finishSpeech(token);
+        };
+        return audio.play().catch((err) => {
+          console.warn('[EkoRia TTS] Browser blocked or failed audio playback:', err);
+          this.finishSpeech(token);
+        });
+      })
+      .catch((err) => {
+        if (abort.signal.aborted) return;
+        // No device speechSynthesis fallback on purpose: stay silent
+        console.warn('[EkoRia TTS] Narration unavailable, staying silent:', err);
+        this.finishSpeech(token);
+      });
   }
 
   public stopNarration() {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
+    // Invalidate any pending request/playback
+    this.speechToken++;
+    if (this.currentAbort) {
+      try {
+        this.currentAbort.abort();
+      } catch {}
+      this.currentAbort = null;
     }
+    if (this.currentAudio) {
+      try {
+        this.currentAudio.onended = null;
+        this.currentAudio.onerror = null;
+        this.currentAudio.pause();
+        this.currentAudio.currentTime = 0;
+      } catch {}
+      this.currentAudio = null;
+    }
+    this.currentOnEnd = null;
+    const wasSpeaking = this.isSpeaking;
     this.isSpeaking = false;
     this.activeSpeakingText = '';
-    this.currentUtterance = null;
-    if (this.ambientGain && this.audioCtx) {
-      this.ambientGain.gain.setValueAtTime(0.2, this.audioCtx.currentTime);
-    }
-    this.notifySpeechListeners(false);
+    this.restoreAmbient();
+    if (wasSpeaking) this.notifySpeechListeners(false);
   }
 
   // Ergonomic aliases

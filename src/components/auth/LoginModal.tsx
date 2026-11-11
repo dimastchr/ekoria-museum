@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, LogIn, UserPlus, LogOut, KeyRound, User, Check, ShieldCheck, Sparkles } from 'lucide-react';
+import { X, LogIn, UserPlus, LogOut, CheckCircle2 } from 'lucide-react';
 import { StorageService } from '../../services/storageService';
 import { StudentProfile } from '../../types';
 import { audioManager } from '../../utils/audioManager';
@@ -9,17 +9,22 @@ interface LoginModalProps {
   activeUser: StudentProfile | null;
   onUserChange: (user: StudentProfile | null) => void;
   onResetProgress?: () => void;
+  /** Opens the teacher portal (teacher login stays separate from pupils). */
+  onOpenTeacherLogin?: () => void;
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({
   onClose,
   activeUser,
   onUserChange,
-  onResetProgress
+  onResetProgress,
+  onOpenTeacherLogin
 }) => {
-  const profiles = StorageService.getProfiles();
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+  // First visit on this device (no pupil accounts yet): start on the register form
+  const hasStudentAccounts = StorageService.getProfiles().some((p) => p.role === 'student' && p.username !== 'mode_demo');
+  const [mode, setMode] = useState<'login' | 'register'>(hasStudentAccounts ? 'login' : 'register');
   const [resetStep, setResetStep] = useState<number>(0);
+  const [successMsg, setSuccessMsg] = useState('');
 
   const [username, setUsername] = useState('');
   const [pin, setPin] = useState('');
@@ -41,10 +46,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+    setSuccessMsg('');
 
-    const found = profiles.find(
-      (p) => p.username.toLowerCase() === username.trim().toLowerCase() && p.pin === pin.trim()
-    );
+    const found = StorageService.authenticate(username, pin, 'student');
 
     if (found) {
       audioManager.playSuccessChime();
@@ -53,46 +57,41 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       onClose();
     } else {
       audioManager.playErrorSound();
-      setErrorMsg('Nama akun atau PIN belum cocok. Periksa kembali atau pilih nama di bawah ya!');
+      const isTeacher = StorageService.authenticate(username, pin, 'teacher');
+      setErrorMsg(
+        isTeacher
+          ? 'Ini akun guru. Silakan masuk lewat Portal Guru, ya!'
+          : 'Nama akun atau PIN belum cocok. Periksa lagi, ya! Belum punya akun? Daftar dulu.'
+      );
     }
   };
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+    setSuccessMsg('');
 
-    if (!username.trim() || !pin.trim() || !fullName.trim()) {
-      setErrorMsg('Harap isi semua kolom pendaftaran ya.');
+    const result = StorageService.registerStudent({ username, pin, fullName, className });
+    if (result.error || !result.profile) {
+      audioManager.playErrorSound();
+      setErrorMsg(result.error || 'Pendaftaran belum berhasil. Coba lagi, ya!');
       return;
     }
 
-    const existing = profiles.find((p) => p.username.toLowerCase() === username.trim().toLowerCase());
-    if (existing) {
-      setErrorMsg('Nama akun ini sudah dipakai, coba nama panggilan lain ya!');
-      return;
-    }
-
-    const newProfile: StudentProfile = {
-      studentId: `std-${Date.now().toString().slice(-4)}`,
-      username: username.trim().toLowerCase(),
-      pin: pin.trim(),
-      fullName: fullName.trim(),
-      className,
-      avatar: '🧑',
-      role: 'student'
-    };
-
+    // Registration does NOT log in automatically: the pupil now logs in with the new account
     audioManager.playSuccessChime();
-    StorageService.saveProfile(newProfile);
-    StorageService.setActiveUser(newProfile);
-    onUserChange(newProfile);
-    onClose();
+    setSuccessMsg(`Akun "${result.profile.username}" berhasil dibuat! Sekarang masuk dengan nama akun dan PIN-mu, ya.`);
+    setUsername(result.profile.username);
+    setPin('');
+    setFullName('');
+    setMode('login');
   };
 
-  const handleQuickSwitch = (p: StudentProfile) => {
+  const handleDemoMode = () => {
     audioManager.playClick();
-    StorageService.setActiveUser(p);
-    onUserChange(p);
+    const demo = StorageService.getOrCreateDemoProfile();
+    StorageService.setActiveUser(demo);
+    onUserChange(demo);
     onClose();
   };
 
@@ -166,7 +165,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     }}
                     className="min-h-[48px] w-full py-2.5 px-4 rounded-2xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-300 text-[#9C4221] font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-colors"
                   >
-                    <span>🔄 Mulai dari Awal (Ulang Petualangan)</span>
+                    <span>🔄 Mulai dari Awal (Ulangi Petualangan)</span>
                   </button>
                 )}
 
@@ -205,7 +204,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         onClick={handleStudentReset}
                         className="min-h-[44px] flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs cursor-pointer"
                       >
-                        Hapus & Mulai Baru
+                        Hapus dan Mulai Baru
                       </button>
                       <button
                         onClick={() => setResetStep(0)}
@@ -238,8 +237,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           /* Login or Register Form */
           <div className="py-5 space-y-4">
             {errorMsg && (
-              <div className="p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-300 text-rose-800 text-sm font-semibold">
+              <div role="alert" className="p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-300 text-rose-800 text-sm font-semibold">
                 {errorMsg}
+              </div>
+            )}
+
+            {successMsg && (
+              <div role="status" className="p-3.5 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-emerald-800 text-sm font-semibold flex items-start gap-2">
+                <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
+                <span>{successMsg}</span>
+              </div>
+            )}
+
+            {!successMsg && (
+              <div className="p-3 rounded-2xl bg-[#EAF7EF] border-2 border-[#1E7A50]/20 text-[#1E5E3F] text-sm font-semibold">
+                {mode === 'register'
+                  ? 'Langkah 1: Daftar dulu. Setelah itu, masuk dengan nama akun dan PIN-mu.'
+                  : 'Langkah 2: Masuk dengan nama akun dan PIN yang sudah kamu daftarkan.'}
               </div>
             )}
 
@@ -247,11 +261,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
                   <label className="block text-base font-bold text-[#1F2D3D] mb-1.5">
-                    Nama Akun (Username)
+                    Nama Akun
                   </label>
                   <input
                     type="text"
-                    placeholder="Contoh: budi5a"
+                    autoComplete="username"
+                    autoCapitalize="none"
+                    placeholder="Contoh: rina5a"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
@@ -265,6 +281,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   </label>
                   <input
                     type="password"
+                    inputMode="numeric"
+                    autoComplete="current-password"
                     maxLength={6}
                     placeholder="Contoh: 1234"
                     value={pin}
@@ -289,7 +307,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   </label>
                   <input
                     type="text"
-                    placeholder="Contoh: Budi Santoso"
+                    placeholder="Contoh: Rina Lestari"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
@@ -304,7 +322,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     </label>
                     <input
                       type="text"
-                      placeholder="budi5a"
+                      autoCapitalize="none"
+                      placeholder="rina5a"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
@@ -317,6 +336,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     </label>
                     <input
                       type="password"
+                      inputMode="numeric"
+                      autoComplete="new-password"
                       maxLength={6}
                       placeholder="1234"
                       value={pin}
@@ -356,41 +377,43 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 type="button"
                 onClick={() => {
                   setErrorMsg('');
+                  setSuccessMsg('');
                   setMode(mode === 'login' ? 'register' : 'login');
                 }}
                 className="text-base font-bold text-[#1E7A50] hover:underline cursor-pointer"
               >
-                {mode === 'login' ? 'Belum punya akun? Klik untuk daftar' : 'Sudah punya akun? Klik untuk masuk'}
+                {mode === 'login' ? 'Belum punya akun? Klik untuk mendaftar' : 'Sudah punya akun? Klik untuk masuk'}
               </button>
             </div>
           </div>
         )}
 
-        {/* Quick Demo Switcher */}
-        <div className="pt-4 border-t-2 border-slate-100">
-          <div className="text-sm font-bold text-[#334E68] mb-2.5">
-            Pilih Cepat Akun Contoh:
-          </div>
-          <div className="grid grid-cols-2 gap-2.5">
-            {profiles.map((p) => (
+        {/* Explicit, separate options (never used automatically) */}
+        {!activeUser && (
+          <div className="pt-4 border-t-2 border-slate-100 flex flex-col sm:flex-row gap-2.5">
+            {onOpenTeacherLogin && (
               <button
-                key={p.studentId}
-                onClick={() => handleQuickSwitch(p)}
-                className={`min-h-[50px] p-3 rounded-2xl border-2 text-left flex items-center gap-2.5 cursor-pointer transition-all ${
-                  activeUser?.studentId === p.studentId
-                    ? 'bg-[#EAF7EF] border-[#1E7A50] text-[#1E7A50] font-bold shadow-sm'
-                    : 'bg-[#F8FAF8] hover:bg-slate-100 border-slate-200 text-[#1F2D3D]'
-                }`}
+                type="button"
+                onClick={() => {
+                  audioManager.playClick();
+                  onClose();
+                  onOpenTeacherLogin();
+                }}
+                className="min-h-[44px] flex-1 py-2 px-3 rounded-2xl bg-amber-50 hover:bg-amber-100 border-2 border-amber-300 text-amber-900 font-bold text-sm cursor-pointer transition-colors"
               >
-                <span className="text-2xl">{p.avatar}</span>
-                <div className="min-w-0">
-                  <div className="font-bold text-sm truncate">{p.fullName.split(' ')[0]}</div>
-                  <div className="text-xs text-[#627D98] font-mono">PIN: {p.pin}</div>
-                </div>
+                👩‍🏫 Saya Guru (Portal Guru)
               </button>
-            ))}
+            )}
+            <button
+              type="button"
+              onClick={handleDemoMode}
+              className="min-h-[44px] flex-1 py-2 px-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-300 text-slate-600 font-bold text-sm cursor-pointer transition-colors"
+              title="Untuk juri atau tamu yang hanya ingin mencoba. Siswa tetap mendaftar dan masuk dengan akunnya sendiri."
+            >
+              🧭 Mode Demo (untuk juri/tamu)
+            </button>
           </div>
-        </div>
+        )}
 
       </div>
     </div>

@@ -1,4 +1,8 @@
 import { Badge, QuizQuestion, RoomData, ZoneData } from '../types';
+import img_room_hutan_harmoni from '../assets/images/room_hutan_harmoni_1794113870103.jpg';
+import img_room_laut_karang from '../assets/images/room_laut_karang_1794113870846.jpg';
+import img_room_sawah_kebun from '../assets/images/room_sawah_kebun_1794113871188.jpg';
+import img_room_sungai_bersih from '../assets/images/room_sungai_bersih_1794113871226.jpg';
 export { MUSEUM_ZONES, MUSEUM_ROOMS, MUSEUM_BADGES } from './museumZonesData';
 
 const LEGACY_ROOMS: RoomData[] = [
@@ -9,7 +13,7 @@ const LEGACY_ROOMS: RoomData[] = [
     theme: 'Ekosistem Hutan',
     tagline: 'Pohon rimbun tempat tinggal satwa liar.',
     curriculumTopic: 'Tumbuhan, Hewan, dan Pengurai di Hutan',
-    bgImage: '/src/assets/images/room_hutan_harmoni_1794113870103.jpg',
+    bgImage: img_room_hutan_harmoni,
     accentColor: '#1E7A50',
     ambientType: 'hutan',
     welcomeSpeech: 'Halo penjelajah! Selamat datang di Hutan. Di sini ada pohon tinggi, rusa, harimau, dan jamur. Yuk, cari tahu siapa yang membuat makanan dan siapa pemakannya!',
@@ -130,7 +134,7 @@ const LEGACY_ROOMS: RoomData[] = [
     theme: 'Ekosistem Air Tawar',
     tagline: 'Air jernih tempat ikan dan capung bermain.',
     curriculumTopic: 'Rantai Makanan Sungai dan Kebersihan Air',
-    bgImage: '/src/assets/images/room_sungai_bersih_1794113871226.jpg',
+    bgImage: img_room_sungai_bersih,
     accentColor: '#1C5FC4',
     ambientType: 'sungai',
     welcomeSpeech: 'Dengarkan suara gemericik air! Ini adalah ekosistem Sungai. Air yang jernih disukai ikan nila, capung, dan tumbuhan air.',
@@ -251,7 +255,7 @@ const LEGACY_ROOMS: RoomData[] = [
     theme: 'Ekosistem Terumbu Karang',
     tagline: 'Warna-warni terumbu karang dan ikan hias.',
     curriculumTopic: 'Terumbu Karang (Hewan) dan Hewan Laut',
-    bgImage: '/src/assets/images/room_laut_karang_1794113870846.jpg',
+    bgImage: img_room_laut_karang,
     accentColor: '#0D7377',
     ambientType: 'laut',
     welcomeSpeech: 'Ayo menyelam ke Laut! Tahukah kamu, terumbu karang yang indah ini sebenarnya dibentuk oleh hewan karang yang hidup berkelompok, bukan batu atau tumbuhan.',
@@ -372,7 +376,7 @@ const LEGACY_ROOMS: RoomData[] = [
     theme: 'Ekosistem Sawah',
     tagline: 'Hamparan padi hijau yang ditanam petani untuk menghasilkan beras.',
     curriculumTopic: 'Rantai Makanan Sawah dan Pembasmi Hama Alami',
-    bgImage: '/src/assets/images/room_sawah_kebun_1794113871188.jpg',
+    bgImage: img_room_sawah_kebun,
     accentColor: '#D45014',
     ambientType: 'sawah',
     welcomeSpeech: 'Selamat datang di Sawah dan Kebun! Padi menghasilkan beras yang kita makan setiap hari. Di sini ada belalang, katak, ular, dan burung hantu.',

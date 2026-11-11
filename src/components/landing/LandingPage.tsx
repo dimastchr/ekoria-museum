@@ -1,6 +1,10 @@
 import React from 'react';
 import { Sparkles, ArrowRight, Compass, BookOpen, ShieldCheck, Award, Heart, CheckCircle2, Trees, Droplets, Fish, Sun, Layers } from 'lucide-react';
 import { audioManager } from '../../utils/audioManager';
+import { SoundToggle } from '../common/SoundToggle';
+import img_avatar_nara_explorer from '../../assets/images/avatar_nara_explorer_1794244206279.jpg';
+import img_avatar_ozi_robot from '../../assets/images/avatar_ozi_robot_1794244205679.jpg';
+import img_ecoria_hero_forest_museum from '../../assets/images/ecoria_hero_forest_museum_1794244173997.jpg';
 
 interface LandingPageProps {
   onStartExploration: () => void;
@@ -20,6 +24,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   studentName
 }) => {
   const handleTeacherPortal = onOpenTeacherPortal || onOpenTeacherLogin || onOpenLogin;
+  const handleOpenOzi = () => {
+    audioManager.playClick();
+    if (onOpenOzi) onOpenOzi();
+  };
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -88,6 +96,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2.5">
+            <SoundToggle variant="light" className="rounded-full" />
             <button
               onClick={() => {
                 audioManager.playClick();
@@ -121,7 +130,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           
           {/* Background Illustration */}
           <img
-            src="/src/assets/images/ecoria_hero_forest_museum_1794244173997.jpg"
+            src={img_ecoria_hero_forest_museum}
             alt="Museum Sains Virtual EkoRia - Hutan Tropis dan Karakter Nara & Ozi"
             className="absolute inset-0 w-full h-full object-cover object-center"
           />
@@ -191,18 +200,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           </div>
 
-          {/* Ozi Mascot Quick Callout badge in corner */}
-          <div className="hidden lg:flex absolute top-6 right-6 bg-white/90 backdrop-blur-md rounded-2xl p-3 border border-white shadow-lg items-center gap-3 text-slate-800 animate-float">
+          {/* Ozi Mascot Quick Callout badge in corner (tap to open Ozi's guide/chat) */}
+          <button
+            type="button"
+            onClick={handleOpenOzi}
+            aria-label="Ketuk Ozi untuk membuka obrolan pemandu"
+            title="Ketuk Ozi untuk bertanya"
+            className="flex absolute top-4 right-4 sm:top-6 sm:right-6 z-20 bg-white/90 hover:bg-white backdrop-blur-md rounded-2xl p-2 sm:p-3 border border-white shadow-lg items-center gap-3 text-slate-800 animate-float cursor-pointer focus:outline-none focus:ring-4 focus:ring-[#F5C518]"
+          >
             <img
-              src="/src/assets/images/avatar_ozi_robot_1794244205679.jpg"
+              src={img_avatar_ozi_robot}
               alt="Ozi Robot AI"
-              className="w-12 h-12 rounded-full border-2 border-[#F5C518]"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-[#F5C518] pointer-events-none"
             />
-            <div className="text-left pr-2">
+            <div className="text-left pr-2 pointer-events-none">
               <div className="font-extrabold text-xs text-[#0F3D2E]">Halo! Aku Ozi 🤖</div>
-              <div className="text-[11px] font-semibold text-[#1B5E3F]">Pemandu Sains Ramah Anak</div>
+              <div className="hidden sm:block text-[11px] font-semibold text-[#1B5E3F]">Ketuk aku untuk bertanya!</div>
             </div>
-          </div>
+          </button>
 
         </div>
       </section>
@@ -356,15 +371,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           <div className="flex gap-4">
             <img
-              src="/src/assets/images/avatar_nara_explorer_1794244206279.jpg"
+              src={img_avatar_nara_explorer}
               alt="Nara Penjelajah"
               className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-white shadow-2xl"
             />
-            <img
-              src="/src/assets/images/avatar_ozi_robot_1794244205679.jpg"
-              alt="Ozi Robot AI"
-              className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-[#F5C518] shadow-2xl animate-float"
-            />
+            <button
+              type="button"
+              onClick={handleOpenOzi}
+              aria-label="Ketuk Ozi untuk membuka obrolan pemandu"
+              title="Ketuk Ozi untuk bertanya"
+              className="rounded-full cursor-pointer focus:outline-none focus:ring-4 focus:ring-[#F5C518] hover:scale-105 transition-transform"
+            >
+              <img
+                src={img_avatar_ozi_robot}
+                alt="Ozi Robot AI"
+                className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-[#F5C518] shadow-2xl animate-float pointer-events-none"
+              />
+            </button>
           </div>
         </div>
       </section>

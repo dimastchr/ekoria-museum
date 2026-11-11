@@ -16,6 +16,7 @@ import { ZoneId, StudentProgress } from '../../types';
 import { MUSEUM_ZONES } from '../../data/museumZonesData';
 import { audioManager } from '../../utils/audioManager';
 import { EkoZoneIcon, EkoLogoIcon } from '../common/EkoIcons';
+import { SoundToggle } from '../common/SoundToggle';
 import grandHallBg from '../../assets/images/ecoria_grand_hall_tree_1794244174588.jpg';
 import oziAvatar from '../../assets/images/avatar_ozi_robot_1794244205679.jpg';
 import naraAvatar from '../../assets/images/avatar_nara_explorer_1794244206279.jpg';
@@ -42,6 +43,11 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
   const completedCount = progress.completedRooms?.length || 0;
 
   const handleSpeakWelcome = () => {
+    if (isSpeaking) {
+      audioManager.stopSpeaking();
+      setIsSpeaking(false);
+      return;
+    }
     const text = 'Selamat datang di Museum Sains Virtual EkoRia! Di aula tengah ini terdapat delapan portal penjelajahan ekosistem berdasarkan Bab 3 IPAS Kelas 5. Sentuh salah satu portal untuk memulai misi belajarmu!';
     setIsSpeaking(true);
     audioManager.speak(text, () => setIsSpeaking(false));
@@ -113,6 +119,8 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
               <span className="hidden md:inline">Ensiklopedia</span>
             </button>
           )}
+
+          <SoundToggle variant="dark" />
 
           <button
             onClick={() => setShowInfoModal(true)}
@@ -261,12 +269,26 @@ export const MuseumHub: React.FC<MuseumHubProps> = ({
 
         {/* Bottom Center / Right: Ozi Speech Bubble */}
         <div className="flex items-center gap-3 bg-white text-[#0F3D2E] px-4 py-2.5 rounded-2xl border-2 border-[#F5C518] shadow-lg max-w-xl">
-          <img 
-            src={oziAvatar} 
-            alt="Ozi" 
-            className="w-9 h-9 rounded-full border-2 border-[#3FA34D] shrink-0 animate-ozi-bounce" 
-          />
-          <div className="text-xs leading-relaxed flex-1">
+          <button
+            type="button"
+            onClick={onOpenOzi}
+            aria-label="Buka obrolan dengan Ozi"
+            title="Ketuk Ozi untuk bertanya"
+            className="shrink-0 rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#F5C518] hover:scale-110 transition-transform"
+          >
+            <img 
+              src={oziAvatar} 
+              alt="Ozi" 
+              className="w-9 h-9 rounded-full border-2 border-[#3FA34D] animate-ozi-bounce pointer-events-none" 
+            />
+          </button>
+          <div
+            className="text-xs leading-relaxed flex-1 cursor-pointer"
+            onClick={onOpenOzi}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onOpenOzi(); }}
+          >
             <span className="font-extrabold text-[#1B5E3F] block">Ozi Asisten Sains:</span>
             "Selamat datang di EkoRia! Pilih salah satu gerbang untuk menjelajahi berbagai ekosistem."
           </div>

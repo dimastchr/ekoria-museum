@@ -17,6 +17,12 @@ import {
 import { MUSEUM_ROOMS, MUSEUM_BADGES } from '../../data/museumData';
 import { RoomId, StudentProgress, ViewState } from '../../types';
 import { audioManager } from '../../utils/audioManager';
+import img_ecobot_safari_mascot_3d from '../../assets/images/ecobot_safari_mascot_3d_1794179931205.jpg';
+import img_hero_background_3d from '../../assets/images/hero_background_3d_1794179861310.jpg';
+import img_icon_achieve_medal_3d from '../../assets/images/icon_achieve_medal_3d_1794179978463.jpg';
+import img_icon_exhibits_book_3d from '../../assets/images/icon_exhibits_book_3d_1794179945007.jpg';
+import img_icon_lab_leaf_3d from '../../assets/images/icon_lab_leaf_3d_1794179955758.jpg';
+import img_icon_quiz_gamepad_3d from '../../assets/images/icon_quiz_gamepad_3d_1794179967428.jpg';
 
 interface MainHallProps {
   progress: StudentProgress;
@@ -52,7 +58,7 @@ export const MainHall: React.FC<MainHallProps> = ({
         
         {/* Full-bleed 3D background image */}
         <img
-          src="/src/assets/images/hero_background_3d_1794179861310.jpg"
+          src={img_hero_background_3d}
           alt="Pemandangan 3D Museum EkoRia"
           className="absolute inset-0 w-full h-full object-cover object-center select-none"
         />
@@ -109,7 +115,7 @@ export const MainHall: React.FC<MainHallProps> = ({
             <div className="relative group cursor-pointer" onClick={() => onOpenEcoBot()}>
               {/* Mascot 3D Image */}
               <img
-                src="/src/assets/images/ecobot_safari_mascot_3d_1794179931205.jpg"
+                src={img_ecobot_safari_mascot_3d}
                 alt="Ozi dan Nara, petualang cilik"
                 className="w-full h-auto drop-shadow-2xl rounded-3xl object-contain transform group-hover:scale-103 transition-transform duration-300 border-2 border-white/60 bg-white/30 backdrop-blur-xs"
               />
@@ -227,7 +233,7 @@ export const MainHall: React.FC<MainHallProps> = ({
             <div className="relative z-10 flex items-center justify-between">
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden shadow-md border-2 border-white bg-white/70 group-hover:scale-108 transition-transform duration-300">
                 <img
-                  src="/src/assets/images/icon_exhibits_book_3d_1794179945007.jpg"
+                  src={img_icon_exhibits_book_3d}
                   alt="Ruang Pameran"
                   className="w-full h-full object-cover"
                 />
@@ -267,7 +273,7 @@ export const MainHall: React.FC<MainHallProps> = ({
             <div className="relative z-10 flex items-center justify-between">
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden shadow-md border-2 border-white bg-white/70 group-hover:scale-108 transition-transform duration-300">
                 <img
-                  src="/src/assets/images/icon_lab_leaf_3d_1794179955758.jpg"
+                  src={img_icon_lab_leaf_3d}
                   alt="Laboratorium Seru"
                   className="w-full h-full object-cover"
                 />
@@ -307,7 +313,7 @@ export const MainHall: React.FC<MainHallProps> = ({
             <div className="relative z-10 flex items-center justify-between">
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden shadow-md border-2 border-white bg-white/70 group-hover:scale-108 transition-transform duration-300">
                 <img
-                  src="/src/assets/images/icon_quiz_gamepad_3d_1794179967428.jpg"
+                  src={img_icon_quiz_gamepad_3d}
                   alt="Kuis Latihan"
                   className="w-full h-full object-cover"
                 />
@@ -347,7 +353,7 @@ export const MainHall: React.FC<MainHallProps> = ({
             <div className="relative z-10 flex items-center justify-between">
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden shadow-md border-2 border-white bg-white/70 group-hover:scale-108 transition-transform duration-300">
                 <img
-                  src="/src/assets/images/icon_achieve_medal_3d_1794179978463.jpg"
+                  src={img_icon_achieve_medal_3d}
                   alt="Pencapaian"
                   className="w-full h-full object-cover"
                 />

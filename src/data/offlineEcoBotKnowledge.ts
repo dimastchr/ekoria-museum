@@ -54,7 +54,7 @@ export const OFFLINE_ECOBOT_KNOWLEDGE: OfflineQAPair[] = [
     answer: 'Jaring-jaring makanan adalah gabungan dari banyak rantai makanan yang saling terhubung di alam. Di kebun, seekor katak tidak hanya makan belalang, tetapi juga lalat dan nyamuk. Katak pun bisa dimakan ular atau burung bangau. Semakin banyak cabang makanannya, ekosistem akan semakin kuat bertahan! 🕸️ Apa yang terjadi jika salah satu makanan katak habis?'
   },
   {
-    keywords: ['ular diburu', 'tikus sawah', 'ular habis'],
+    keywords: ['ular diburu', 'tikus sawah', 'ular habis', 'ular di sawah', 'ular sawah'],
     answer: 'Jika ular sawah diburu habis oleh manusia, tidak ada lagi pemangsa alami bagi tikus. Akibatnya, jumlah tikus akan meledak sangat banyak dan memakan seluruh tanaman padi hingga petani gagal panen. Itulah mengapa kita tidak boleh membunuh ular sawah sembarangan! 🐍 Apa cara terbaik petani mengatasi tikus tanpa racun kimia?'
   },
   {
@@ -159,33 +159,66 @@ export const OFFLINE_ECOBOT_KNOWLEDGE: OfflineQAPair[] = [
   }
 ];
 
-/**
- * Fuzzy / Keyword based matching for offline fallback
- */
-export function getOfflineEcoBotAnswer(query: string): string {
-  const normalized = query.toLowerCase().trim();
+// Keywords that are too generic to prove the question is about that topic on their own.
+const WEAK_KEYWORDS = new Set(['hai', 'halo', 'ozi', 'ecobot', 'tumbuhan', 'hutan', 'sungai', 'panah', 'kuis', 'seimbang', 'banjir', 'ayam', 'monyet', 'kutu', 'padi', 'beras', 'nasi']);
+const GREETING_KEYWORDS = new Set(['halo', 'hai', 'siapa kamu', 'ozi', 'ecobot']);
 
-  // Search through knowledge base for matching keywords
+function normalizeText(text: string): string {
+  return ` ${text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, ' ')
+    .replace(/-/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()} `;
+}
+
+/**
+ * Strict keyword matching for the offline fallback.
+ * - Keywords must match as whole words/phrases (no "padi" inside "padinya", no "hai" inside other words).
+ * - A single generic keyword is not enough unless the question is very short.
+ * - Greetings only match short greeting messages.
+ * Returns null when nothing really matches, so the UI can say so honestly.
+ */
+export function findOfflineEcoBotAnswer(query: string): string | null {
+  const normalized = normalizeText(query);
+  const wordCount = normalized.trim().split(' ').filter(Boolean).length;
+  if (wordCount === 0) return null;
+
   let bestMatch: OfflineQAPair | null = null;
   let maxScore = 0;
 
   for (const item of OFFLINE_ECOBOT_KNOWLEDGE) {
     let score = 0;
+    let strongHits = 0;
+    let greetingOnly = true;
     for (const kw of item.keywords) {
-      if (normalized.includes(kw.toLowerCase())) {
-        score += kw.length; // Weigh longer matches higher
+      const needle = normalizeText(kw);
+      if (normalized.includes(needle)) {
+        const isWeak = WEAK_KEYWORDS.has(kw.toLowerCase());
+        score += isWeak ? 1 : kw.length;
+        if (!isWeak) strongHits++;
+        if (!GREETING_KEYWORDS.has(kw.toLowerCase())) greetingOnly = false;
       }
     }
+    if (score === 0) continue;
+    const isGreetingEntry = item.keywords.some((k) => GREETING_KEYWORDS.has(k.toLowerCase()));
+    if (isGreetingEntry && greetingOnly && wordCount > 3) continue; // "Ozi, kenapa..." is not a greeting
+    if (strongHits === 0 && !(isGreetingEntry && wordCount <= 3) && wordCount > 3) continue; // only a weak keyword
     if (score > maxScore) {
       maxScore = score;
       bestMatch = item;
     }
   }
 
-  if (bestMatch && maxScore > 0) {
-    return bestMatch.answer;
-  }
+  return bestMatch ? bestMatch.answer : null;
+}
 
-  // Polite generic child-friendly fallback if no keyword matches
-  return 'Pertanyaanmu sangat menarik tentang alam! Di ekosistem Indonesia, semua makhluk hidup saling terhubung dan saling membantu menjaga keharmonisan bumi. Contohnya pohon rindang yang menaungi burung dan menghasilkan oksigen segar untuk kita. 🌿 Mau coba tanya tentang rantai makanan di sawah atau terumbu karang di laut?';
+/**
+ * Backwards-compatible helper: strict match, or a short honest "not sure" reply.
+ */
+export function getOfflineEcoBotAnswer(query: string): string {
+  return (
+    findOfflineEcoBotAnswer(query) ||
+    'Ozi belum punya catatan untuk pertanyaan itu. Coba tanyakan kepada gurumu, atau tanyakan tentang rantai makanan, pengurai, atau terumbu karang, ya! 🌿'
+  );
 }

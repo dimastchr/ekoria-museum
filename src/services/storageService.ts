@@ -5,34 +5,14 @@ const STORAGE_KEY_PROGRESS = 'ekoria_progress_v1';
 const STORAGE_KEY_ACTIVE_USER = 'ekoria_active_user_v1';
 const STORAGE_KEY_OFFLINE_QUEUE = 'ekoria_offline_queue_v1';
 
+const STORAGE_KEY_AUTH_VERSION = 'ekoria_auth_version';
+const AUTH_VERSION = '2';
+
+/**
+ * Only the teacher account is seeded. Pupils are NOT seeded any more: every
+ * pupil must register (daftar) and then log in (masuk) on this device.
+ */
 const DEFAULT_PROFILES: StudentProfile[] = [
-  {
-    studentId: 'std-5a-01',
-    username: 'budi5a',
-    pin: '1234',
-    fullName: 'Budi Santoso',
-    className: 'Kelas 5A',
-    avatar: '👦',
-    role: 'student'
-  },
-  {
-    studentId: 'std-5a-02',
-    username: 'siti5a',
-    pin: '2345',
-    fullName: 'Siti Rahmawati',
-    className: 'Kelas 5A',
-    avatar: '👧',
-    role: 'student'
-  },
-  {
-    studentId: 'std-5b-01',
-    username: 'eko5b',
-    pin: '3456',
-    fullName: 'Eko Prasetyo',
-    className: 'Kelas 5B',
-    avatar: '🧑',
-    role: 'student'
-  },
   {
     studentId: 'tch-001',
     username: 'guru_ipas',
@@ -44,87 +24,49 @@ const DEFAULT_PROFILES: StudentProfile[] = [
   }
 ];
 
-const DEFAULT_PROGRESS: Record<string, StudentProgress> = {
-  'std-5a-01': {
-    studentId: 'std-5a-01',
-    username: 'budi5a',
-    className: 'Kelas 5A',
-    hearts: 4,
-    lastVisitedZone: 'hutan',
-    completedRooms: ['hutan-harmoni'],
-    roomProgress: {
-      'hutan-harmoni': 100,
-      'sungai-bersih': 40,
-      'laut-karang': 0,
-      'sawah-kebun': 0,
-      'hutan': 100,
-      'padang-rumput': 50,
-      'sungai-danau': 40,
-      'laut': 0,
-      'rantai-makanan': 0,
-      'keseimbangan-ekosistem': 0,
-      'ekosistem-buatan': 0,
-      'pelestarian-lingkungan': 0
-    },
-    totalXP: 240,
-    totalStars: 6,
-    badges: ['penjelajah-hutan'],
-    hiddenFound: ['kumbang-permata-tersembunyi'],
-    discoveredOrganisms: ['pohon-meranti', 'rusa-bawean', 'macan-tutul', 'jamur-pelapuk', 'burung-rangkong'],
-    journalEntries: [],
-    preTestCompleted: true,
-    preTestScore: 80,
-    postTestCompleted: false,
-    postTestScore: 0,
-    reflectionNotes: 'Saya belajar bahwa jika pohon hutan ditebang, rusa tidak punya makanan dan macan tutul ikut kelaparan.',
-    quizScores: {
-      'hutan-harmoni': 100
-    },
-    timeSpentMinutes: 38,
-    lastActive: new Date().toISOString(),
-    syncStatus: 'synced'
-  },
-  'std-5a-02': {
-    studentId: 'std-5a-02',
-    username: 'siti5a',
-    className: 'Kelas 5A',
-    hearts: 4,
-    lastVisitedZone: 'padang-rumput',
-    completedRooms: ['hutan-harmoni', 'sungai-bersih'],
-    roomProgress: {
-      'hutan-harmoni': 100,
-      'sungai-bersih': 100,
-      'laut-karang': 60,
-      'sawah-kebun': 20,
-      'hutan': 100,
-      'padang-rumput': 100,
-      'sungai-danau': 80,
-      'laut': 60,
-      'rantai-makanan': 40,
-      'keseimbangan-ekosistem': 0,
-      'ekosistem-buatan': 20,
-      'pelestarian-lingkungan': 0
-    },
-    totalXP: 510,
-    totalStars: 12,
-    badges: ['penjelajah-hutan', 'penjaga-sungai', 'ahli-rantai-makanan'],
-    hiddenFound: ['kumbang-permata-tersembunyi', 'kepiting-batu-langka'],
-    discoveredOrganisms: ['pohon-meranti', 'rusa-bawean', 'macan-tutul', 'ikan-wader', 'capung-jarum', 'katak-sungai'],
-    journalEntries: [],
-    preTestCompleted: true,
-    preTestScore: 100,
-    postTestCompleted: false,
-    postTestScore: 0,
-    reflectionNotes: 'Capung air hanya bertelur di air bersih! Kita tidak boleh membuang sabun cuci langsung ke sungai.',
-    quizScores: {
-      'hutan-harmoni': 100,
-      'sungai-bersih': 100
-    },
-    timeSpentMinutes: 65,
-    lastActive: new Date().toISOString(),
-    syncStatus: 'synced'
+/** Demo pupils that older versions seeded and auto-logged in (removed on upgrade). */
+const LEGACY_DEMO_STUDENT_IDS = ['std-5a-01', 'std-5a-02', 'std-5b-01'];
+
+/** Explicit "Mode Demo" account (only used when someone presses the Mode Demo button). */
+export const DEMO_STUDENT_ID = 'std-demo';
+
+function readJson<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
   }
-};
+}
+
+/**
+ * One-time upgrade from the old storage: drop the seeded demo pupils
+ * (Budi, Siti, Eko), their fake progress, and the auto-login session.
+ */
+function migrateAuthStorage() {
+  try {
+    if (localStorage.getItem(STORAGE_KEY_AUTH_VERSION) === AUTH_VERSION) return;
+
+    const profiles = readJson<StudentProfile[]>(STORAGE_KEY_PROFILES, []);
+    const cleaned = profiles.filter((p) => !LEGACY_DEMO_STUDENT_IDS.includes(p.studentId));
+    if (!cleaned.some((p) => p.role === 'teacher')) cleaned.unshift(...DEFAULT_PROFILES);
+    localStorage.setItem(STORAGE_KEY_PROFILES, JSON.stringify(cleaned));
+
+    const progress = readJson<Record<string, StudentProgress>>(STORAGE_KEY_PROGRESS, {});
+    LEGACY_DEMO_STUDENT_IDS.forEach((id) => delete progress[id]);
+    localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(progress));
+
+    // Old versions logged everyone in as "Budi Santoso" automatically
+    localStorage.removeItem(STORAGE_KEY_ACTIVE_USER);
+    localStorage.setItem(STORAGE_KEY_AUTH_VERSION, AUTH_VERSION);
+  } catch {
+    // Storage unavailable: nothing to migrate
+  }
+}
+
+if (typeof window !== 'undefined') {
+  migrateAuthStorage();
+}
 
 export class StorageService {
   public static getProfiles(): StudentProfile[] {
@@ -151,19 +93,82 @@ export class StorageService {
     localStorage.setItem(STORAGE_KEY_PROFILES, JSON.stringify(profiles));
   }
 
+  /** Returns the logged-in user, or null. There is NO automatic/demo login. */
   public static getActiveUser(): StudentProfile | null {
     const raw = localStorage.getItem(STORAGE_KEY_ACTIVE_USER);
-    if (!raw) {
-      // Default to Budi for immediate engaging exploration
-      const budi = this.getProfiles()[0];
-      this.setActiveUser(budi);
-      return budi;
-    }
+    if (!raw) return null;
     try {
-      return JSON.parse(raw);
+      const saved = JSON.parse(raw) as StudentProfile;
+      // Only keep the session if the account still exists on this device
+      const exists = this.getProfiles().find((p) => p.studentId === saved.studentId);
+      if (!exists) {
+        localStorage.removeItem(STORAGE_KEY_ACTIVE_USER);
+        return null;
+      }
+      return exists;
     } catch {
       return null;
     }
+  }
+
+  public static findProfileByUsername(username: string): StudentProfile | undefined {
+    const u = username.trim().toLowerCase();
+    return this.getProfiles().find((p) => p.username.toLowerCase() === u);
+  }
+
+  /** Check username + PIN. Returns the profile when both match. */
+  public static authenticate(username: string, pin: string, role?: 'student' | 'teacher'): StudentProfile | null {
+    const found = this.findProfileByUsername(username);
+    if (!found || found.pin !== pin.trim()) return null;
+    if (role && found.role !== role) return null;
+    return found;
+  }
+
+  /** Register a new pupil. Returns an error message, or null on success. */
+  public static registerStudent(input: { username: string; pin: string; fullName: string; className: string }): { profile?: StudentProfile; error?: string } {
+    const username = input.username.trim().toLowerCase();
+    const pin = input.pin.trim();
+    const fullName = input.fullName.trim();
+    if (!username || !pin || !fullName) {
+      return { error: 'Isi semua kolom pendaftaran dulu, ya!' };
+    }
+    if (!/^[a-z0-9_.]{3,20}$/.test(username)) {
+      return { error: 'Nama akun memakai 3–20 huruf kecil atau angka tanpa spasi, ya! Contoh: rina5a' };
+    }
+    if (!/^[0-9]{4,6}$/.test(pin)) {
+      return { error: 'PIN harus berupa 4 sampai 6 angka, ya!' };
+    }
+    if (this.findProfileByUsername(username)) {
+      return { error: 'Nama akun ini sudah dipakai. Coba nama lain, ya!' };
+    }
+    const profile: StudentProfile = {
+      studentId: `std-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+      username,
+      pin,
+      fullName,
+      className: input.className,
+      avatar: '🧑',
+      role: 'student'
+    };
+    this.saveProfile(profile);
+    return { profile };
+  }
+
+  /** Explicit demo account for judges/guests. Never used automatically. */
+  public static getOrCreateDemoProfile(): StudentProfile {
+    const existing = this.getProfiles().find((p) => p.studentId === DEMO_STUDENT_ID);
+    if (existing) return existing;
+    const demo: StudentProfile = {
+      studentId: DEMO_STUDENT_ID,
+      username: 'mode_demo',
+      pin: '0000',
+      fullName: 'Penjelajah Demo',
+      className: 'Mode Demo',
+      avatar: '🧭',
+      role: 'student'
+    };
+    this.saveProfile(demo);
+    return demo;
   }
 
   public static setActiveUser(user: StudentProfile | null): void {
@@ -175,15 +180,7 @@ export class StorageService {
   }
 
   public static getProgress(studentId: string): StudentProgress {
-    const raw = localStorage.getItem(STORAGE_KEY_PROGRESS);
-    let allProgress: Record<string, StudentProgress> = DEFAULT_PROGRESS;
-    if (raw) {
-      try {
-        allProgress = JSON.parse(raw);
-      } catch {
-        allProgress = DEFAULT_PROGRESS;
-      }
-    }
+    const allProgress = readJson<Record<string, StudentProgress>>(STORAGE_KEY_PROGRESS, {});
 
     if (allProgress[studentId]) {
       const existing = allProgress[studentId];
@@ -338,7 +335,7 @@ export class StorageService {
   }
 
   public static getAllStudentProgress(): StudentProgress[] {
-    const profiles = this.getProfiles().filter((p) => p.role === 'student');
+    const profiles = this.getProfiles().filter((p) => p.role === 'student' && p.studentId !== DEMO_STUDENT_ID);
     return profiles.map((p) => this.getProgress(p.studentId));
   }
 

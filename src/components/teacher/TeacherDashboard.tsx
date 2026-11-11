@@ -24,6 +24,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
   const [resetModalType, setResetModalType] = useState<'single' | 'all' | null>(null);
   const [targetStudentId, setTargetStudentId] = useState<string | null>(null);
   const [resetConfirmationInput, setResetConfirmationInput] = useState('');
+  const [resetClass, setResetClass] = useState('Kelas 5A');
 
   const studentCount = profiles.filter((p) => p.role === 'student').length;
   const avgXP = Math.round(
@@ -61,25 +62,29 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
     if (!newUsername.trim() || !newFullName.trim() || !newPin.trim()) return;
 
     audioManager.playClick();
-    const newProfile: StudentProfile = {
-      studentId: `std-${Date.now().toString().slice(-4)}`,
-      username: newUsername.trim().toLowerCase(),
-      fullName: newFullName.trim(),
-      className: newClass,
-      pin: newPin.trim(),
-      avatar: '🧑',
-      role: 'student'
-    };
+    // Same rules as pupil self-registration (unique username, 4–6 digit PIN)
+    const result = StorageService.registerStudent({
+      username: newUsername,
+      pin: newPin,
+      fullName: newFullName,
+      className: newClass
+    });
+    if (result.error || !result.profile) {
+      audioManager.playErrorSound();
+      setSuccessMsg(`⚠️ ${result.error || 'Akun belum berhasil dibuat.'}`);
+      setTimeout(() => setSuccessMsg(''), 5000);
+      return;
+    }
+    const created = result.profile;
 
-    StorageService.saveProfile(newProfile);
     setProfiles(StorageService.getProfiles());
     setStudentsProgress(StorageService.getAllStudentProgress());
 
-    setSuccessMsg(`Akun siswa ${newFullName} (Username: ${newUsername}, PIN: ${newPin}) berhasil dibuat!`);
+    setSuccessMsg(`Akun siswa ${created.fullName} (${created.username}) berhasil dibuat dengan PIN ${created.pin}. Catat PIN ini dan berikan kepada siswa.`);
     setNewUsername('');
     setNewFullName('');
     setShowAddForm(false);
-    setTimeout(() => setSuccessMsg(''), 4000);
+    setTimeout(() => setSuccessMsg(''), 8000);
   };
 
   const handleConfirmReset = () => {
@@ -91,8 +96,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
       const student = profiles.find((p) => p.studentId === targetStudentId);
       setSuccessMsg(`Data belajar siswa ${student?.fullName || targetStudentId} berhasil direset ke awal.`);
     } else if (resetModalType === 'all') {
-      StorageService.resetAllClass('Kelas 5A');
-      setSuccessMsg('Semua data progres siswa di Kelas 5A berhasil direset ke awal.');
+      StorageService.resetAllClass(resetClass);
+      setSuccessMsg(`Semua nilai siswa di ${resetClass} berhasil dihapus dan dimulai dari awal.`);
     }
 
     setStudentsProgress(StorageService.getAllStudentProgress());
@@ -182,9 +187,9 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
               setResetConfirmationInput('');
             }}
             className="min-h-[48px] flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-sm border-2 border-rose-300 cursor-pointer transition-colors"
-            title="Reset semua nilai siswa di kelas"
+            title="Hapus semua nilai siswa di kelas"
           >
-            <RotateCcw className="w-4 h-4 text-rose-600" /> Reset Semua Siswa
+            <RotateCcw className="w-4 h-4 text-rose-600" /> Hapus Nilai Semua Siswa
           </button>
           
           <button
@@ -439,9 +444,9 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
                           setResetConfirmationInput('');
                         }}
                         className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-700 text-xs font-bold border border-slate-200 hover:border-rose-300 cursor-pointer transition-colors"
-                        title="Reset nilai siswa ini"
+                        title="Hapus nilai siswa ini"
                       >
-                        Reset Siswa Ini
+                        Hapus Nilai Siswa Ini
                       </button>
                     </td>
                   </tr>
@@ -461,16 +466,31 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
               <AlertTriangle className="w-7 h-7 shrink-0" />
               <h3 className="font-['Outfit'] font-black text-xl text-[#1F2D3D]">
                 {resetModalType === 'all'
-                  ? 'Konfirmasi Reset Semua Siswa'
-                  : 'Konfirmasi Reset Siswa Tunggal'}
+                  ? 'Konfirmasi Hapus Nilai Semua Siswa'
+                  : 'Konfirmasi Hapus Nilai Satu Siswa'}
               </h3>
             </div>
 
             <p className="text-sm text-[#334E68] leading-relaxed font-medium">
               {resetModalType === 'all'
-                ? 'Semua nilai pre-test, post-test, XP, lencana, dan riwayat eksplorasi seluruh siswa kelas 5A akan dihapus permanen di cloud dan lokal.'
+                ? `Semua nilai pre-test, post-test, XP, lencana, dan riwayat eksplorasi seluruh siswa kelas ${resetClass.replace(/^Kelas\s*/i, '')} akan dihapus permanen dari server dan perangkat ini.`
                 : 'Nilai pre-test, post-test, XP, dan lencana siswa ini akan dikembalikan ke awal (0).'}
             </p>
+
+            {resetModalType === 'all' && (
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-[#1F2D3D]">Pilih kelas:</label>
+                <select
+                  value={resetClass}
+                  onChange={(e) => setResetClass(e.target.value)}
+                  className="w-full bg-[#F8FAF8] border-2 border-slate-300 focus:border-rose-500 rounded-2xl px-4 py-2.5 text-sm font-bold text-[#1F2D3D] focus:outline-none cursor-pointer"
+                >
+                  <option value="Kelas 5A">Kelas 5A</option>
+                  <option value="Kelas 5B">Kelas 5B</option>
+                  <option value="Kelas 5C">Kelas 5C</option>
+                </select>
+              </div>
+            )}
 
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-[#1F2D3D]">
@@ -502,7 +522,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
                 disabled={resetConfirmationInput.trim().toUpperCase() !== 'RESET'}
                 className="min-h-[44px] flex-1 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-700 disabled:opacity-40 text-white font-black text-sm cursor-pointer transition-colors"
               >
-                Eksekusi Reset
+                Ya, Hapus Permanen
               </button>
             </div>
           </div>
@@ -521,7 +541,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
             <p className="text-[#334E68]">Anak memahami panah artinya 'dimakan oleh' dan energi berpindah dari produsen ke konsumen.</p>
           </div>
           <div className="p-4 rounded-2xl bg-[#FEF7EC] border-2 border-amber-300 space-y-1">
-            <div className="font-bold text-[#D45014]">Terumbu Karang Adalah Hewan</div>
+            <div className="font-bold text-[#D45014]">Terumbu Karang adalah Hewan</div>
             <p className="text-[#334E68]">Karang hidup adalah koloni hewan laut kecil (biotik) yang bersimbiosis dengan alga bersel satu.</p>
           </div>
           <div className="p-4 rounded-2xl bg-[#EBF3FC] border-2 border-[#1C5FC4]/30 space-y-1">
