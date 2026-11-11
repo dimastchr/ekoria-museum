@@ -1,0 +1,129 @@
+Perbaiki teks saja (jangan ubah logika, struktur data, id, role, warna, atau tata letak). Ganti setiap teks LAMA menjadi BARU persis seperti tertulis, di file yang disebut. Jika teks LAMA terpotong atau tidak ditemukan persis, cari kalimat yang paling mirip dan terapkan perbaikan yang sama. Teks bertanda (ganti semua) diganti di seluruh file. Pastikan aplikasi tetap berjalan tanpa error.
+
+BATCH 8/11
+1. [src/components/quiz/QuizCenter.tsx]
+LAMA: "Kerja bagus! Pemahaman ekosistemmu makin mantap bersama Ozi dan Nara"
+BARU: "Kerja bagus! Pemahamanmu tentang ekosistem makin mantap bersama Ozi dan Nara."
+2. [src/components/quiz/QuizCenter.tsx]
+LAMA: "Kembali ke Dasbor"
+BARU: "Kembali ke Beranda"
+3. [src/components/journal/ExplorerJournal.tsx]
+LAMA: EcoRia
+BARU: EkoRia
+4. [src/components/journal/ExplorerJournal.tsx]
+LAMA: "Cari biota / catatan..."
+BARU: "Cari makhluk hidup atau catatan..."
+5. [src/components/encyclopedia/EncyclopediaModal.tsx]
+LAMA: EcoRia
+BARU: EkoRia
+6. [src/components/encyclopedia/EncyclopediaModal.tsx]
+LAMA: "Keadaan di mana interaksi antar komponen penyusun ekosistem berjalan harmonis, stabil, dan dinamis tanpa kepunahan drastis."
+BARU: "Keadaan ketika hubungan antarkomponen penyusun ekosistem berjalan selaras dan stabil sehingga tidak ada makhluk hidup yang punah."
+7. [src/components/encyclopedia/EncyclopediaModal.tsx]
+LAMA: "Jumlah rumput cukup untuk rusa, dan populasi predator menjaga rusa tidak kehabisan rumput."
+BARU: "Jumlah rumput cukup untuk rusa, dan pemangsa menjaga jumlah rusa agar rumput tidak habis."
+8. [src/components/encyclopedia/EncyclopediaModal.tsx]
+LAMA: "Jaring-jaring Makanan"
+BARU: "Jaring-Jaring Makanan"
+9. [src/components/exhibits/TrashSortingActivity.tsx]
+LAMA: EcoRia
+BARU: EkoRia
+10. [src/components/exhibits/TrashSortingActivity.tsx]
+LAMA: "Kamu telah memilah semua sampah dengan benar. Skor <score> poin ditambahkan ke profilmu"
+BARU: "Kamu telah memilah semua sampah dengan benar. <score> poin ditambahkan ke profilmu."
+11. [src/components/exhibits/TrashSortingActivity.tsx]
+LAMA: "Mengandung racun logam berat berbahaya, harus dibuang ke wadah khusus B3."
+BARU: "Mengandung logam berat beracun, harus dibuang ke wadah khusus B3 (bahan berbahaya dan beracun)."
+12. [src/components/exhibits/TrashSortingActivity.tsx]
+LAMA: "Lampu Neon / Bohlam Pecah" — "Lampu mengandung merkuri beracun yang membahayakan tanah dan air."
+BARU: "Lampu Neon Pecah" — "Lampu neon mengandung merkuri beracun yang membahayakan tanah dan air."
+13. [src/components/exhibits/TrashSortingActivity.tsx]
+LAMA: "Plastik butuh ratusan tahun terurai, harus didaur ..."
+BARU: "Plastik butuh ratusan tahun untuk terurai, harus didaur ..."
+14. [src/components/exhibits/TrashSortingActivity.tsx]
+LAMA: "Sampah alami yang dapat diserap kembali oleh tanah melalui dekomposer."
+BARU: "Sampah alami yang dapat diuraikan pengurai menjadi tanah subur."
+15. [src/components/exhibits/TrashSortingActivity.tsx]
+LAMA: "Pohon menyerap karbon, menghasilkan oksigen, dan akarnya mengikat air tanah."
+BARU: "Pohon menyerap karbon dioksida, menghasilkan oksigen, dan akarnya menahan tanah serta menyimpan air."
+16. [src/components/exhibits/TrashSortingActivity.tsx]
+LAMA: "Menghilangkan habitat satwa langka, memicu tanah longsor, dan pemanasan global."
+BARU: "Menghilangkan habitat satwa langka, memicu tanah longsor, dan memperparah pemanasan global."
+17. [src/components/exhibits/TrashSortingActivity.tsx]
+LAMA: "Pilih Aksi dan Amati Dampaknya Bagi Ekosistem"
+BARU: "Pilih Aksi dan Amati Dampaknya bagi Ekosistem"
+18. [src/components/dashboard/StudentDashboard.tsx]
+LAMA: EcoRia
+BARU: EkoRia
+19. [src/components/dashboard/StudentDashboard.tsx]
+LAMA: "EcoRia" / "Virtual Science Museum"
+BARU: "EkoRia" / "Museum Sains Virtual"
+20. [src/components/dashboard/StudentDashboard.tsx]
+LAMA: "Panduan Ozi", "Tanya Ozi Bot"
+BARU: "Panduan Ozi", "Tanya Ozi"
+21. [src/components/dashboard/StudentDashboard.tsx]
+LAMA: "Pre-Test" / "Mulai Pre-Test" / "Post-Test"
+BARU: "Tes Awal" / "Mulai Tes Awal" / "Tes Akhir"
+22. [src/components/dashboard/StudentDashboard.tsx]
+LAMA: "Siap melanjutkan petualangan di EcoRia"
+BARU: "Siap melanjutkan petualangan di EkoRia?"
+23. [src/components/dashboard/StudentDashboard.tsx]
+LAMA: "Keluar Sesi"
+BARU: "Keluar"
+24. [src/components/dashboard/StudentDashboard.tsx]
+LAMA: "Disusun runtut berdasarkan Buku IPAS Kelas V"
+BARU: "Disusun berurutan sesuai Buku IPAS Kelas V"
+25. [src/components/achievements/AchievementsView.tsx]
+LAMA: EcoRia
+BARU: EkoRia
+26. [src/components/achievements/AchievementsView.tsx]
+LAMA: "EcoRia Virtual Science Museum" / "Kurikulum Merdeka IPAS"
+BARU: "Museum Sains Virtual EkoRia" / "Kurikulum Merdeka IPAS"
+27. [src/components/achievements/AchievementsView.tsx]
+LAMA: "Ozi Bot" / "Pemandu Virtual Sains" / "Sahabat Bumi"
+BARU: "Ozi" / "Robot Pemandu Sains" / "Sahabat Bumi"
+28. [src/components/achievements/AchievementsView.tsx]
+LAMA: "Skor Post-Test"
+BARU: "Skor Tes Akhir"
+29. [src/components/achievements/AchievementsView.tsx]
+LAMA: "Dianugerahkan Kepada Penjelajah Muda"
+BARU: "Dianugerahkan kepada Penjelajah Muda"
+30. [src/components/achievements/AchievementsView.tsx]
+LAMA: "Pencapaian" / "Sertifikat EcoRia"
+BARU: "Pencapaian" / "Piagam EkoRia"
+31. [src/components/achievements/AchievementsView.tsx]
+LAMA: "Poin Pengalaman"
+BARU: "Poin Pengalaman (XP)"
+32. [src/components/museum/OrganismModal.tsx]
+LAMA: "Tanya EcoBot tentang <nama lokal>"
+BARU: "Tanya Ozi tentang <nama lokal>"
+33. [src/components/museum/OrganismModal.tsx]
+LAMA: "Fakta Menarik Sains"
+BARU: "Fakta Sains Menarik"
+34. [src/components/guide/EcoBotGuide.tsx]
+LAMA: "Buka Pemandu EcoBot"
+BARU: "Buka Pemandu Ozi"
+35. [src/components/guide/EcoBotGuide.tsx]
+LAMA: "Panggil EcoBot"
+BARU: "Panggil Ozi"
+36. [src/components/guide/EcoBotGuide.tsx]
+LAMA: "EcoBot" / "Robot Pemandu AI"
+BARU: "Ozi" / "Robot Pemandu Sains"
+37. [src/components/guide/EcoBotGuide.tsx]
+LAMA: "Dengarkan Suara EcoBot"
+BARU: "Dengarkan Suara Ozi"
+38. [src/components/guide/EcoBotGuide.tsx]
+LAMA: "Tanya EcoBot"
+BARU: "Tanya Ozi"
+39. [src/components/guide/EcoBotGuide.tsx]
+LAMA: "Membaca..." (saat membacakan)
+BARU: "Membacakan..."
+40. [src/components/assessment/CertificateModal.tsx]
+LAMA: "EcoBot" / "Pemandu Cilik AI" / "Program Komputer Pintar" / "Sahabat Ekosistem"
+BARU: "Ozi" / "Robot Pemandu Sains" / "Sahabat Ekosistem"
+41. [src/components/assessment/CertificateModal.tsx]
+LAMA: "Diberikan dengan Bangga Kepada"
+BARU: "Diberikan dengan Bangga kepada"
+42. [src/components/assessment/CertificateModal.tsx]
+LAMA: kelas: "Kelas 5 SD"
+BARU: kelas: "Kelas V SD"

@@ -1,0 +1,6 @@
+{
+  "name": "EkoRia Museum",
+  "description": "Petualangan seru di dunia ekosistem untuk siswa kelas V SD: museum sains interaktif, peta petualangan, lantai hutan dan pengurai, pemandu Ozi, serta asesmen cerdas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,96 @@
+Perbaiki teks saja (jangan ubah logika, struktur data, id, role, warna, atau tata letak). Ganti setiap teks LAMA menjadi BARU persis seperti tertulis, di file yang disebut. Jika teks LAMA terpotong atau tidak ditemukan persis, cari kalimat yang paling mirip dan terapkan perbaikan yang sama. Teks bertanda (ganti semua) diganti di seluruh file. Pastikan aplikasi tetap berjalan tanpa error.
+
+BATCH 5/11
+1. [src/data/museumZonesData.ts]
+LAMA: effectOnEcosystem: 'Air asin laut jernih memungkinkan sinar matahari sampai ke dasar karang.'
+BARU: effectOnEcosystem: 'Air laut yang jernih memungkinkan sinar matahari sampai ke dasar karang.'
+2. [src/data/museumZonesData.ts]
+LAMA: name: 'Pasir Laut Abiotik',
+BARU: name: 'Pasir Laut',
+3. [src/data/museumZonesData.ts]
+LAMA: welcomeSpeech: 'Selamat datang di Lab Rantai Makanan! Ingat prinsip sains: arah panah (→) selalu dari yang DIMAKAN ke yang MEMAKAN, artinya energi kehidupan berpindah ke tubuh pemakannya!'
+BARU: welcomeSpeech: 'Selamat datang di Laboratorium Rantai Makanan! Ingat prinsip sains: arah panah selalu dari yang dimakan ke yang memakan. Artinya, energi berpindah ke tubuh pemakannya!'
+4. [src/data/museumZonesData.ts]
+LAMA: text: 'Identifikasi pemindah energi ke tubuh pemakan'
+BARU: text: 'Tunjukkan ke mana energi berpindah dari yang dimakan ke pemakannya'
+5. [src/data/museumZonesData.ts]
+LAMA: name: 'Elang Ular Jawa',
+BARU: name: 'Elang Ular Bido',
+6. [src/data/museumZonesData.ts]
+LAMA: scientificName: 'Nisaetus bartelsi',
+BARU: scientificName: 'Spilornis cheela',
+7. [src/data/museumZonesData.ts]
+LAMA: diet: 'Ular sawah dan hewan mamalia kecil.',
+BARU: diet: 'Ular sawah dan mamalia kecil.',
+8. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Elang adalah lambang satwa nasional Indonesia (Garuda) yang menjaga keseimbangan puncak rantai makanan!'
+BARU: funFact: 'Elang adalah konsumen puncak yang menjaga keseimbangan rantai makanan! Kerabatnya, elang jawa, adalah satwa langka nasional yang dianggap mirip burung Garuda.'
+9. [src/data/museumZonesData.ts]
+LAMA: 'Memahami konsep keseimbangan alam (homeostasis ekosistem).'
+BARU: 'Memahami konsep keseimbangan alam dalam ekosistem.'
+10. [src/data/museumZonesData.ts]
+LAMA: text: 'Uji coba skenario gangguan ular diburu'
+BARU: text: 'Uji coba skenario gangguan: ular diburu manusia'
+11. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Daya dukung lingkungan membatasi jumlah tumbuhan agar tanah tidak kehabisan unsur hara.'
+BARU: funFact: 'Jumlah tumbuhan dibatasi oleh daya dukung lingkungan, seperti ketersediaan air, cahaya, dan unsur hara di dalam tanah.'
+12. [src/data/museumZonesData.ts]
+LAMA: bagaimana populasi tumbuhan mempengaruhi hewan lain?
+BARU: bagaimana populasi tumbuhan memengaruhi hewan lain?
+13. [src/data/museumZonesData.ts]
+LAMA: trophicLevelName: 'Konsumen I',
+BARU: trophicLevelName: 'Konsumen Tingkat I',
+14. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Jumlah herbivora selalu dikontrol oleh ketersediaan daun dan kehadiran predator pemangsa.'
+BARU: funFact: 'Jumlah herbivora dikendalikan oleh ketersediaan makanan dan kehadiran pemangsa.'
+15. [src/data/museumZonesData.ts]
+LAMA: thinkingQuestion: 'Mengapa jumlah herbivora di alam tidak boleh melebihi jumlah tumbuhan?'
+BARU: thinkingQuestion: 'Apa yang terjadi jika jumlah herbivora terlalu banyak dibandingkan tumbuhan yang tersedia?'
+16. [src/data/museumZonesData.ts]
+LAMA: trophicLevelName: 'Konsumen Pengontrol',
+BARU: trophicLevelName: 'Konsumen Tingkat II (Pemangsa)',
+17. [src/data/museumZonesData.ts]
+LAMA: tidak menghabiskan seluruh mangsanya sampai punah di alam alami?
+BARU: tidak menghabiskan seluruh mangsanya sampai punah di alam?
+18. [src/data/museumZonesData.ts]
+LAMA: curriculumTopic: 'Perbedaan Ekosistem Alami vs Buatan,
+BARU: curriculumTopic: 'Perbedaan Ekosistem Alami dan Buatan,
+19. [src/data/museumZonesData.ts]
+LAMA: 'Mengenal rantai makanan sawah: Padi → Belalang/Tikus → Katak/Ular → Burung Hantu.'
+BARU: 'Mengenal rantai makanan sawah: Padi → Belalang → Katak → Ular, dan Padi → Tikus → Burung Hantu.'
+20. [src/data/museumZonesData.ts]
+LAMA: diet: 'Fotosintesis dengan air irigasi dan pupuk organik.',
+BARU: diet: 'Membuat makanan sendiri melalui fotosintesis; akarnya menyerap air irigasi dan zat hara dari pupuk organik.',
+21. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Sistem irigasi sawah di Indonesia mengalirkan air jernih dari pegunungan ke seluruh petak sawah!'
+BARU: funFact: 'Sistem irigasi, seperti subak di Bali, mengalirkan air dari sungai dan bendungan ke petak-petak sawah!'
+22. [src/data/museumZonesData.ts]
+LAMA: name: 'Burung Hantu Tyto Alba',
+BARU: name: 'Burung Hantu Serak Jawa',
+23. [src/data/museumZonesData.ts]
+LAMA: trophicLevelName: 'Konsumen II (Pembasmi Hama Alami)',
+BARU: trophicLevelName: 'Konsumen Tingkat II (Pembasmi Hama Alami)',
+24. [src/data/museumZonesData.ts]
+LAMA: habitat: 'Kolam ikan mina padi',
+BARU: habitat: 'Kolam dan petak sawah mina padi',
+25. [src/data/museumZonesData.ts]
+LAMA: energySource: 'Lumut dan pelet alami',
+BARU: energySource: 'Lumut dan serangga air',
+26. [src/data/museumZonesData.ts]
+LAMA: effectOnEcosystem: 'Lumpur gembur tempat cacing tanah hidup menggemburkan tanah sawah.'
+BARU: effectOnEcosystem: 'Lumpur gembur menjadi tempat hidup cacing tanah yang ikut menggemburkan tanah sawah.'
+27. [src/data/museumZonesData.ts]
+LAMA: 'Memilah sampah berdasarkan jenisnya: Organik, Anorganik/Plastik, dan Limbah B3.'
+BARU: 'Memilah sampah berdasarkan jenisnya: organik, anorganik, dan limbah B3 (bahan berbahaya dan beracun).'
+28. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Menanam satu pohon dapat menyerap karbon dan menyediakan udara bersih untuk 4 orang setiap hari!'
+BARU: funFact: 'Saat sudah tumbuh besar, sebatang pohon dapat menyerap karbon dioksida dan menghasilkan oksigen yang kita butuhkan untuk bernapas!'
+29. [src/data/museumZonesData.ts]
+LAMA: name: 'Tempat Sampah Anorganik (Biru)',
+BARU: name: 'Tempat Sampah Anorganik (Kuning)',
+30. [src/data/museumZonesData.ts]
+LAMA: sebagai mata air abadi.
+BARU: sebagai mata air yang terus mengalir.
+31. [src/data/museumZonesData.ts]
+LAMA: description: 'Menjelajahi keanekaragaman Padang Rumput Savanna Baluran.'
+BARU: description: 'Menjelajahi keanekaragaman padang rumput Sabana Baluran.'

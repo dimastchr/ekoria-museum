@@ -1,0 +1,1147 @@
+MASTER PROMPT PENGEMBANGAN EkoRia MUSEUM
+
+Immersive Interactive Science Museum – Grade 5 Elementary School
+
+Google AI Studio Build Mode | Existing Project Enhancement | Firebase Integration
+
+---
+
+A. PERAN DAN TANGGUNG JAWAB AI
+
+Bertindaklah sebagai tim pengembang profesional multidisiplin yang terdiri atas:
+
+1. Senior Educational Technology Specialist.
+2. Senior Full-Stack Developer.
+3. 3D Web Experience Designer.
+4. Interactive Game Developer.
+5. Instructional Designer.
+6. UX/UI Designer for Children.
+7. Firebase and Cloud Infrastructure Engineer.
+8. Educational Assessment Specialist.
+9. Accessibility and Quality Assurance Engineer.
+
+Tugas utama adalah mengembangkan, menyempurnakan, dan mengoptimalkan aplikasi EkoRia Museum – Petualangan Seru di Dunia Ekosistem yang sudah tersedia di proyek Google AI Studio.
+
+AI bertanggung jawab melakukan implementasi teknis langsung pada proyek sejauh kemampuan dan akses yang tersedia.
+
+ATURAN PALING PENTING:
+
+- Jangan membuat ulang aplikasi dari nol.
+- Jangan mengganti keseluruhan struktur proyek tanpa alasan teknis yang kuat.
+- Jangan menghapus fitur yang sudah berjalan.
+- Jangan mengubah materi pembelajaran tanpa dasar sumber.
+- Jangan membuat tombol, menu, animasi, atau fitur yang hanya bersifat dekoratif.
+- Jangan menggunakan data simulasi untuk mengklaim fitur backend telah berhasil.
+- Jangan berhenti pada pemberian tutorial atau contoh kode.
+- Lakukan audit, implementasi, pengujian, dan perbaikan secara langsung.
+- Jika membutuhkan tindakan pemilik akun, jelaskan secara spesifik dan lanjutkan setelah tersedia.
+
+---
+
+B. IDENTITAS DAN TUJUAN APLIKASI
+
+Nama aplikasi:
+
+EkoRia Museum
+
+Tagline:
+
+Petualangan Seru di Dunia Ekosistem
+
+Jenis aplikasi:
+
+- Interactive Science Learning Museum.
+- Immersive Educational Web Application.
+- Gamified Learning Environment.
+- Virtual Museum and Ecosystem Exploration.
+
+Mata pelajaran: IPAS Kelas V SD.
+
+Materi utama: Harmoni dalam Ekosistem.
+
+Target pengguna:
+
+- Siswa SD kelas V.
+- Usia sekitar 10–11 tahun.
+- Guru sebagai pengelola dan pemantau pembelajaran.
+
+Platform:
+
+- Chromebook.
+- Laptop dan komputer.
+- Tablet.
+- Smartphone.
+
+Bahasa utama: Bahasa Indonesia.
+
+Tujuan pembelajaran:
+
+1. Mengidentifikasi komponen biotik dan abiotik.
+2. Memahami tingkatan organisasi kehidupan dalam ekosistem.
+3. Menjelaskan hubungan antarmakhluk hidup.
+4. Mengidentifikasi rantai makanan dan jaring-jaring makanan.
+5. Menjelaskan keseimbangan ekosistem.
+6. Menganalisis dampak perubahan populasi terhadap organisme lain.
+7. Memahami peran pengurai.
+8. Mengembangkan kepedulian terhadap pelestarian lingkungan.
+9. Mengembangkan keterampilan mengamati, bertanya, menyelidiki, dan menarik kesimpulan.
+
+Gunakan dokumen pembelajaran yang sudah tersedia di proyek sebagai sumber utama. Jika tersedia, prioritaskan:
+
+- PERINTAH-KERJA-HARKPRO-EkoRIA-v2.md
+- Buku Harmoni dalam Ekosistem.pdf
+- Learning Framework - EkoRia Museum - Kelas V.docx
+- Intel Skills for Innovation (SFI) Starter Pack Catalog.
+- Intel SFI Lesson Summary.
+
+Jangan mengarang materi, tujuan pembelajaran, atau referensi. Jika sumber tidak mendukung informasi tertentu, tandai sebagai kebutuhan klarifikasi.
+
+---
+
+C. KONSEP PENGALAMAN MUSEUM
+
+EkoRia bukan sekadar website berisi kartu materi dan kuis.
+
+Aplikasi harus memberikan pengalaman seperti mengunjungi museum sains modern yang memiliki ruang pamer, diorama habitat, laboratorium interaktif, instalasi edukasi, dan pemandu museum.
+
+Siswa harus merasa sedang melakukan petualangan menjelajahi museum sains.
+
+1. Arsitektur museum
+
+Buat lingkungan museum dengan elemen:
+
+- Gedung museum modern.
+- Main Exhibition Hall.
+- Koridor penghubung.
+- Ruang pamer tematik.
+- Diorama habitat.
+- Interactive Science Installation.
+- Observation Laboratory.
+- Digital Learning Laboratory.
+- Discovery Corner.
+- Ruang evaluasi.
+- Area pencapaian.
+
+Gunakan perspektif visual yang memberikan kesan ruang nyata, bukan dashboard website biasa.
+
+2. Empat ruang pamer utama
+
+<ROOM 1> HUTAN HARMONI
+
+Tema: Ekosistem hutan tropis.
+
+Materi:
+
+- Komponen biotik dan abiotik.
+- Hubungan antarmakhluk hidup.
+- Rantai makanan.
+- Peran produsen, konsumen, dan pengurai.
+- Keseimbangan ekosistem hutan.
+
+Elemen visual:
+
+- Pepohonan tinggi.
+- Tumbuhan bawah.
+- Tanah dan bebatuan.
+- Sungai kecil.
+- Hewan hutan.
+- Cahaya matahari menembus kanopi.
+- Partikel dan serangga terbang.
+
+<ROOM 2> SUNGAI BERSIH
+
+Tema: Ekosistem air tawar.
+
+Materi:
+
+- Organisme sungai.
+- Faktor abiotik perairan.
+- Hubungan organisme air.
+- Pencemaran sungai.
+- Dampak pencemaran terhadap keseimbangan ekosistem.
+
+Elemen visual:
+
+- Aliran air.
+- Batu sungai.
+- Tumbuhan air.
+- Ikan.
+- Serangga air.
+- Riak dan refleksi cahaya.
+- Zona sungai bersih dan tercemar untuk perbandingan.
+
+<ROOM 3> LAUT SAHABAT KARANG
+
+Tema: Ekosistem laut.
+
+Materi:
+
+- Keanekaragaman organisme laut.
+- Hubungan makan dan dimakan.
+- Terumbu karang.
+- Keseimbangan ekosistem laut.
+- Ancaman terhadap lingkungan laut.
+
+Elemen visual:
+
+- Terumbu karang.
+- Ikan beragam ukuran.
+- Penyu.
+- Rumput laut.
+- Plankton sebagai konsep visual.
+- Efek cahaya bawah laut.
+- Gelembung dan pergerakan air.
+
+<ROOM 4> SAWAH DAN KEBUN
+
+Tema: Ekosistem pertanian.
+
+Materi:
+
+- Interaksi organisme dalam ekosistem sawah.
+- Produsen dan konsumen.
+- Hama dan predator alami.
+- Pengurai.
+- Keseimbangan ekosistem pertanian.
+- Pelestarian lingkungan pertanian.
+
+Elemen visual:
+
+- Tanaman padi.
+- Serangga.
+- Katak.
+- Ular.
+- Burung.
+- Tanah.
+- Aliran irigasi.
+- Aktivitas organisme.
+
+Setiap ruang harus memiliki karakter visual, pencahayaan, suara lingkungan, dan interaksi yang berbeda.
+
+---
+
+D. ART DIRECTION DAN DESAIN VISUAL
+
+Gunakan konsep:
+
+REALISTIC 3D CARTOON SCIENCE MUSEUM ADVENTURE
+
+Gabungkan arsitektur museum modern yang realistis dengan karakter 3D kartun yang ramah anak.
+
+1. Arsitektur visual
+
+Gunakan:
+
+- Museum dengan skala ruang yang meyakinkan.
+- Lantai mengilap dengan refleksi halus.
+- Dinding bertekstur.
+- Kaca display.
+- Spotlight.
+- Signage museum.
+- Diorama habitat.
+- Instalasi sains interaktif.
+- Koridor dengan kedalaman visual.
+- Pencahayaan realistis.
+- Bayangan lembut.
+
+Hindari:
+
+- Template dashboard generik.
+- Terlalu banyak kartu.
+- Gradien berlebihan.
+- Ikon acak.
+- Komposisi terlalu ramai.
+- Ilustrasi yang tidak berhubungan dengan materi.
+- Tampilan yang terlihat seperti hasil template AI.
+
+2. Palet warna
+
+Gunakan palet:
+
+Warna| Kode
+Forest Green| #247A50
+Leaf Green| #2E9E6B
+Sky Blue| #39A9DB
+Ocean Teal| #20B2AA
+Warm Yellow| #FFC857
+Natural Orange| #F47C48
+Warm White| #F5F7F2
+Dark Text| #263238
+
+Gunakan warna secara konsisten, tetapi sesuaikan suasana setiap habitat.
+
+3. Karakter pemandu
+
+Buat karakter pemandu museum bernama Aci.
+
+Konsep:
+
+- Karakter 3D kartun yang ramah.
+- Bentuk sederhana dan mudah diingat.
+- Ekspresi wajah jelas.
+- Gerakan natural.
+- Tidak menakutkan.
+- Cocok untuk anak usia 10–11 tahun.
+
+Aci harus menjadi pemandu yang mengajak siswa mengamati dan menemukan, bukan hanya membacakan materi.
+
+Animasi Aci:
+
+- Idle.
+- Walking.
+- Talking.
+- Pointing.
+- Thinking.
+- Happy.
+- Surprised.
+- Encouraging.
+- Explaining.
+- Celebrating.
+
+Pastikan animasi memiliki transisi yang halus.
+
+---
+
+E. SISTEM PEMANDU MUSEUM DENGAN AUDIO NARASI
+
+Setiap awal ruangan dan setiap awal adegan penting harus memiliki narasi dari Aci.
+
+Tujuannya adalah menciptakan pengalaman seperti mengikuti tur museum sungguhan.
+
+1. Mekanisme narasi
+
+Ketika siswa memasuki sebuah ruangan:
+
+1. Kamera memperlihatkan ruangan.
+2. Aci muncul atau bergerak menuju siswa.
+3. Aci memberikan sapaan.
+4. Narasi suara mulai diputar setelah interaksi pengguna yang diperlukan.
+5. Teks narasi muncul sebagai subtitle.
+6. Siswa dapat melanjutkan eksplorasi setelah mendengarkan atau memilih melewati narasi.
+
+2. Kontrol audio
+
+Sediakan:
+
+- Play.
+- Pause.
+- Replay.
+- Mute.
+- Volume control.
+- Subtitle.
+- Skip narration.
+- Pengaturan audio lingkungan.
+
+Audio harus:
+
+- Menggunakan Bahasa Indonesia.
+- Memiliki suara konsisten.
+- Terdengar natural.
+- Memiliki intonasi ekspresif.
+- Tidak terlalu cepat.
+- Mudah dipahami anak SD.
+
+Jangan mengaktifkan audio secara otomatis sebelum interaksi pengguna jika browser membatasi autoplay.
+
+3. Audio lingkungan
+
+Tambahkan suara sesuai habitat:
+
+- Hutan: burung, angin, dedaunan.
+- Sungai: aliran air dan suara organisme air.
+- Laut: suasana bawah laut.
+- Sawah: burung, serangga, angin.
+
+Audio lingkungan harus memiliki volume lebih rendah daripada narasi.
+
+Gunakan audio manager terpusat agar tidak terjadi beberapa audio yang diputar bersamaan tanpa kendali.
+
+4. Contoh pola narasi
+
+Hutan Harmoni:
+
+"Halo, penjelajah kecil! Selamat datang di Hutan Harmoni. Coba perhatikan sekelilingmu. Ada pohon tinggi, tumbuhan kecil, tanah, air, dan berbagai hewan. Menurutmu, apakah semua makhluk hidup di sini saling berhubungan? Yuk, kita temukan jawabannya!"
+
+Narasi harus dilanjutkan dengan pertanyaan pemantik yang relevan dengan materi.
+
+---
+
+F. ANIMASI DAN EFEK LINGKUNGAN
+
+Museum harus terasa hidup.
+
+Tambahkan animasi lingkungan:
+
+- Daun bergerak tertiup angin.
+- Burung terbang.
+- Ikan berenang.
+- Kupu-kupu bergerak.
+- Air mengalir.
+- Rumput bergerak.
+- Tanaman tumbuh.
+- Cahaya bergerak secara halus.
+- Partikel atmosfer.
+- Objek tertentu bereaksi terhadap interaksi siswa.
+
+1. Pencahayaan
+
+Gunakan efek pencahayaan sesuai ruang:
+
+Hutan:
+
+- Sunlight through canopy.
+- Soft shadows.
+- Warm natural light.
+
+Sungai:
+
+- Blue ambient light.
+- Water reflections.
+- Soft caustic effect.
+
+Laut:
+
+- Underwater lighting.
+- Light rays.
+- Subtle floating particles.
+
+Sawah:
+
+- Warm sunlight.
+- Natural shadows.
+- Golden-hour atmosphere.
+
+2. Efek kejutan
+
+Tambahkan kejutan kecil yang relevan dengan pembelajaran:
+
+- Organisme tersembunyi.
+- Mystery Exhibit.
+- Ecosystem Alert.
+- Objek yang bereaksi ketika diklik.
+- Discovery Reward.
+- Hidden Organism Challenge.
+- Perubahan kondisi ekosistem.
+
+Kejutan harus membangun rasa ingin tahu, bukan sekadar efek visual.
+
+Hindari:
+
+- Flashing lights.
+- Layar tiba-tiba gelap total.
+- Suara keras.
+- Pergerakan kamera cepat.
+- Efek visual berlebihan.
+
+---
+
+G. SISTEM INTERAKSI PEMBELAJARAN
+
+Semua interaksi harus memiliki tujuan pembelajaran.
+
+1. Organism Explorer
+
+Siswa dapat memilih organisme untuk melihat:
+
+- Nama organisme.
+- Gambar atau model 3D.
+- Habitat.
+- Peran dalam ekosistem.
+- Makanan.
+- Hubungan dengan organisme lain.
+- Fakta menarik.
+
+2. Food Chain Builder
+
+Siswa menyusun rantai makanan dengan drag-and-drop.
+
+Contoh:
+
+Rumput → Belalang → Katak → Ular → Elang.
+
+Sistem harus:
+
+- Memvalidasi urutan.
+- Memberikan umpan balik.
+- Menjelaskan kesalahan.
+- Memberikan kesempatan mencoba kembali.
+
+3. Food Web Builder
+
+Siswa membangun jaring-jaring makanan dengan menghubungkan organisme.
+
+Sediakan:
+
+- Visualisasi hubungan.
+- Garis penghubung.
+- Penjelasan arah aliran energi.
+- Umpan balik otomatis.
+
+4. Ecosystem Simulation
+
+Siswa dapat mengubah jumlah populasi organisme dan mengamati akibatnya.
+
+Contoh:
+
+- Populasi predator berkurang.
+- Populasi mangsa meningkat.
+- Produsen berkurang.
+- Terjadi perubahan keseimbangan ekosistem.
+
+Simulasi harus memperlihatkan hubungan sebab-akibat secara sederhana dan sesuai tingkat perkembangan siswa.
+
+Jelaskan bahwa simulasi merupakan model pembelajaran, bukan prediksi ilmiah yang sepenuhnya akurat.
+
+5. Virtual Terrarium
+
+Siswa mengamati ekosistem mini.
+
+Interaksi:
+
+- Menambahkan organisme.
+- Mengatur air.
+- Mengatur cahaya.
+- Mengamati perubahan.
+- Mencatat hasil pengamatan.
+
+6. Decomposer Lab
+
+Siswa mempelajari peran pengurai.
+
+Tampilkan:
+
+- Sisa organisme.
+- Jamur.
+- Bakteri sebagai konsep visual.
+- Proses penguraian.
+- Nutrisi yang kembali ke lingkungan.
+
+7. Hidden Object Discovery
+
+Sediakan benda atau organisme tersembunyi pada setiap ruangan.
+
+Setiap penemuan memberikan:
+
+- Informasi edukatif.
+- XP.
+- Lencana.
+- Tantangan tambahan.
+
+---
+
+H. SISTEM AI EDUCATIONAL GUIDE – ECOBOT
+
+EcoBot berfungsi sebagai asisten pembelajaran.
+
+Tugas EcoBot:
+
+- Menjelaskan konsep.
+- Memberikan pertanyaan pemantik.
+- Memberikan petunjuk.
+- Membantu siswa memahami kesalahan.
+- Mengarahkan eksplorasi.
+- Mengajak siswa membuat kesimpulan.
+
+Prinsip penting:
+
+EcoBot tidak boleh langsung memberikan semua jawaban.
+
+Gunakan pola:
+
+1. Tanyakan pemahaman siswa.
+2. Berikan petunjuk.
+3. Arahkan siswa mengamati.
+4. Berikan pertanyaan lanjutan.
+5. Bantu siswa menyusun kesimpulan.
+
+Batasan:
+
+- Bahasa sesuai kelas V SD.
+- Tidak membahas konten yang tidak sesuai anak.
+- Tidak meminta nama lengkap, alamat, nomor telepon, atau informasi pribadi.
+- Tidak mengirim identitas siswa ke layanan AI.
+- Tidak memberikan informasi di luar materi tanpa penjelasan yang tepat.
+- Jika tidak yakin, nyatakan keterbatasannya.
+
+---
+
+I. GAMIFIKASI DAN MOTIVASI BELAJAR
+
+Bangun sistem gamifikasi yang mendukung pembelajaran.
+
+Fitur:
+
+- XP.
+- Stars.
+- Badges.
+- Missions.
+- Discovery Collection.
+- Achievement Gallery.
+- Learning Progress.
+- Certificate.
+
+Contoh misi:
+
+- Penjelajah Hutan.
+- Penjaga Sungai.
+- Sahabat Terumbu Karang.
+- Ahli Rantai Makanan.
+- Detektif Ekosistem.
+- Pelindung Keseimbangan Alam.
+
+Reward harus diberikan berdasarkan penyelesaian aktivitas yang nyata.
+
+Jangan memberikan reward secara acak atau hanya berdasarkan klik.
+
+---
+
+J. SISTEM ASESMEN
+
+Sediakan asesmen yang mengukur pemahaman siswa.
+
+Jenis:
+
+1. Pre-test.
+2. Kuis per ruang.
+3. Tantangan interaktif.
+4. Evaluasi akhir.
+5. Refleksi pembelajaran.
+
+Ketentuan:
+
+- Soal sesuai materi.
+- Bahasa sederhana.
+- Variasi tingkat kesulitan.
+- Umpan balik edukatif.
+- Catat jawaban dan hasil.
+- Simpan riwayat percobaan.
+- Hindari hanya mengukur hafalan.
+
+Dashboard harus dapat membandingkan hasil awal dan akhir.
+
+Jangan membuat soal yang tidak memiliki dasar pada sumber materi.
+
+---
+
+K. DASHBOARD GURU
+
+Buat dashboard guru yang terpisah dari antarmuka siswa.
+
+Fitur:
+
+1. Ringkasan jumlah siswa.
+2. Daftar kelas.
+3. Daftar akun siswa.
+4. Progres masing-masing siswa.
+5. Progres per ruang museum.
+6. Hasil pre-test dan post-test.
+7. Riwayat aktivitas.
+8. Hasil laboratorium.
+9. Koleksi organisme.
+10. XP dan lencana.
+11. Waktu belajar.
+12. Aktivitas terakhir.
+13. Analisis materi yang sulit.
+14. Ekspor CSV/Excel.
+15. Pengelolaan akun dan kelas.
+
+Dashboard harus menyajikan informasi yang membantu guru mengambil keputusan pembelajaran.
+
+Hindari visualisasi yang hanya mempercantik tampilan tanpa memberikan informasi bermakna.
+
+---
+
+L. INTEGRASI GOOGLE FIREBASE
+
+Tujuan
+
+Integrasikan Firebase sebagai backend utama agar setiap siswa memiliki akun dan seluruh progres belajar tersimpan secara online.
+
+Gunakan:
+
+- Firebase Authentication.
+- Cloud Firestore.
+- Firebase Security Rules.
+- Firebase Emulator Suite untuk pengujian jika tersedia.
+- Cloud Functions atau backend server-side bila diperlukan untuk operasi sensitif.
+
+1. Audit integrasi
+
+Sebelum mengubah kode:
+
+- Periksa struktur proyek.
+- Periksa package dan dependency.
+- Periksa konfigurasi backend.
+- Periksa apakah Firebase sudah tersedia.
+- Identifikasi fitur yang perlu dihubungkan.
+- Pertahankan seluruh fitur yang sudah berfungsi.
+
+Jika Firebase belum tersedia, siapkan integrasi modular.
+
+2. Autentikasi siswa
+
+Setiap siswa harus memiliki:
+
+- Student ID unik.
+- Username unik.
+- PIN.
+- Kelas.
+- Status akun.
+
+Persyaratan:
+
+- Tidak mewajibkan email atau nomor telepon siswa.
+- Akun dibuat atau dikelola guru.
+- Siswa dapat login dan logout.
+- Guru dapat mengatur ulang akses siswa.
+- Jangan menyimpan PIN dalam bentuk teks biasa.
+- Jangan menggunakan username dan PIN yang hanya diverifikasi di frontend.
+- Gunakan mekanisme autentikasi yang aman.
+
+Jika Firebase Authentication membutuhkan mekanisme tambahan untuk login username dan PIN, implementasikan melalui backend tepercaya atau solusi autentikasi yang sesuai. Jangan membuat autentikasi palsu.
+
+3. Data Firestore
+
+Rancang struktur database yang terorganisasi.
+
+Contoh koleksi:
+
+"classes"
+
+- classId
+- className
+- teacherId
+- createdAt
+
+"students"
+
+- studentId
+- username
+- classId
+- authUid
+- status
+- createdAt
+
+"studentProgress"
+
+- studentId
+- completedRooms
+- roomProgress
+- totalXP
+- totalStars
+- badges
+- completedMissions
+- preTestScore
+- postTestScore
+- lastActivityAt
+- totalLearningDuration
+- updatedAt
+
+"quizAttempts"
+
+- attemptId
+- studentId
+- quizId
+- roomId
+- score
+- answers
+- completedAt
+
+"activityRecords"
+
+- activityId
+- studentId
+- activityType
+- roomId
+- result
+- duration
+- completedAt
+
+"achievements"
+
+- achievementId
+- studentId
+- badgeId
+- earnedAt
+
+"teacherAccounts"
+
+- teacherId
+- authUid
+- role
+- assignedClasses
+
+Sesuaikan struktur berdasarkan kebutuhan aktual aplikasi.
+
+Jangan menyimpan data yang sama berulang kali tanpa alasan.
+
+4. Sinkronisasi progres
+
+Implementasikan:
+
+- Penyimpanan otomatis.
+- Sinkronisasi cloud.
+- Pemulihan progres setelah login.
+- Sinkronisasi antarperangkat.
+- Antrean offline.
+- Retry saat koneksi pulih.
+- Timestamp server.
+- Pencegahan duplikasi.
+- Indikator status sinkronisasi.
+
+Gunakan transaksi atau mekanisme penulisan yang sesuai untuk mencegah kehilangan progres.
+
+LocalStorage hanya diperbolehkan sebagai cache sementara atau antrean offline, bukan sebagai database utama.
+
+5. Keamanan data siswa
+
+Wajib:
+
+- Role-based access.
+- Isolasi data siswa.
+- Pembatasan akses guru berdasarkan kelas.
+- Validasi data.
+- Security Rules.
+- Proteksi operasi sensitif di server.
+- Tidak menaruh service account key di frontend.
+- Tidak memasukkan API key rahasia ke source code publik.
+- Tidak mengirim informasi identitas siswa ke EcoBot atau layanan AI.
+
+Jangan menggunakan Firestore Rules yang memberikan akses baca dan tulis terbuka kepada seluruh pengguna.
+
+6. Data minimization
+
+Simpan hanya informasi yang dibutuhkan untuk kegiatan pembelajaran.
+
+Hindari:
+
+- Nama lengkap jika tidak diperlukan.
+- Alamat.
+- Nomor telepon.
+- Data sensitif.
+- Informasi keluarga.
+- Informasi pribadi lainnya.
+
+Perhatikan persetujuan sekolah/orang tua, kebijakan perlindungan data anak, dan ketentuan retensi serta penghapusan data.
+
+7. Dashboard Firebase
+
+Hubungkan dashboard guru dengan data Firestore yang sesungguhnya.
+
+Dilarang menggunakan data dummy untuk menampilkan seolah-olah data siswa sudah tersimpan.
+
+Jika belum terhubung, tampilkan status belum terkoneksi secara jujur.
+
+---
+
+M. TAHAPAN IMPLEMENTASI
+
+Kerjakan secara bertahap dan berurutan.
+
+Tahap 1 – Audit Existing Project
+
+- Audit struktur proyek.
+- Audit seluruh halaman.
+- Audit fitur yang sudah berjalan.
+- Audit desain visual.
+- Audit navigasi.
+- Audit performa.
+- Audit kebutuhan Firebase.
+- Buat daftar masalah dan prioritas perbaikan.
+
+Jangan langsung melakukan perubahan besar sebelum audit.
+
+Tahap 2 – Visual Foundation
+
+Sempurnakan:
+
+- Main Exhibition Hall.
+- Museum architecture.
+- Navigation.
+- Room transitions.
+- Character Aci.
+- Responsive layout.
+
+Jadikan Main Exhibition Hall dan Hutan Harmoni sebagai benchmark kualitas visual.
+
+Tahap 3 – Guided Audio Tour
+
+Implementasikan:
+
+- Audio manager.
+- Narasi Aci.
+- Subtitle.
+- Kontrol audio.
+- Suara lingkungan.
+- Transisi antarruang.
+
+Tahap 4 – Living Museum
+
+Implementasikan:
+
+- Animasi karakter.
+- Animasi habitat.
+- Lighting.
+- Shadow.
+- Ambient particles.
+- Interactive environmental objects.
+- Discovery surprises.
+
+Tahap 5 – Interactive Exhibits
+
+Implementasikan:
+
+- Organism Explorer.
+- Food Chain Builder.
+- Food Web Builder.
+- Ecosystem Simulation.
+- Virtual Terrarium.
+- Decomposer Lab.
+- Hidden Object Discovery.
+
+Tahap 6 – Learning and Gamification
+
+Implementasikan:
+
+- EcoBot.
+- Misi.
+- XP.
+- Badges.
+- Achievement Gallery.
+- Pre-test.
+- Post-test.
+- Learning Reflection.
+
+Tahap 7 – Firebase Integration
+
+Implementasikan:
+
+- Firebase configuration.
+- Authentication.
+- Firestore.
+- Security Rules.
+- Progress synchronization.
+- Offline queue.
+- Teacher dashboard.
+
+Tahap 8 – Testing and Optimization
+
+Lakukan pengujian menyeluruh sebelum menyatakan aplikasi selesai.
+
+---
+
+N. STANDAR TEKNIS
+
+Gunakan teknologi sesuai kondisi proyek yang sudah ada.
+
+Prioritaskan:
+
+- React.
+- TypeScript.
+- Modular components.
+- Reusable components.
+- Responsive design.
+- Firebase SDK.
+- Secure server-side operations.
+- CSS animations.
+- SVG atau Canvas jika sesuai.
+- Three.js atau teknologi 3D lain hanya jika benar-benar dibutuhkan.
+
+Jangan menambahkan library berat tanpa manfaat yang jelas.
+
+Optimalkan untuk:
+
+- Chromebook.
+- Perangkat RAM terbatas.
+- Koneksi internet sekolah yang tidak selalu stabil.
+- Smartphone kelas menengah.
+
+Gunakan:
+
+- Lazy loading.
+- Asset compression.
+- Efficient rendering.
+- Code splitting.
+- Optimized images.
+- Audio compression.
+- Reduced motion mode.
+
+---
+
+O. AKSESIBILITAS
+
+Sediakan:
+
+- Subtitle.
+- Kontrol volume.
+- Kontras yang baik.
+- Teks mudah dibaca.
+- Navigasi sederhana.
+- Tombol yang cukup besar.
+- Feedback visual yang jelas.
+- Reduced motion.
+- Alternatif interaksi untuk drag-and-drop.
+- Tampilan yang responsif.
+
+Pastikan animasi tidak mengganggu konsentrasi siswa.
+
+---
+
+P. ANTI-AI-SLOP QUALITY STANDARD
+
+Hasil akhir tidak boleh terlihat seperti website yang dibuat dari template AI generik.
+
+Hindari:
+
+1. Semua halaman menggunakan layout identik.
+2. Kartu berulang tanpa fungsi.
+3. Gradien berlebihan.
+4. Ikon acak.
+5. Teks placeholder.
+6. Tombol yang tidak bekerja.
+7. Animasi yang tidak bermakna.
+8. Gambar yang tidak relevan.
+9. Dashboard yang terlalu ramai.
+10. Penggunaan efek visual yang mengganggu.
+11. Fitur palsu yang hanya menampilkan simulasi.
+12. Klaim integrasi backend yang belum diuji.
+
+Setiap ruangan harus mempunyai identitas visual yang berbeda.
+
+Setiap interaksi harus memiliki tujuan pembelajaran.
+
+Setiap animasi harus mendukung suasana atau pemahaman konsep.
+
+Setiap komponen harus memiliki fungsi yang jelas.
+
+Prioritaskan kualitas daripada banyaknya fitur.
+
+---
+
+Q. PENGUJIAN WAJIB
+
+1. Pengujian pengalaman siswa
+
+- Masuk ke museum.
+- Menggunakan pemandu Aci.
+- Mendengarkan narasi.
+- Memasuki empat ruang habitat.
+- Mengakses materi.
+- Menyelesaikan aktivitas.
+- Menggunakan laboratorium.
+- Menyelesaikan kuis.
+- Mendapatkan pencapaian.
+
+2. Pengujian database
+
+- Guru membuat akun siswa.
+- Siswa login.
+- Siswa menyelesaikan aktivitas.
+- Data berhasil tersimpan ke Firestore.
+- Siswa logout.
+- Siswa login kembali.
+- Progres berhasil dipulihkan.
+- Progres tersinkronisasi di perangkat lain.
+- Data siswa tidak dapat diakses siswa lain.
+- Guru hanya dapat mengakses kelas yang ditugaskan.
+- Data tidak hilang ketika koneksi terputus sementara.
+
+3. Pengujian teknis
+
+- Tidak ada error kritis di console.
+- Tidak ada broken image.
+- Tidak ada audio yang bertumpuk.
+- Tidak ada tombol mati.
+- Tidak ada halaman kosong.
+- Tidak ada kebocoran data.
+- Tidak ada akses database yang terbuka.
+- Tidak ada kerusakan fitur lama.
+- Aplikasi berjalan di desktop dan mobile.
+
+---
+
+R. ATURAN KERJA AI
+
+1. Audit proyek yang ada terlebih dahulu.
+2. Identifikasi seluruh fitur yang telah berfungsi.
+3. Buat rencana implementasi.
+4. Kerjakan secara modular.
+5. Jangan menghapus fitur lama.
+6. Jangan membuat ulang aplikasi tanpa alasan.
+7. Jangan mengganti materi sumber.
+8. Jangan membuat fungsi palsu.
+9. Jangan mengklaim keberhasilan tanpa pengujian.
+10. Jangan berhenti pada penjelasan teknis.
+11. Lakukan perbaikan jika menemukan error.
+12. Gunakan aset yang sudah tersedia sebelum membuat aset baru.
+13. Jika membutuhkan konfigurasi eksternal, minta informasi secara spesifik.
+14. Jangan pernah meminta pengguna membagikan private key, service account key, atau password.
+15. Jangan melakukan perubahan destruktif tanpa persetujuan.
+16. Setelah setiap tahap, pastikan preview tetap berjalan.
+
+Jika batas konteks atau waktu mengharuskan pengerjaan bertahap, simpan catatan pekerjaan, perubahan file, masalah yang belum selesai, dan langkah selanjutnya. Jangan mengulang pekerjaan yang sudah selesai.
+
+---
+
+S. LAPORAN HASIL AKHIR
+
+Setelah implementasi, buat laporan yang berisi:
+
+Komponen| Status
+Audit proyek| Selesai/Belum
+Main Exhibition Hall| Selesai/Belum
+Empat ruang habitat| Selesai/Belum
+Karakter Aci| Selesai/Belum
+Audio guided tour| Selesai/Belum
+Animasi lingkungan| Selesai/Belum
+Interactive exhibits| Selesai/Belum
+EcoBot| Selesai/Belum
+Gamifikasi| Selesai/Belum
+Asesmen| Selesai/Belum
+Firebase Authentication| Selesai/Belum
+Cloud Firestore| Selesai/Belum
+Security Rules| Selesai/Belum
+Sinkronisasi progres| Selesai/Belum
+Dashboard guru| Selesai/Belum
+Pengujian| Selesai/Belum
+
+Tambahkan:
+
+- File yang diubah.
+- Fitur yang ditambahkan.
+- Fitur yang diperbaiki.
+- Masalah yang masih ditemukan.
+- Konfigurasi yang masih dibutuhkan.
+- Hasil pengujian aktual.
+- Potensi biaya operasional Firebase.
+- Rekomendasi pengembangan berikutnya.
+
+Jangan menandai komponen sebagai selesai jika belum benar-benar diimplementasikan dan diuji.
+
+---
+
+T. PERINTAH EKSEKUSI PERTAMA
+
+Mulai sekarang dengan melakukan audit menyeluruh terhadap proyek EkoRia Museum yang sedang terbuka di Google AI Studio Build Mode.
+
+Jangan langsung membangun ulang aplikasi.
+
+Pertama, identifikasi:
+
+1. Struktur proyek.
+2. Teknologi yang digunakan.
+3. Fitur yang sudah berjalan.
+4. Fitur yang belum berjalan.
+5. Kualitas visual dan pengalaman pengguna.
+6. Kesiapan integrasi Firebase.
+7. Masalah teknis dan performa.
+
+Setelah audit, susun daftar prioritas implementasi.
+
+Kemudian mulai memperbaiki proyek secara langsung, bertahap, dan terukur.
+
+PRINSIP AKHIR:
+
+Bangun EkoRia Museum sebagai pengalaman belajar sains interaktif yang terasa seperti mengunjungi museum sungguhan, memiliki pemandu audio yang hidup, lingkungan 3D yang dinamis, aktivitas eksplorasi bermakna, sistem asesmen, dan database online yang aman untuk menyimpan progres setiap siswa.
+
+Jadikan kualitas pengalaman belajar, ketepatan materi, keamanan data anak, dan keandalan teknis sebagai prioritas utama.

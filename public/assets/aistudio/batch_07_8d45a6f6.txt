@@ -1,0 +1,105 @@
+Perbaiki teks saja (jangan ubah logika, struktur data, id, role, warna, atau tata letak). Ganti setiap teks LAMA menjadi BARU persis seperti tertulis, di file yang disebut. Jika teks LAMA terpotong atau tidak ditemukan persis, cari kalimat yang paling mirip dan terapkan perbaikan yang sama. Teks bertanda (ganti semua) diganti di seluruh file. Pastikan aplikasi tetap berjalan tanpa error.
+
+BATCH 7/11
+1. [src/data/offlineEcoBotKnowledge.ts]
+LAMA: bertindak seperti wajan penggorengan mini untuk menangkap sinar matahari. Tanpa klorofil, daun tidak bisa menyerap energi cahaya untuk mengubah air dan udara menjadi sari pati makanan.
+BARU: bekerja seperti panel surya mini untuk menangkap sinar matahari. Tanpa klorofil, daun tidak bisa menyerap energi cahaya untuk mengubah air dan karbon dioksida menjadi makanan.
+2. [src/data/offlineEcoBotKnowledge.ts]
+LAMA: kaya akan vitamin nutrisi bagi akar tumbuhan.
+BARU: kaya akan zat hara bagi akar tumbuhan.
+3. [src/data/offlineEcoBotKnowledge.ts]
+LAMA: tumbuhan menyerap air untuk mengantarkan sari makanan dari akar ke pucuk daun tertinggi.
+BARU: tumbuhan menyerap air untuk mengangkut zat hara dari akar ke daun.
+4. [src/components/museum/MuseumHub.tsx]
+LAMA: EcoRia
+BARU: EkoRia
+5. [src/components/museum/MuseumHub.tsx]
+LAMA: "Tentang Museum EcoRia" / "EcoRia Virtual Science Museum"
+BARU: "Tentang Museum EkoRia" / "Museum Sains Virtual EkoRia"
+6. [src/components/museum/MuseumHub.tsx]
+LAMA: "Hutan – Komponen biotik, abiotik, dan peran dekomposer"
+BARU: "Hutan – Komponen biotik, abiotik, dan peran pengurai"
+7. [src/components/museum/MuseumHub.tsx]
+LAMA: "Rantai Makanan – Aliran energi produsen hingga puncak"
+BARU: "Rantai Makanan – Aliran energi dari produsen hingga pemangsa puncak"
+8. [src/components/museum/MuseumHub.tsx]
+LAMA: "Keseimbangan Ekosistem – Dinamika populasi dan simulasi sains"
+BARU: "Keseimbangan Ekosistem – Naik-turunnya jumlah makhluk hidup dan simulasi sains"
+9. [src/components/museum/MuseumHub.tsx]
+LAMA: "Ekosistem Buatan – Sawah, kebun, dan kolam rekayasa manusia"
+BARU: "Ekosistem Buatan – Sawah, kebun, dan kolam buatan manusia"
+10. [src/components/museum/MuseumHub.tsx]
+LAMA: "Geser ke kiri atau kanan untuk memilih salah satu dari 8 gerbang ekosistem"
+BARU: "Geser ke kiri atau kanan untuk memilih salah satu dari 8 gerbang ekosistem."
+11. [src/components/museum/MuseumHub.tsx]
+LAMA: "\"Selamat datang di EcoRia! Pilih salah satu portal untuk menjelajahi berbagai ekosistem.\""
+BARU: "\"Selamat datang di EkoRia! Pilih salah satu gerbang untuk menjelajahi berbagai ekosistem.\""
+12. [src/components/museum/MainHall.tsx]
+LAMA: EcoRia
+BARU: EkoRia
+13. [src/components/museum/MainHall.tsx]
+LAMA: "EcoRia Museum 3D Landscape" (alt/aria)
+BARU: "Pemandangan 3D Museum EkoRia"
+14. [src/components/museum/MainHall.tsx]
+LAMA: "EcoBot dan Petualang Cilik" (alt)
+BARU: "Ozi dan Nara, petualang cilik"
+15. [src/components/museum/MainHall.tsx]
+LAMA: "4 Habitat alam: Hutan, Sungai, Laut, dan Sawah."
+BARU: "Empat habitat alam: hutan, sungai, laut, dan sawah."
+16. [src/components/museum/MainHall.tsx]
+LAMA: "Simulasi ekosistem & jamur pengurai lantai hutan."
+BARU: "Simulasi ekosistem dan jamur pengurai di lantai hutan."
+17. [src/components/museum/MainHall.tsx]
+LAMA: "20 Soal Pre-Test & 20 Soal Uji Akhir berhadiah XP."
+BARU: "Tes Awal dan Tes Akhir, masing-masing 20 soal berhadiah XP."
+18. [src/components/museum/MainHall.tsx]
+LAMA: "Selesaikan evaluasi akhir untuk menguji pengetahuanmu dan cetak sertifikat resmi bergambar nama dan lencanamu!"
+BARU: "Selesaikan tes akhir untuk menguji pengetahuanmu, lalu cetak sertifikat resmi berisi nama dan lencanamu!"
+19. [src/components/landing/LandingPage.tsx]
+LAMA: EcoRia
+BARU: EkoRia
+20. [src/components/landing/LandingPage.tsx]
+LAMA: "EcoRia" / "Virtual Science Museum" / "Museum Sains Virtual"
+BARU: "EkoRia" / "Museum Sains Virtual"
+21. [src/components/landing/LandingPage.tsx]
+LAMA: "Masuki dunia EcoRia dan pelajari harmoni dalam ekosistem melalui petualangan yang interaktif, seru, dan bermakna bersama Nara dan robot pemandu Ozi"
+BARU: "Masuki dunia EkoRia dan pelajari harmoni dalam ekosistem melalui petualangan yang interaktif, seru, dan bermakna bersama Nara dan robot pemandu Ozi."
+22. [src/components/landing/LandingPage.tsx]
+LAMA: "Keseimbangan Ekosistem — Simulasi seimbang 3 tingkat dan perbaikan gangguan."
+BARU: "Keseimbangan Ekosistem — Simulasi keseimbangan tiga kelompok makhluk hidup dan cara memperbaiki gangguan."
+23. [src/components/landing/LandingPage.tsx]
+LAMA: "Rantai Makanan — Aliran energi dari produsen ke pemakan hingga pengurai."
+BARU: "Rantai Makanan — Aliran energi dari produsen ke konsumen hingga pengurai."
+24. [src/components/landing/LandingPage.tsx]
+LAMA: "Ekosistem Buatan — Sawah padi, kolam ikan mina padi, dan predator alami."
+BARU: "Ekosistem Buatan — Sawah, mina padi (padi dan ikan), dan pemangsa alami hama."
+25. [src/components/landing/LandingPage.tsx]
+LAMA: "Pelestarian Lingkungan — Pilah sampah organik/plastik, reboisasi, dan hemat air."
+BARU: "Pelestarian Lingkungan — Memilah sampah organik dan anorganik, menanam kembali hutan, dan menghemat air."
+26. [src/components/landing/LandingPage.tsx]
+LAMA: "Sungai & Danau — Ikan wader, batu kali jernih, dan capung indikator air."
+BARU: "Sungai & Danau — Ikan wader, batu kali, dan capung penanda air bersih."
+27. [src/components/landing/LandingPage.tsx]
+LAMA: "Siswa dapat mengoleksi temuan biotik dan abiotik ke dalam Jurnal Penjelajah pribadi
+BARU: "Siswa dapat mengumpulkan temuan biotik dan abiotik di Jurnal Penjelajah pribadi
+28. [src/components/landing/LandingPage.tsx]
+LAMA: "Penyimpanan Cloud"
+BARU: "Penyimpanan Daring (Cloud)"
+29. [src/components/landing/LandingPage.tsx]
+LAMA: "Narasi Suara Bahasa Indonesia"
+BARU: "Narasi Suara Berbahasa Indonesia"
+30. [src/components/quiz/QuizCenter.tsx]
+LAMA: EcoRia
+BARU: EkoRia
+31. [src/components/quiz/QuizCenter.tsx]
+LAMA: "Pre-Test" / "Post-Test"
+BARU: "Tes Awal" / "Tes Akhir"
+32. [src/components/quiz/QuizCenter.tsx]
+LAMA: "Terselesaikan" + progressPercent
+BARU: "Selesai" + progressPercent
+33. [src/components/quiz/QuizCenter.tsx]
+LAMA: "Jawaban yang benar adalah pilihan <huruf opsi>"
+BARU: "Jawaban yang benar adalah pilihan <huruf opsi>."
+34. [src/components/quiz/QuizCenter.tsx]
+LAMA: "Selamat! Kamu telah menyelesaikan semua <totalQuestions> soal dengan skor <finalScore>"
+BARU: "Selamat! Kamu telah menyelesaikan semua <totalQuestions> soal dengan skor <finalScore>."

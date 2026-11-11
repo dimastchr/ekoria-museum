@@ -1,0 +1,111 @@
+Perbaiki teks saja (jangan ubah logika, struktur data, id, role, warna, atau tata letak). Ganti setiap teks LAMA menjadi BARU persis seperti tertulis, di file yang disebut. Jika teks LAMA terpotong atau tidak ditemukan persis, cari kalimat yang paling mirip dan terapkan perbaikan yang sama. Teks bertanda (ganti semua) diganti di seluruh file. Pastikan aplikasi tetap berjalan tanpa error.
+
+BATCH 1/11
+1. [src/data/museumData.ts]
+LAMA: Membuat makanan sendiri dengan sinar matahari dan air.
+BARU: Membuat makanan sendiri dari air dan udara (karbon dioksida) dengan bantuan sinar matahari.
+2. [src/data/museumData.ts]
+LAMA: Pohon hutan menghasilkan oksigen segar untuk bernapas semua hewan dan manusia!
+BARU: Pohon hutan menghasilkan oksigen segar yang kita hirup bersama hewan-hewan!
+3. [src/data/museumData.ts]
+LAMA: scientificName: 'Rusa Jawa'
+BARU: scientificName: 'Rusa Sambar'
+4. [src/data/museumData.ts]
+LAMA: Rusa memiliki telinga lebar dan lari cepat untuk menghindar dari pemangsa.
+BARU: Rusa memiliki telinga lebar dan dapat berlari cepat untuk menghindari pemangsa.
+5. [src/data/museumData.ts]
+LAMA: role: 'Tempat akar berpijak'
+BARU: role: 'Tempat akar tumbuh dan mencengkeram'
+6. [src/data/museumData.ts]
+LAMA: Cari di dekat lumut hijau batuan tepi sungai...
+BARU: Cari di dekat lumut hijau pada batu di tepi sungai...
+7. [src/data/museumData.ts]
+LAMA: Warna hijaunya mirip daun agar aman dari burung pemangsa.
+BARU: Warna hijaunya mirip daun sehingga ia aman dari burung pemangsa.
+8. [src/data/museumData.ts]
+LAMA: Dengarkan suara gemercik air!
+BARU: Dengarkan suara gemericik air!
+9. [src/data/museumData.ts]
+LAMA: 'Mengetahui lumut dan ganggang sebagai produsen air.'
+BARU: 'Mengetahui lumut dan ganggang sebagai produsen di sungai.'
+10. [src/data/museumData.ts]
+LAMA: diet: 'Capung, lalat, dan cacing.'
+BARU: diet: 'Capung, lalat, cacing, dan ikan kecil.'
+11. [src/data/museumData.ts]
+LAMA: Lumut air menghasilkan gelembung oksigen langsung ke dalam air untuk ikan bernapas!
+BARU: Lumut air melepaskan gelembung oksigen ke dalam air sehingga ikan bisa bernapas!
+12. [src/data/museumData.ts]
+LAMA: Capung hanya mau bertelur di air sungai yang jernih dan bebas dari racun detergen.
+BARU: Capung suka bertelur di air sungai yang jernih dan bebas dari limbah detergen.
+13. [src/data/museumData.ts]
+LAMA: trophicLevelName: 'Konsumen 1 (Pemakan Lumut)'
+BARU: trophicLevelName: 'Konsumen Tingkat I (Pemakan Lumut)'
+14. [src/data/museumData.ts]
+LAMA: trophicLevelName: 'Konsumen 1 (Herbivora)'
+BARU: trophicLevelName: 'Konsumen Tingkat I (Herbivora)'
+15. [src/data/museumData.ts]
+LAMA: trophicLevelName: 'Konsumen 2 (Karnivora Kecil)'
+BARU: trophicLevelName: 'Konsumen Tingkat II (Karnivora Kecil)'
+16. [src/data/museumData.ts]
+LAMA: trophicLevelName: 'Konsumen 2 (Karnivora)'
+BARU: trophicLevelName: 'Konsumen Tingkat II atau III (Karnivora)'
+17. [src/data/museumData.ts]
+LAMA: sebenarnya adalah kelompok hewan laut hidup, bukan batu atau tumbuhan.
+BARU: sebenarnya dibentuk oleh hewan karang yang hidup berkelompok, bukan batu atau tumbuhan.
+18. [src/data/museumData.ts]
+LAMA: trophicLevelName: 'Konsumen 1 (Ikan Kecil)'
+BARU: trophicLevelName: 'Konsumen Tingkat I (Pemakan Alga)'
+19. [src/data/museumData.ts]
+LAMA: Anemon melindungi ikan badut, dan ikan badut membersihkan anemon.
+BARU: Anemon melindungi ikan badut dan ikan badut membersihkan anemon.
+20. [src/data/museumData.ts]
+LAMA: trophicLevelName: 'Konsumen 2 (Pemakan Alga & Lamun)'
+BARU: trophicLevelName: 'Konsumen Tingkat I (Herbivora Pemakan Lamun dan Alga)'
+21. [src/data/museumData.ts]
+LAMA: predators: ['Hiu (saat dewasa)']
+BARU: predators: ['Hiu macan']
+22. [src/data/museumData.ts]
+LAMA: Penyu sering mengira kantong plastik sebagai ubur-ubur makanan mereka.
+BARU: Penyu sering mengira kantong plastik adalah ubur-ubur, salah satu makanannya.
+23. [src/data/museumData.ts]
+LAMA: diet: 'Ikan-ikan besar pemangsa.'
+BARU: diet: 'Ikan karang, termasuk ikan pemangsa seperti kerapu.'
+24. [src/data/museumData.ts]
+LAMA: predators: ['Tidak ada predator alami di karang']
+BARU: predators: ['Tidak ada pemangsa alami di karang']
+25. [src/data/museumData.ts]
+LAMA: Hiu membantu memakan ikan yang sakit agar penyakit tidak menular ke ikan-ikan lain di laut.
+BARU: Hiu sering memangsa ikan yang sakit atau lemah sehingga penyakit tidak mudah menular ke ikan lain.
+26. [src/data/museumData.ts]
+LAMA: role: 'Dasar samudra'
+BARU: role: 'Dasar laut'
+27. [src/data/museumData.ts]
+LAMA: Hamparan padi hijau tempat petani menanam beras.
+BARU: Hamparan padi hijau yang ditanam petani untuk menghasilkan beras.
+28. [src/data/museumData.ts]
+LAMA: 'Mengetahui peran cacing tanah menggemburkan lumpur sawah.'
+BARU: 'Mengetahui peran cacing tanah dalam menggemburkan lumpur sawah.'
+29. [src/data/museumData.ts]
+LAMA: diet: 'Membuat makanan sendiri dari sinar matahari, air, dan hara tanah.'
+BARU: diet: 'Membuat makanan sendiri dari air dan udara (karbon dioksida) dengan bantuan sinar matahari, dibantu zat hara dari tanah.'
+30. [src/data/museumData.ts]
+LAMA: role: 'Menyirami tanaman padi'
+BARU: role: 'Mengairi tanaman padi'
+31. [src/data/museumData.ts]
+LAMA: Air yang mengalir cukup menjaga agar padi tidak layu.
+BARU: Aliran air yang cukup menjaga padi agar tidak layu.
+32. [src/data/museumData.ts]
+LAMA: tempat cacing tanah hidup menggemburkan tanah.
+BARU: tempat cacing tanah hidup dan menggemburkan tanah.
+33. [src/data/museumData.ts]
+LAMA: Penyelidikan pintar! Cacing tanah
+BARU: Pengamatan yang jeli! Cacing tanah
+34. [src/data/museumData.ts]
+LAMA: Produsen adalah makhluk hidup autotrof yang membuat makanan sendiri
+BARU: Produsen adalah makhluk hidup yang dapat membuat makanan sendiri (autotrof)
+35. [src/data/museumData.ts]
+LAMA: biasanya bertindak sebagai Konsumen Tingkat 1.
+BARU: biasanya berperan sebagai konsumen tingkat I.
+36. [src/data/museumData.ts]
+LAMA: 'Detritivor (pemakan bangkai daun)'
+BARU: 'Detritivor (pemakan sisa daun dan bangkai)'

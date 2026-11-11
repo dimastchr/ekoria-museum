@@ -1,0 +1,47 @@
+REVISI TOTAL TAHAP 1 – EkoRia Museum (untuk siswa kelas 5 SD, usia 10–11 tahun). Pertahankan semua fitur yang sudah jalan, lalu lakukan audit total dan perbaikan berikut. Di akhir, tulis laporan singkat: apa yang diubah di file mana, dan masalah apa yang ditemukan.
+
+1. DESAIN RAMAH ANAK
+- Ubah tampilan agar ceria, hangat, dan seperti game petualangan anak, bukan seperti situs museum orang dewasa. Pakai sudut membulat besar, ilustrasi kartun lucu yang konsisten, ikon besar, animasi kecil yang menyenangkan (memantul, berkilau), dan efek suara ringan saat berhasil.
+- Kurangi teks panjang. Setiap layar paling banyak 2–3 kalimat pendek. Huruf minimal 18px untuk isi, judul besar, dan jarak baris lega.
+- Tombol minimal 48x48px, label jelas dengan ikon (contoh: "Ayo Masuk!", "Coba Lagi", "Lanjut").
+- Kontras warna wajib memenuhi WCAG AA (4,5:1 untuk teks biasa). Jangan pakai teks putih di atas kuning atau tosca. Hijau daun #2E9E6B dan biru #2F80ED tidak boleh dipakai untuk teks kecil. Gelapkan menjadi sekitar #1E7A50 dan #1C5FC4, atau pakai teks gelap #1F2D3D.
+- Navigasi sederhana: peta museum bergambar sebagai menu utama, dan tombol "Kembali ke Peta" yang selalu terlihat. Tampilan harus nyaman di Chromebook atau laptop sekolah dan di HP.
+
+2. KARAKTER ECOBOT BARU
+- Desain ulang EcoBot menjadi maskot yang lucu dan disukai anak, misalnya robot kecil berbentuk tunas/daun dengan mata besar bulat, pipi merona, dan antena berbentuk daun. Beri ekspresi: senang, berpikir, kagum, menyemangati. Beri animasi melambai dan berkedip.
+- Kepribadian: ramah, sabar, ceria, suka memuji usaha ("Wah, pertanyaan yang bagus!"). Jangan bersikap seperti teman manusia, dan jangan mengaku manusia. Tulis jelas bahwa EcoBot adalah program komputer (AI).
+- Gabungkan atau rapikan peran Pemandu Aci dan EcoBot agar anak tidak bingung. Pakai satu karakter pemandu utama (EcoBot), atau bedakan perannya dengan jelas.
+
+3. SUARA NARASI
+- Tambahkan narasi suara bahasa Indonesia yang membacakan setiap petunjuk, instruksi kegiatan, soal kuis beserta pilihannya, dan jawaban EcoBot.
+- Pakai Web Speech API dengan lang "id-ID". Pilih suara Indonesia yang tersedia (utamakan suara perempuan/ramah), rate 0.9, pitch 1.1.
+- Pasang tombol speaker "Dengarkan" di setiap kotak petunjuk dan soal. Sediakan pengaturan narasi otomatis on/off. Hentikan narasi lama saat narasi baru dimulai. Sorot kata atau kalimat yang sedang dibaca bila memungkinkan.
+- Jika browser tidak punya suara id-ID, tampilkan pesan kecil dan tetap jalankan aplikasi tanpa error.
+
+4. SIMULASI EKOSISTEM HARUS BISA SEIMBANG
+Simulasi sekarang tidak pernah mencapai keseimbangan. Perbaiki modelnya:
+- Gunakan model diskrit 3 tingkat (tumbuhan, herbivora, karnivora): tumbuhan tumbuh logistik dengan daya dukung K, herbivora makan tumbuhan, karnivora makan herbivora, dan ada angka kematian alami. Pilih parameter default sehingga sistem MENUJU titik seimbang yang stabil (osilasi meredam) dalam sekitar 20–40 langkah.
+- Batasi populasi agar tidak negatif dan tidak meledak tanpa batas.
+- Skenario yang bisa dipilih anak: "Seimbang", "Ular diburu manusia → tikus meledak", "Hutan ditebang → tumbuhan berkurang", "Pestisida berlebihan". Tampilkan apa yang terjadi, lalu biarkan anak memperbaiki ("Lepaskan kembali ular", "Tanam pohon") dan melihat ekosistem kembali seimbang.
+- Tampilkan grafik garis sederhana dengan ikon hewan dan indikator "Ekosistem: Seimbang / Tidak Seimbang" yang dihitung dari perubahan populasi kecil selama beberapa langkah. Tambahkan tombol Play, Jeda, Langkah, dan Ulang.
+- Uji sendiri: dengan pengaturan default, indikator harus menjadi "Seimbang".
+
+5. DECOMPOSER LAB TANPA WADAH GELAS
+- Hapus semua gambar mikroorganisme di dalam gelas, tabung, cawan petri, toples, atau alat laboratorium.
+- Ganti dengan pemandangan alami: lantai hutan dengan tumpukan daun gugur, batang kayu lapuk berjamur, jamur di tanah, cacing tanah, rayap, kaki seribu, dan tanah gembur. Bakteri ditampilkan sebagai "lensa kaca pembesar" (lingkaran zoom) di atas daun yang membusuk, dengan bentuk bakteri kartun kecil, tanpa wadah.
+- Tunjukkan prosesnya bertahap: daun segar → layu → membusuk → hancur → tanah humus → tumbuhan baru tumbuh.
+- Istilah akurat: jamur dan bakteri = pengurai. Cacing tanah, rayap, dan kaki seribu = hewan yang membantu menghancurkan sampah daun (detritivor). Jangan sebut cacing tanah sebagai bakteri atau jamur.
+
+6. NAMA TEMPAT, KALIMAT, DAN ISTILAH
+- Periksa SEMUA teks di aplikasi (museumData.ts, komponen, kuis, dialog). Ganti nama tempat, nama ruangan, dan kalimat yang aneh, kaku, puitis berlebihan, atau tidak realistis.
+- Gunakan bahasa Indonesia sehari-hari yang mudah dipahami anak SD kelas 5, sesuai buku IPAS Kelas V Bab 3 "Harmoni dalam Ekosistem". Pakai istilah umum: produsen, konsumen, pengurai, rantai makanan, jaring-jaring makanan, biotik, abiotik, ekosistem, simbiosis, herbivora, karnivora, omnivora.
+- Nama ruang yang sederhana, misalnya: "Hutan", "Sungai", "Laut", "Sawah dan Kebun".
+- Nama hewan dan tumbuhan pakai nama yang dikenal anak di Indonesia (padi, belalang, katak, ular sawah, elang, tikus, burung pipit, ikan mujair, ikan nila, capung, kupu-kupu, cacing tanah, jamur, rumput laut, terumbu karang, ikan badut, penyu, harimau sumatra, rusa, monyet, dan sebagainya). Hindari istilah ilmiah rumit kecuali diberi penjelasan singkat.
+- Hapus istilah yang tidak perlu untuk anak SD, misalnya "agroekosistem", "bioindikator kejernihan", atau "Kearifan Subak" sebagai judul. Bila perlu disebut, jelaskan dengan kata sederhana.
+- Koreksi sains wajib:
+  - Arah panah rantai makanan selalu dari yang DIMAKAN ke yang MEMAKAN (padi → belalang → katak → ular → elang), artinya energi berpindah ke pemakan. Tulis keterangan ini di Food Chain Builder.
+  - Terumbu karang adalah hewan.
+  - Rumput laut adalah alga produsen, bukan tumbuhan sejati. Lamun adalah tumbuhan.
+  - Batu karang mati boleh disebut abiotik, karang hidup adalah biotik.
+  - Plastik di laut berbahaya karena dimakan atau menjerat hewan, bukan karena "menghabiskan oksigen".
+  - Jangan klaim ikan pemakan jentik pasti mencegah demam berdarah. Cukup sebut "membantu mengurangi jentik nyamuk".

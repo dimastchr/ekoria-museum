@@ -1,0 +1,111 @@
+Perbaiki teks saja (jangan ubah logika, struktur data, id, role, warna, atau tata letak). Ganti setiap teks LAMA menjadi BARU persis seperti tertulis, di file yang disebut. Jika teks LAMA terpotong atau tidak ditemukan persis, cari kalimat yang paling mirip dan terapkan perbaikan yang sama. Teks bertanda (ganti semua) diganti di seluruh file. Pastikan aplikasi tetap berjalan tanpa error.
+
+BATCH 10/11
+1. [src/components/museum/ExhibitionRoom.tsx]
+LAMA: "Komponen Tak Hidup (Abiotik)"
+BARU: "Abiotik (Benda Tak Hidup)"
+2. [src/components/museum/ZoneView.tsx]
+LAMA: "Geser panorama kiri-kanan untuk menjelajah & ketuk titik berdenyut untuk mengamati."
+BARU: "Geser panorama ke kiri atau ke kanan untuk menjelajah, lalu ketuk titik yang berkedip untuk mengamati."
+3. [src/components/museum/ZoneView.tsx]
+LAMA: "Eksplorasi penuh zona ini"
+BARU: "Jelajahi seluruh zona ini"
+4. [src/components/museum/ZoneView.tsx]
+LAMA: "PETA MINI ZONA"
+BARU: "Peta Mini Zona"
+5. [src/components/museum/ZoneView.tsx]
+LAMA: "Panorama 360"
+BARU: "Panorama 360°"
+6. [src/components/museum/ObjectDetailModal.tsx]
+LAMA: "adalah komponen abiotik vital di ekosistem"
+BARU: "adalah komponen abiotik yang sangat penting di ekosistem"
+7. [src/components/navbar/TopNav.tsx]
+LAMA: "Tersimpan aman di Cloud Firestore"
+BARU: "Kemajuanmu tersimpan aman di internet"
+8. [src/components/navbar/TopNav.tsx]
+LAMA: "Sedang menyinkronkan data ke Cloud Firestore..."
+BARU: "Sedang menyimpan kemajuanmu ke internet..."
+9. [src/components/navbar/TopNav.tsx]
+LAMA: "Tersimpan di cloud" / "Menunggu internet" / "Menyinkronkan"
+BARU: "Tersimpan daring" / "Menunggu internet" / "Menyimpan..."
+10. [src/components/navbar/TopNav.tsx]
+LAMA: "Audio Dibisukan" / "Audio Aktif"
+BARU: "Suara Mati" / "Suara Menyala"
+11. [src/components/navbar/TopNav.tsx]
+LAMA: "Klik untuk ganti profil atau kelola akun"
+BARU: "Klik untuk mengganti profil atau mengatur akun"
+12. [src/components/assessment/AssessmentModal.tsx]
+LAMA: "Pre-Test" / "Post-Test"
+BARU: "Tes Awal" / "Tes Akhir"
+13. [src/components/assessment/AssessmentModal.tsx]
+LAMA: "Yuk jawab 20 pertanyaan seru ini untuk mengukur pemahaman awalmu sebelum menjelajahi museum!"
+BARU: "Yuk, jawab 20 pertanyaan seru ini untuk mengukur pemahaman awalmu sebelum menjelajahi museum!"
+14. [src/components/assessment/AssessmentModal.tsx]
+LAMA: "Hebat, kamu sudah menuntaskan semua wahana!
+BARU: "Hebat, kamu sudah menuntaskan semua zona!
+15. [src/components/assessment/AssessmentModal.tsx]
+LAMA: "Terus semangat! Kunjungi kembali laboratorium dan paviliun untuk memperkuat analisismu."
+BARU: "Terus semangat! Kunjungi lagi laboratorium dan zona ekosistem untuk memperkuat pemahamanmu."
+16. [src/components/assessment/AssessmentModal.tsx]
+LAMA: "Hebat sekali! Kamu berhasil menyelesaikan 20 soal kuis dengan skor <score> dari seratus. Ayo lanjutkan petualanganmu!"
+BARU: "Kamu sudah menyelesaikan 20 soal dengan skor <score> dari seratus. Ayo, lanjutkan petualanganmu!"
+17. [src/components/assessment/AssessmentModal.tsx]
+LAMA: "Dijawab" , "dari <n> soal"
+BARU: "Terjawab" , "dari <n> soal"
+18. [src/components/exhibits/DecomposerLab.tsx]
+LAMA: "Hewan peremah sampah daun (Detritivor)"
+BARU: "Hewan pemakan remah daun (detritivor)"
+19. [src/components/exhibits/DecomposerLab.tsx]
+LAMA: "Ulangi dari Daun Segar" / "Reset ke Tahap 1"
+BARU: "Ulangi dari Daun Segar" / "Kembali ke Tahap 1"
+20. [src/components/exhibits/EcosystemSimulation.tsx]
+LAMA: "Tumbuhan cukup, hewan pemakan terkontrol, dan alam stabil."
+BARU: "Tumbuhan cukup, jumlah hewan terkendali, dan alam seimbang."
+21. [src/components/exhibits/EcosystemSimulation.tsx]
+LAMA: "Ekosistem sedang tidak seimbang. Coba klik tombol perbaiki ekosistem untuk menyeimbangkannya kembali!"
+BARU: "Ekosistem sedang tidak seimbang. Coba klik tombol \"Perbaiki Ekosistem\" untuk menyeimbangkannya kembali!"
+22. [src/components/exhibits/EcosystemSimulation.tsx]
+LAMA: "Saat ular pemangsa habis, tikus memakan seluruh padi sampai habis!"
+BARU: "Saat ular diburu habis, jumlah tikus melonjak dan padi dimakan sampai habis!"
+23. [src/components/exhibits/EcosystemSimulation.tsx]
+LAMA: "Pestisida kimia berlebihan! Banyak serangga baik dan hewan kecil ikut mati terkena racun."
+BARU: "Pestisida dipakai berlebihan! Banyak serangga baik dan hewan kecil ikut mati terkena racun."
+24. [src/components/exhibits/EcosystemSimulation.tsx]
+LAMA: "Hebat! Ekosistem berhasil diperbaiki. Tumbuhan bertunas kembali, hewan terkontrol, dan alam kembali seimbang."
+BARU: "Hebat! Ekosistem berhasil diperbaiki. Tumbuhan bertunas kembali, jumlah hewan terkendali, dan alam kembali seimbang."
+25. [src/components/exhibits/FoodChainBuilder.tsx]
+LAMA: "Arah panah selalu menunjuk dari DIMAKAN menuju ke MEMAKAN"
+BARU: "Arah panah selalu menunjuk dari yang DIMAKAN ke yang MEMAKAN."
+26. [src/components/exhibits/FoodChainBuilder.tsx]
+LAMA: "Ayo susun urutan siapa memakan siapa!
+BARU: "Ayo, susun urutan siapa memakan siapa!
+27. [src/components/exhibits/FoodChainBuilder.tsx]
+LAMA: "Semua makhluk hidup sudah dimasukkan ke dalam rantai! Klik Periksa Rantai Makanan di atas."
+BARU: "Semua makhluk hidup sudah masuk ke rantai! Klik tombol \"Periksa Rantai Makanan\" di atas."
+28. [src/components/exhibits/FoodChainBuilder.tsx]
+LAMA: "Urutan Aliran Energi Makanan"
+BARU: "Urutan Aliran Energi"
+29. [src/components/exhibits/FoodWebBuilder.tsx]
+LAMA: "Ulat meledak banyak dan memakan habis daun pohon."
+BARU: "Jumlah ulat bertambah sangat banyak dan memakan habis daun pohon."
+30. [src/components/exhibits/FoodWebBuilder.tsx]
+LAMA: Rumput & Terna (produsen)
+BARU: Rumput & Tanaman Kecil (produsen)
+31. [src/components/exhibits/FoodWebBuilder.tsx]
+LAMA: Burung Pipit & Prenjak (karnivora) — "Burung memakan ulat agar pohon tidak gundul."
+BARU: Burung Prenjak (pemakan serangga) — "Burung prenjak memakan ulat sehingga daun pohon tidak habis."
+32. [src/components/exhibits/FoodWebBuilder.tsx]
+LAMA: "Mengembalikan zat hara dari sisa bangkai ke tanah untuk diserap akar pohon!"
+BARU: "Mengembalikan zat hara dari daun gugur, kayu lapuk, dan bangkai ke tanah untuk diserap akar pohon!"
+33. [src/components/exhibits/VirtualTerrarium.tsx]
+LAMA: "Miniatur Ekosistem" / "Toples Kaca Ajaib" / "Terrarium"
+BARU: "Miniatur Ekosistem" / "Toples Kaca Ajaib" / "Terarium"
+34. [src/components/exhibits/VirtualTerrarium.tsx]
+LAMA: "Kelembapan Air"
+BARU: "Kelembapan"
+35. [src/components/exhibits/VirtualTerrarium.tsx]
+LAMA: "Kerikil Drainase Air"
+BARU: "Kerikil Saluran Air"
+36. [src/components/teacher/TeacherDashboard.tsx]
+LAMA: "Dashboard Pemantauan"
+BARU: "Dasbor Pemantauan"

@@ -1,0 +1,51 @@
+Perbaiki teks saja (jangan ubah logika, struktur data, id, role, warna, atau tata letak). Ganti setiap teks LAMA menjadi BARU persis seperti tertulis, di file yang disebut. Jika teks LAMA terpotong atau tidak ditemukan persis, cari kalimat yang paling mirip dan terapkan perbaikan yang sama. Teks bertanda (ganti semua) diganti di seluruh file. Pastikan aplikasi tetap berjalan tanpa error.
+
+BATCH 11/11
+1. [src/components/teacher/TeacherDashboard.tsx]
+LAMA: "Reset semua nilai siswa di kelas" / "Reset Semua Siswa"
+BARU: "Hapus semua nilai siswa di kelas" / "Hapus Nilai Semua Siswa"
+2. [src/components/teacher/TeacherDashboard.tsx]
+LAMA: "Reset nilai siswa ini" / "Reset Siswa Ini"
+BARU: "Hapus nilai siswa ini" / "Hapus Nilai Siswa Ini"
+3. [src/components/teacher/TeacherDashboard.tsx]
+LAMA: "Konfirmasi Reset Semua Siswa" / "Konfirmasi Reset Siswa Tunggal"
+BARU: "Konfirmasi Hapus Nilai Semua Siswa" / "Konfirmasi Hapus Nilai Satu Siswa"
+4. [src/components/teacher/TeacherDashboard.tsx]
+LAMA: "Eksekusi Reset"
+BARU: "Ya, Hapus Permanen"
+5. [src/components/teacher/TeacherDashboard.tsx]
+LAMA: "Semua nilai pre-test, post-test, XP, lencana, dan riwayat eksplorasi seluruh siswa kelas 5A akan dihapus permanen di cloud dan lokal."
+BARU: "Semua nilai pre-test, post-test, XP, lencana, dan riwayat eksplorasi seluruh siswa kelas <kelas> akan dihapus permanen dari server dan perangkat ini."
+6. [src/components/teacher/TeacherDashboard.tsx]
+LAMA: "Akun siswa <nama> (<username>) dibuat dengan PIN <pin>"
+BARU: "Akun siswa <nama> (<username>) berhasil dibuat dengan PIN <pin>. Catat PIN ini dan berikan kepada siswa."
+7. [src/components/teacher/TeacherDashboard.tsx]
+LAMA: "Terumbu Karang Adalah Hewan
+BARU: "Terumbu Karang adalah Hewan
+8. [src/components/auth/LoginModal.tsx]
+LAMA: Label form: "Nama Pengguna" (Username)
+BARU: Label form: "Nama Akun"
+9. [src/components/auth/LoginModal.tsx]
+LAMA: "Hapus Mulai Baru"
+BARU: "Hapus dan Mulai Baru"
+10. [src/components/auth/LoginModal.tsx]
+LAMA: "Mulai dari Awal" / "Ulang Petualangan"
+BARU: "Mulai dari Awal" / "Ulangi Petualangan"
+11. [src/components/auth/LoginModal.tsx]
+LAMA: "Nama akun atau PIN belum cocok. Periksa kembali atau pilih nama di bawah ya!"
+BARU: "Nama akun atau PIN belum cocok. Periksa lagi atau pilih namamu di bawah, ya!"
+12. [src/components/auth/LoginModal.tsx]
+LAMA: "Harap isi semua kolom pendaftaran ya."
+BARU: "Isi semua kolom pendaftaran dulu, ya!"
+13. [src/components/auth/LoginModal.tsx]
+LAMA: "Nama akun ini sudah dipakai, coba nama panggilan lain ya!"
+BARU: "Nama akun ini sudah dipakai. Coba nama lain, ya!"
+14. [src/components/auth/LoginModal.tsx]
+LAMA: "Belum punya akun? Klik untuk daftar"
+BARU: "Belum punya akun? Klik untuk mendaftar"
+15. [src/components/auth/LoginModal.tsx]
+LAMA: "Pilih Cepat Akun Contoh"
+BARU: "Pilih Akun Contoh"
+16. [src/components/auth/TeacherLoginModal.tsx]
+LAMA: "PIN atau nama akun guru belum sesuai.
+BARU: "Nama pengguna atau PIN guru belum sesuai.

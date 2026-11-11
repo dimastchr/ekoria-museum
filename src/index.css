@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-display: 'Manrope', 'Fredoka', sans-serif;
+  --font-heading: 'Manrope', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* EkoRia Virtual Science Museum Tahap 4 Theme Colors */
+  --color-forest-dark: #0F3D2E;
+  --color-forest-deep: #1B5E3F;
+  --color-leaf-green: #3FA34D;
+  --color-light-green: #8BC34A;
+  --color-sun-yellow: #F5C518;
+  --color-warm-cream: #F6F1E3;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #F6F1E3;
+  color: #0F3D2E;
+  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Playful child-friendly bouncy buttons and animations */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes leaf-wag {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+.animate-float {
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+.animate-pulse-btn {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+.animate-leaf {
+  animation: leaf-wag 2.5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #E8EFE8;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #288C5C;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1E7A50;
+}
+
+/* -------------------------------------------------------------------------- */
+/* EkoRia Visual & Animation Effects (Kabut, Cahaya Sunbeam, Pop-Up Spring)   */
+/* -------------------------------------------------------------------------- */
+
+/* 1. Natural Drifting Mist / Fog Layer */
+@keyframes mist-drift-left {
+  0% { transform: translateX(0%) scaleY(1); opacity: 0.35; }
+  50% { transform: translateX(-8%) scaleY(1.08); opacity: 0.55; }
+  100% { transform: translateX(0%) scaleY(1); opacity: 0.35; }
+}
+
+@keyframes mist-drift-right {
+  0% { transform: translateX(0%) scaleY(1.05); opacity: 0.4; }
+  50% { transform: translateX(10%) scaleY(0.95); opacity: 0.6; }
+  100% { transform: translateX(0%) scaleY(1.05); opacity: 0.4; }
+}
+
+.animate-mist-left {
+  animation: mist-drift-left 18s ease-in-out infinite;
+}
+
+.animate-mist-right {
+  animation: mist-drift-right 24s ease-in-out infinite;
+}
+
+/* 2. Radiant Sunbeams / God Rays Light Effect */
+@keyframes sunbeam-shimmer {
+  0%, 100% { opacity: 0.45; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.75; transform: scale(1.03) rotate(1deg); }
+}
+
+.sunbeam-rays-overlay {
+  background: radial-gradient(circle at 50% 0%, rgba(245, 197, 24, 0.35) 0%, rgba(245, 197, 24, 0.12) 45%, transparent 70%),
+              linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+              linear-gradient(225deg, rgba(245, 197, 24, 0.15) 0%, transparent 60%);
+  animation: sunbeam-shimmer 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* 3. Cheerful Bouncy Pop-Up Spring Animation */
+@keyframes pop-in-spring {
+  0% { opacity: 0; transform: scale(0.82) translateY(18px); }
+  60% { opacity: 1; transform: scale(1.04) translateY(-4px); }
+  85% { transform: scale(0.98) translateY(1px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-pop-spring {
+  animation: pop-in-spring 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 4. Playful Ozi Mascot Bounce Float */
+@keyframes ozi-float-bounce {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(-2deg); }
+  50% { transform: translateY(-4px) rotate(1deg); }
+  75% { transform: translateY(-10px) rotate(2deg); }
+}
+
+.animate-ozi-bounce {
+  animation: ozi-float-bounce 4s ease-in-out infinite;
+}
+
+/* 5. Glowing Ring Pulse */
+@keyframes glow-ring-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(245, 197, 24, 0.4), 0 0 20px rgba(63, 163, 77, 0.2); }
+  50% { box-shadow: 0 0 22px rgba(245, 197, 24, 0.8), 0 0 35px rgba(139, 195, 74, 0.5); }
+}
+
+.animate-glow-ring {
+  animation: glow-ring-pulse 2.5s ease-in-out infinite;
+}
+

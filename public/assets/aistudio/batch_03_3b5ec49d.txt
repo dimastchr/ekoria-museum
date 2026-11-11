@@ -1,0 +1,92 @@
+Perbaiki teks saja (jangan ubah logika, struktur data, id, role, warna, atau tata letak). Ganti setiap teks LAMA menjadi BARU persis seperti tertulis, di file yang disebut. Jika teks LAMA terpotong atau tidak ditemukan persis, cari kalimat yang paling mirip dan terapkan perbaikan yang sama. Teks bertanda (ganti semua) diganti di seluruh file. Pastikan aplikasi tetap berjalan tanpa error.
+
+BATCH 3/11
+1. [src/data/museumData.ts]
+LAMA: Ekosistem seimbang memiliki aliran energi yang harmonis di setiap tingkatan trofik.
+BARU: Pada ekosistem seimbang, energi mengalir dengan lancar di setiap tingkat rantai makanan dan jumlah tiap makhluk hidup tetap terjaga.
+2. [src/data/museumData.ts]
+LAMA: 'Anorganik botol plastik (biru)'
+BARU: 'Anorganik seperti botol plastik (kuning)'
+3. [src/data/museumData.ts]
+LAMA: menghasilkan oksigen untuk bernapas makhluk hidup.
+BARU: menghasilkan oksigen yang dihirup makhluk hidup.
+4. [src/data/museumZonesData.ts]
+LAMA: Pohon rimbun kanopi raksasa tempat berteduh aneka satwa liar.
+BARU: Pohon-pohon rimbun dengan kanopi raksasa, tempat berteduh aneka satwa liar.
+5. [src/data/museumZonesData.ts]
+LAMA: Mari temukan rahasia produsen dan dekomposer!
+BARU: Mari temukan rahasia produsen dan pengurai!
+6. [src/data/museumZonesData.ts]
+LAMA: 'Mengenal pohon hutan sebagai produsen penghasil oksigen dan energi.'
+BARU: 'Mengenal pohon hutan sebagai produsen penghasil makanan dan oksigen.'
+7. [src/data/museumZonesData.ts]
+LAMA: diet: 'Membuat makanan sendiri melalui fotosintesis dengan sinar matahari dan air.'
+BARU: diet: 'Membuat makanan sendiri melalui fotosintesis dengan bantuan sinar matahari, air, dan karbon dioksida dari udara.'
+8. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Pohon hutan menghasilkan berton-ton oksigen segar setiap hari yang kita hirup bersama!'
+BARU: funFact: 'Pohon-pohon di hutan menghasilkan oksigen dalam jumlah sangat banyak, oksigen yang juga kita hirup setiap hari!'
+9. [src/data/museumZonesData.ts]
+LAMA: habitat: 'Semak lantai hutan',
+BARU: habitat: 'Semak di tepi hutan dan pekarangan',
+10. [src/data/museumZonesData.ts]
+LAMA: name: 'Rusa Jawa',
+BARU: name: 'Rusa Sambar',
+11. [src/data/museumZonesData.ts]
+LAMA: scientificName: 'Rusa timorensis',
+BARU: scientificName: 'Rusa unicolor',
+12. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Rusa memiliki indra pendengaran sangat peka dan kaki gesit untuk lari dari terkaman predator.'
+BARU: funFact: 'Rusa memiliki indra pendengaran yang sangat peka dan kaki yang gesit untuk lari dari terkaman pemangsa.'
+13. [src/data/museumZonesData.ts]
+LAMA: trophicLevelName: 'Konsumen Puncak (Karnivora)',
+habitat: 'Kawasan hutan rimba lebat',
+BARU: trophicLevelName: 'Konsumen Tingkat II / Puncak (Karnivora)',
+habitat: 'Kawasan hutan rimba lebat',
+14. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Tanpa jamur pengurai, lantai hutan akan tertimbun daun mati setinggi pohon! Jamur mendaur ulang nutrisi ke tanah.'
+BARU: funFact: 'Tanpa jamur pengurai, daun mati di lantai hutan akan terus menumpuk semakin tinggi! Jamur mendaur ulang nutrisi kembali ke tanah.'
+15. [src/data/museumZonesData.ts]
+LAMA: role: 'Media penyerap air dan nutrisi',
+BARU: role: 'Media penyimpan air dan nutrisi',
+16. [src/data/museumZonesData.ts]
+LAMA: effectOnEcosystem: 'Tanah gembur hitam kaya nutrisi hasil daur ulang jamur dan cacing tanah.'
+BARU: effectOnEcosystem: 'Tanah gembur berwarna gelap ini kaya nutrisi hasil daur ulang oleh jamur dan cacing tanah.'
+17. [src/data/museumZonesData.ts]
+LAMA: theme: 'Ekosistem Savanna Tropis',
+BARU: theme: 'Ekosistem Sabana Tropis',
+18. [src/data/museumZonesData.ts]
+LAMA: curriculumTopic: 'Interaksi Padang Rumput Baluran Jawa Timur: Produsen Rumput, Sapi, Belalang, dan Predator',
+BARU: curriculumTopic: 'Interaksi Padang Rumput Baluran Jawa Timur: Produsen Rumput, Banteng, Belalang, dan Predator',
+19. [src/data/museumZonesData.ts]
+LAMA: welcomeSpeech: 'Selamat datang di Padang Rumput! Seperti savanna Baluran di Jawa Timur, hamparan rumput luas ini menjadi rumah bagi belalang, kelinci, sapi jawa, ular, dan burung elang yang melayang tinggi!'
+BARU: welcomeSpeech: 'Selamat datang di Padang Rumput! Seperti sabana Baluran di Jawa Timur, hamparan rumput luas ini menjadi rumah bagi belalang, kelinci liar, banteng, ular, dan burung elang yang melayang tinggi!'
+20. [src/data/museumZonesData.ts]
+LAMA: guidingQuestion: 'Mengapa rumput savanna tetap tumbuh subur meskipun terus dimakan hewan herbivora?'
+BARU: guidingQuestion: 'Mengapa rumput sabana tetap tumbuh subur meskipun terus dimakan hewan herbivora?'
+21. [src/data/museumZonesData.ts]
+LAMA: 'Mengidentifikasi rumput sebagai produsen dominan di savanna.'
+BARU: 'Mengidentifikasi rumput sebagai produsen utama di sabana.'
+22. [src/data/museumZonesData.ts]
+LAMA: 'Mengenal rantai makanan padang rumput: Rumput → Belalang → Katak/Kelinci → Ular → Elang.'
+BARU: 'Mengenal rantai makanan padang rumput: Rumput → Belalang → Katak → Ular → Elang, dan Rumput → Kelinci → Ular → Elang.'
+23. [src/data/museumZonesData.ts]
+LAMA: 'Mengetahui peran banteng dan sapi jawa sebagai herbivora besar.'
+BARU: 'Mengetahui peran banteng sebagai herbivora besar di sabana.'
+24. [src/data/museumZonesData.ts]
+LAMA: name: 'Rumput Savanna',
+BARU: name: 'Rumput Sabana',
+25. [src/data/museumZonesData.ts]
+LAMA: trophicLevelName: 'Produsen (Tumbuhan Savanna)',
+BARU: trophicLevelName: 'Produsen (Tumbuhan Sabana)',
+26. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Akar rumput savanna sangat dalam dan kuat, sehingga dapat tumbuh bertunas kembali setelah musim kemarau!'
+BARU: funFact: 'Akar rumput sabana sangat dalam dan kuat sehingga rumput dapat bertunas kembali setelah musim kemarau!'
+27. [src/data/museumZonesData.ts]
+LAMA: thinkingQuestion: 'Bagaimana rumput savanna bisa bertahan hidup meski berbulan-bulan tidak turun hujan?'
+BARU: thinkingQuestion: 'Bagaimana rumput sabana bisa bertahan hidup meskipun berbulan-bulan tidak turun hujan?'
+28. [src/data/museumZonesData.ts]
+LAMA: thinkingQuestion: 'Jika rumput savanna mengering terbakar, ke mana belalang mencari makanan?'
+BARU: thinkingQuestion: 'Jika rumput sabana mengering atau terbakar, ke mana belalang mencari makanan?'
+29. [src/data/museumZonesData.ts]
+LAMA: funFact: 'Kelinci membuat liang di bawah tanah untuk melindungi anak-anaknya dari sengatan panas dan pemangsa.'
+BARU: funFact: 'Kelinci liar ini bersembunyi di cekungan tanah di bawah semak untuk berlindung dari sengatan panas dan pemangsa.'

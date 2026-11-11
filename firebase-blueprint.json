@@ -1,0 +1,94 @@
+{
+  "entities": {
+    "StudentCloudRecord": {
+      "title": "StudentCloudRecord",
+      "description": "Anonim/pseudonim progres belajar siswa tanpa data pribadi (tanpa nama lengkap, foto, email)",
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "Username atau nama panggilan siswa",
+          "maxLength": 64
+        },
+        "className": {
+          "type": "string",
+          "description": "Kelas siswa di sekolah",
+          "maxLength": 32
+        },
+        "preTestScore": {
+          "type": "number",
+          "description": "Skor pre-test 0-100"
+        },
+        "postTestScore": {
+          "type": "number",
+          "description": "Skor post-test 0-100"
+        },
+        "totalXP": {
+          "type": "number",
+          "description": "Total XP pengalaman"
+        },
+        "totalStars": {
+          "type": "number",
+          "description": "Total bintang penghargaan"
+        },
+        "badges": {
+          "type": "array",
+          "description": "Daftar lencana prestasi yang diraih"
+        },
+        "completedRooms": {
+          "type": "array",
+          "description": "Daftar ID paviliun yang tuntas dieksplorasi"
+        },
+        "lastActive": {
+          "type": "string",
+          "description": "Waktu aktivitas terakhir ISO"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Waktu pembaruan cloud terakhir ISO"
+        }
+      },
+      "required": ["username", "className", "totalXP"]
+    },
+    "AttemptRecord": {
+      "title": "AttemptRecord",
+      "description": "Catatan riwayat pengerjaan tes atau kuis siswa",
+      "type": "object",
+      "properties": {
+        "attemptId": {
+          "type": "string",
+          "description": "ID unik upaya pengerjaan",
+          "maxLength": 64
+        },
+        "type": {
+          "type": "string",
+          "description": "Jenis tes: pretest, posttest, atau room-quiz",
+          "maxLength": 32
+        },
+        "score": {
+          "type": "number",
+          "description": "Skor pencapaian 0-100"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Waktu selesai pengerjaan"
+        }
+      },
+      "required": ["attemptId", "type", "score", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/classes/{className}/students/{username}": {
+      "schema": {
+        "$ref": "#/entities/StudentCloudRecord"
+      },
+      "description": "Data progres siswa dalam satu kelas"
+    },
+    "/classes/{className}/students/{username}/attempts/{attemptId}": {
+      "schema": {
+        "$ref": "#/entities/AttemptRecord"
+      },
+      "description": "Riwayat pengerjaan asesmen siswa"
+    }
+  }
+}
