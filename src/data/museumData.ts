@@ -555,6 +555,7 @@ const LEGACY_BADGES: Badge[] = [
   }
 ];
 
+// Tes Awal & Tes Akhir: masing-masing 10 soal, sejajar per nomor (topik sama) untuk analisis N-Gain.
 export const PRETEST_QUESTIONS: QuizQuestion[] = [
   // 1. Biotik vs Abiotik (Memahami - C2)
   {
@@ -570,23 +571,9 @@ export const PRETEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Komponen biotik adalah semua makhluk hidup seperti tumbuhan, hewan, dan jamur.',
     concept: 'Komponen Biotik'
   },
-  // 2. Peran Faktor Abiotik (Menerapkan - C3)
+  // 2. Produsen (Memahami - C2)
   {
     id: 'pre-2',
-    question: 'Tumbuhan hijau di hutan membutuhkan cahaya matahari dan air hujan untuk...',
-    options: [
-      'Membuat makanannya sendiri (fotosintesis)',
-      'Tidur dan beristirahat di malam hari',
-      'Menghangatkan tubuh pemangsa',
-      'Mengurangi jumlah oksigen di udara'
-    ],
-    correctIndex: 0,
-    explanation: 'Sinar matahari dan air (abiotik) sangat penting bagi produsen untuk membuat sari makanan.',
-    concept: 'Peran Komponen Abiotik'
-  },
-  // 3. Produsen (Memahami - C2)
-  {
-    id: 'pre-3',
     question: 'Mengapa tumbuhan hijau disebut sebagai PRODUSEN dalam sebuah ekosistem?',
     options: [
       'Karena mampu menghasilkan makanan sendiri lewat fotosintesis',
@@ -598,9 +585,9 @@ export const PRETEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Produsen adalah makhluk hidup yang dapat membuat makanan sendiri (autotrof) tanpa memangsa makhluk lain.',
     concept: 'Produsen'
   },
-  // 4. Herbivora (Memahami - C1)
+  // 3. Herbivora / Konsumen Tingkat I (Memahami - C1)
   {
-    id: 'pre-4',
+    id: 'pre-3',
     question: 'Rusa dan kelinci di hutan hanya memakan rumput dan dedaunan. Hewan ini tergolong...',
     options: [
       'Herbivora (pemakan tumbuhan)',
@@ -612,37 +599,9 @@ export const PRETEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Hewan pemakan tumbuhan disebut herbivora, biasanya berperan sebagai konsumen tingkat I.',
     concept: 'Herbivora'
   },
-  // 5. Karnivora (Memahami - C1)
+  // 4. Pengurai Dekomposer (Memahami - C2)
   {
-    id: 'pre-5',
-    question: 'Harimau Sumatra memburu dan memakan daging rusa di hutan. Harimau tergolong hewan...',
-    options: [
-      'Karnivora (pemakan daging)',
-      'Herbivora (pemakan tumbuhan)',
-      'Produsen (penghasil makanan)',
-      'Detritivor (pemakan sisa daun dan bangkai)'
-    ],
-    correctIndex: 0,
-    explanation: 'Hewan yang makanan utamanya adalah daging hewan lain disebut karnivora.',
-    concept: 'Karnivora'
-  },
-  // 6. Omnivora (Memahami - C2)
-  {
-    id: 'pre-6',
-    question: 'Hewan yang dapat memakan tumbuhan sekaligus memakan hewan lain (pemakan segala) disebut...',
-    options: [
-      'Omnivora (seperti monyet dan ayam)',
-      'Herbivora murni',
-      'Karnivora murni',
-      'Bakteri tanah'
-    ],
-    correctIndex: 0,
-    explanation: 'Omnivora adalah makhluk pemakan segala, bisa makan buah/biji maupun serangga/daging.',
-    concept: 'Omnivora'
-  },
-  // 7. Pengurai Dekomposer (Memahami - C2)
-  {
-    id: 'pre-7',
+    id: 'pre-4',
     question: 'Apakah tugas utama jamur dan bakteri pengurai di lantai hutan?',
     options: [
       'Menguraikan daun kering dan bangkai menjadi zat hara tanah',
@@ -654,37 +613,9 @@ export const PRETEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Pengurai (jamur dan bakteri) menguraikan zat organik mati menjadi unsur hara yang menyuburkan tanah kembali.',
     concept: 'Pengurai (Dekomposer)'
   },
-  // 8. Detritivor (Menerapkan - C3)
+  // 5. Urutan Rantai Makanan & Tingkat Trofik (Menerapkan - C3)
   {
-    id: 'pre-8',
-    question: 'Cacing tanah memakan dan menghancurkan sampah daun gugur di tanah. Peran cacing tanah adalah...',
-    options: [
-      'Detritivor (hewan pemakan dan penghancur sisa makhluk hidup)',
-      'Produsen utama pembuat energi',
-      'Konsumen puncak pemangsa elang',
-      'Benda abiotik tak hidup'
-    ],
-    correctIndex: 0,
-    explanation: 'Cacing tanah, rayap, dan kaki seribu adalah detritivor yang menghancurkan sampah daun menjadi potongan kecil sebelum diuraikan oleh bakteri dan jamur.',
-    concept: 'Detritivor'
-  },
-  // 9. Rantai Makanan & Arah Panah (Memahami - C2)
-  {
-    id: 'pre-9',
-    question: 'Pada rantai makanan: Padi → Tikus → Ular. Tanda panah (→) memiliki arti...',
-    options: [
-      'Dimakan oleh (energi berpindah ke pemakan)',
-      'Menyerang tanpa memakan',
-      'Sama kuat dan bersahabat',
-      'Berasal dari jenis yang sama'
-    ],
-    correctIndex: 0,
-    explanation: 'Arah panah selalu menunjuk dari makhluk hidup yang dimakan menuju pemakannya sebagai jalur aliran energi.',
-    concept: 'Aliran Energi Rantai Makanan'
-  },
-  // 10. Urutan Rantai Makanan (Menerapkan - C3)
-  {
-    id: 'pre-10',
+    id: 'pre-5',
     question: 'Manakah urutan rantai makanan yang tepat dan logis di ekosistem hutan?',
     options: [
       'Rumput hijau → Rusa → Harimau → Jamur pengurai',
@@ -696,9 +627,9 @@ export const PRETEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Rantai makanan selalu diawali oleh produsen (rumput hijau), lalu herbivora (rusa), karnivora (harimau), dan pengurai.',
     concept: 'Urutan Rantai Makanan'
   },
-  // 11. Jaring-Jaring Makanan (Menerapkan - C3)
+  // 6. Jaring-Jaring Makanan (Menerapkan - C3)
   {
-    id: 'pre-11',
+    id: 'pre-6',
     question: 'Kumpulan dari beberapa rantai makanan yang saling berhubungan di alam disebut...',
     options: [
       'Jaring-jaring makanan',
@@ -710,9 +641,9 @@ export const PRETEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Di alam nyata, rantai makanan saling terhubung menjadi jaring-jaring makanan yang rumit dan seimbang.',
     concept: 'Jaring-Jaring Makanan'
   },
-  // 12. Keseimbangan Terganggu (Menalar - C4 HOTS)
+  // 7. Keseimbangan Terganggu (Menalar - C4 HOTS)
   {
-    id: 'pre-12',
+    id: 'pre-7',
     question: 'Jika ular di sawah diburu habis oleh manusia, apa dampak buruk yang akan terjadi?',
     options: [
       'Jumlah tikus meningkat pesat dan memakan habis tanaman padi petani',
@@ -724,23 +655,9 @@ export const PRETEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Ular adalah pemangsa alami tikus. Tanpa ular, tikus berkembang biak tanpa terkendali dan merusak panen padi.',
     concept: 'Dampak Hilangnya Makhluk Hidup'
   },
-  // 13. Kerusakan Ekosistem Air (Menalar - C4 HOTS)
+  // 8. Simbiosis Mutualisme (Menerapkan - C3)
   {
-    id: 'pre-13',
-    question: 'Di sungai, jika lumut dan tumbuhan air mati karena limbah pabrik, nasib ikan pemakan lumut adalah...',
-    options: [
-      'Kelaparan dan populasinya akan menurun drastis',
-      'Berubah menjadi pemakan batu kali',
-      'Langsung bisa terbang ke daratan',
-      'Populasinya semakin banyak dan gemuk'
-    ],
-    correctIndex: 0,
-    explanation: 'Jika produsen mati, konsumen tingkat I kehilangan sumber energi utama dan populasinya akan turun drastis.',
-    concept: 'Keseimbangan Ekosistem Air'
-  },
-  // 14. Simbiosis Mutualisme (Menerapkan - C3)
-  {
-    id: 'pre-14',
+    id: 'pre-8',
     question: 'Burung jalak hinggap dan memakan kutu di punggung kerbau. Hubungan saling menguntungkan ini disebut...',
     options: [
       'Simbiosis mutualisme',
@@ -752,51 +669,9 @@ export const PRETEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Simbiosis mutualisme adalah hubungan dua makhluk hidup yang saling menguntungkan satu sama lain.',
     concept: 'Simbiosis Mutualisme'
   },
-  // 15. Simbiosis Komensalisme (Menerapkan - C3)
+  // 9. Bahaya Sampah Plastik (Menalar - C4 HOTS)
   {
-    id: 'pre-15',
-    question: 'Tanaman anggrek menempel di batang pohon mangga untuk mendapat cahaya tanpa merugikan inangnya. Ini disebut...',
-    options: [
-      'Simbiosis komensalisme',
-      'Simbiosis parasitisme',
-      'Simbiosis mutualisme',
-      'Pemangsaan liar'
-    ],
-    correctIndex: 0,
-    explanation: 'Komensalisme adalah hubungan satu pihak untung (anggrek dapat tempat tinggi) dan pihak lain tidak dirugikan.',
-    concept: 'Simbiosis Komensalisme'
-  },
-  // 16. Simbiosis Parasitisme (Menerapkan - C3)
-  {
-    id: 'pre-16',
-    question: 'Tanaman benalu menyerap air dan zat hara dari pohon inangnya hingga pohon itu layu. Hubungan ini disebut...',
-    options: [
-      'Simbiosis parasitisme',
-      'Simbiosis mutualisme',
-      'Simbiosis komensalisme',
-      'Persahabatan alami'
-    ],
-    correctIndex: 0,
-    explanation: 'Parasitisme terjadi jika satu pihak untung sementara pihak yang ditumpangi (inang) dirugikan atau sakit.',
-    concept: 'Simbiosis Parasitisme'
-  },
-  // 17. Ekosistem Alami vs Buatan (Memahami - C2)
-  {
-    id: 'pre-17',
-    question: 'Manakah di bawah ini yang merupakan contoh ekosistem BUATAN manusia?',
-    options: [
-      'Sawah berundak dan kolam ikan',
-      'Hutan rimba perawan',
-      'Samudra laut dalam',
-      'Sungai alami berarus deras'
-    ],
-    correctIndex: 0,
-    explanation: 'Sawah, kebun, kolam ikan, dan akuarium adalah contoh ekosistem buatan yang sengaja dirancang oleh manusia.',
-    concept: 'Ekosistem Buatan'
-  },
-  // 18. Bahaya Sampah Plastik (Menalar - C4 HOTS)
-  {
-    id: 'pre-18',
+    id: 'pre-9',
     question: 'Mengapa kantong plastik yang hanyut ke laut sangat membahayakan penyu laut?',
     options: [
       'Penyu mengira plastik itu ubur-ubur lalu memakannya hingga pencernaannya terluka',
@@ -808,23 +683,9 @@ export const PRETEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Banyak penyu memakan ubur-ubur di laut. Kantong plastik yang melayang di air mirip sekali dengan ubur-ubur.',
     concept: 'Bahaya Sampah Plastik'
   },
-  // 19. Dampak Pestisida Kimia (Menalar - C4 HOTS)
+  // 10. Menjaga Keseimbangan Ekosistem (Menerapkan - C3)
   {
-    id: 'pre-19',
-    question: 'Jika petani menyemprotkan racun pestisida kimia secara berlebihan setiap hari, akibat buruknya adalah...',
-    options: [
-      'Membunuh serangga bermanfaat, seperti penyerbuk dan pemangsa hama, serta meracuni air tanah',
-      'Padi langsung matang dalam waktu satu jam',
-      'Tanah sawah menjadi semakin harum dan subur',
-      'Burung elang akan semakin menyukai sawah'
-    ],
-    correctIndex: 0,
-    explanation: 'Pestisida berlebihan merusak tanah, mencemari air parit, dan membunuh serangga penyerbuk yang bermanfaat.',
-    concept: 'Pengaruh Pestisida'
-  },
-  // 20. Menjaga Keseimbangan Ekosistem (Menerapkan - C3)
-  {
-    id: 'pre-20',
+    id: 'pre-10',
     question: 'Tindakan sederhana yang bisa kita lakukan di sekolah untuk menjaga kelestarian lingkungan hidup adalah...',
     options: [
       'Membuang sampah ke tempatnya dan merawat tanaman di kebun sekolah',
@@ -853,23 +714,9 @@ export const POSTTEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Komponen biotik sungai terdiri dari hewan air, tanaman air, dan serangga hidup.',
     concept: 'Komponen Biotik'
   },
-  // 2. Peran Faktor Abiotik (Menerapkan - C3)
+  // 2. Produsen (Memahami - C2)
   {
     id: 'post-2',
-    question: 'Di sawah, air parit irigasi dan lumpur tanah yang kaya hara sangat dibutuhkan oleh padi untuk...',
-    options: [
-      'Tumbuh subur dan menghasilkan butir gabah padi',
-      'Bersembunyi dari pemburu burung liar',
-      'Menghentikan proses fotosintesis',
-      'Membuat air parit menjadi kering'
-    ],
-    correctIndex: 0,
-    explanation: 'Air dan tanah lumpur (faktor abiotik) menyediakan hara dan cairan bagi tanaman padi agar berbuah lebat.',
-    concept: 'Peran Komponen Abiotik'
-  },
-  // 3. Produsen (Memahami - C2)
-  {
-    id: 'post-3',
     question: 'Di lautan yang luas, fitoplankton (alga mikroskopis hijau) berperan sebagai produsen karena...',
     options: [
       'Mampu berfotosintesis menghasilkan makanan dari sinar matahari',
@@ -881,9 +728,9 @@ export const POSTTEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Fitoplankton adalah alga renik (sangat kecil) di laut yang berfotosintesis dan menjadi dasar rantai makanan laut.',
     concept: 'Produsen'
   },
-  // 4. Herbivora (Memahami - C1)
+  // 3. Herbivora / Konsumen Tingkat I (Memahami - C1)
   {
-    id: 'post-4',
+    id: 'post-3',
     question: 'Belalang hijau di sawah memakan daun padi muda setiap hari. Belalang hijau tergolong...',
     options: [
       'Herbivora (hewan pemakan tumbuhan)',
@@ -895,37 +742,9 @@ export const POSTTEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Hewan pemakan daun seperti belalang disebut herbivora dan berperan sebagai konsumen tingkat I.',
     concept: 'Herbivora'
   },
-  // 5. Karnivora (Memahami - C1)
+  // 4. Pengurai Dekomposer (Memahami - C2)
   {
-    id: 'post-5',
-    question: 'Burung elang menyambar dan memakan ular sawah serta tikus. Burung elang tergolong hewan...',
-    options: [
-      'Karnivora (pemakan daging)',
-      'Herbivora (pemakan daun padi)',
-      'Produsen mandiri',
-      'Komponen abiotik tak hidup'
-    ],
-    correctIndex: 0,
-    explanation: 'Burung elang adalah karnivora pemangsa daging dan sering menjadi konsumen puncak di alam.',
-    concept: 'Karnivora'
-  },
-  // 6. Omnivora (Memahami - C2)
-  {
-    id: 'post-6',
-    question: 'Ikan lele di kolam memakan lumut air, pelet dedak, dan cacing kecil. Ikan lele tergolong hewan...',
-    options: [
-      'Omnivora (pemakan tumbuhan dan hewan lain)',
-      'Herbivora murni',
-      'Karnivora murni',
-      'Produsen utama'
-    ],
-    correctIndex: 0,
-    explanation: 'Hewan pemakan serangga/cacing sekaligus pemakan tumbuhan/lumut adalah hewan omnivora.',
-    concept: 'Omnivora'
-  },
-  // 7. Pengurai Dekomposer (Memahami - C2)
-  {
-    id: 'post-7',
+    id: 'post-4',
     question: 'Ketika sebatang pohon tumbang dan mati di hutan, jamur kayu akan bertugas untuk...',
     options: [
       'Melapukkan dan menguraikan kayu menjadi zat hara penyubur tanah',
@@ -937,37 +756,9 @@ export const POSTTEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Jamur dekomposer melepaskan enzim yang melunakkan dan mendaur ulang kayu lapuk menjadi unsur hara.',
     concept: 'Pengurai (Dekomposer)'
   },
-  // 8. Detritivor (Menerapkan - C3)
+  // 5. Urutan Rantai Makanan & Tingkat Trofik (Menerapkan - C3)
   {
-    id: 'post-8',
-    question: 'Hewan kecil seperti kaki seribu dan rayap yang mencacah batang kayu lapuk di kebun tergolong...',
-    options: [
-      'Detritivor (hewan pemakan dan pencacah sisa makhluk hidup)',
-      'Produsen pembuat gula',
-      'Karnivora pemangsa elang',
-      'Bakteri bersel satu'
-    ],
-    correctIndex: 0,
-    explanation: 'Rayap dan kaki seribu mencacah serasah kayu lapuk menjadi serpihan kecil sehingga disebut detritivor.',
-    concept: 'Detritivor'
-  },
-  // 9. Rantai Makanan & Arah Panah (Memahami - C2)
-  {
-    id: 'post-9',
-    question: 'Pada rantai makanan laut: Alga → Ikan Kecil → Ikan Tuna → Ikan Hiu. Arah panah (→) menunjukkan...',
-    options: [
-      'Arah aliran perpindahan energi dari yang dimakan ke pemakan',
-      'Arah hewan melarikan diri',
-      'Nama jenis hewan yang lebih besar',
-      'Bermusuhan di dalam air'
-    ],
-    correctIndex: 0,
-    explanation: 'Tanda panah menggambarkan bahwa energi mengalir dari mangsa menuju ke tubuh hewan yang memakannya.',
-    concept: 'Aliran Energi Rantai Makanan'
-  },
-  // 10. Urutan Rantai Makanan (Menerapkan - C3)
-  {
-    id: 'post-10',
+    id: 'post-5',
     question: 'Manakah urutan rantai makanan yang benar di ekosistem laut?',
     options: [
       'Fitoplankton → Udang kecil → Ikan tongkol → Ikan hiu',
@@ -979,9 +770,9 @@ export const POSTTEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Dimulai dari produsen (fitoplankton), lalu konsumen tingkat I (udang kecil), konsumen tingkat II (ikan tongkol), dan konsumen puncak (hiu).',
     concept: 'Urutan Rantai Makanan'
   },
-  // 11. Jaring-Jaring Makanan (Menerapkan - C3)
+  // 6. Jaring-Jaring Makanan (Menerapkan - C3)
   {
-    id: 'post-11',
+    id: 'post-6',
     question: 'Mengapa jaring-jaring makanan membuat sebuah ekosistem lebih kuat dan stabil dibanding rantai makanan tunggal?',
     options: [
       'Karena hewan pemangsa memiliki beberapa pilihan jenis makanan lain',
@@ -993,9 +784,9 @@ export const POSTTEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Dalam jaring-jaring makanan, jika satu jenis mangsa berkurang, predator masih bisa memakan hewan alternatif lain.',
     concept: 'Jaring-Jaring Makanan'
   },
-  // 12. Keseimbangan Terganggu (Menalar - C4 HOTS)
+  // 7. Keseimbangan Terganggu (Menalar - C4 HOTS)
   {
-    id: 'post-12',
+    id: 'post-7',
     question: 'Jika burung hantu di kebun kelapa sawit ditembaki dan diburu habis, apa yang akan terjadi?',
     options: [
       'Hama tikus kebun membeludak dan merusak buah kelapa sawit',
@@ -1007,23 +798,9 @@ export const POSTTEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Burung hantu adalah predator utama tikus di malam hari. Tanpa burung hantu, tikus merajalela merusak hasil panen.',
     concept: 'Dampak Hilangnya Makhluk Hidup'
   },
-  // 13. Kerusakan Ekosistem Air (Menalar - C4 HOTS)
+  // 8. Simbiosis Mutualisme (Menerapkan - C3)
   {
-    id: 'post-13',
-    question: 'Jika air laut memanas sehingga terumbu karang memutih dan mati, apa akibat buruk bagi ikan-ikan karang kecil?',
-    options: [
-      'Kehilangan tempat berlindung dan persediaan makanan sehingga banyak yang mati',
-      'Ikan karang langsung belajar hidup di darat',
-      'Ikan karang akan memakan pasir laut sampai kenyang',
-      'Ikan karang menjadi sangat besar seperti ikan paus'
-    ],
-    correctIndex: 0,
-    explanation: 'Terumbu karang adalah rumah dan tempat mencari makan bagi ikan karang. Jika karang mati, ikan kehilangan rumah.',
-    concept: 'Keseimbangan Ekosistem Air'
-  },
-  // 14. Simbiosis Mutualisme (Menerapkan - C3)
-  {
-    id: 'post-14',
+    id: 'post-8',
     question: 'Ikan badut tinggal di antara tentakel anemon laut. Anemon melindungi ikan dan ikan membersihkan anemon. Ini adalah contoh...',
     options: [
       'Simbiosis mutualisme (kedua pihak saling untung)',
@@ -1035,51 +812,9 @@ export const POSTTEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Hubungan ikan badut dan anemon laut saling menguntungkan sehingga merupakan simbiosis mutualisme.',
     concept: 'Simbiosis Mutualisme'
   },
-  // 15. Simbiosis Komensalisme (Menerapkan - C3)
+  // 9. Bahaya Sampah Plastik (Menalar - C4 HOTS)
   {
-    id: 'post-15',
-    question: 'Ikan remora berenang di dekat ikan hiu untuk memakan remah makanan tanpa mengganggu hiu. Hubungan ini disebut...',
-    options: [
-      'Simbiosis komensalisme (satu untung, satu tidak dirugikan)',
-      'Simbiosis mutualisme (keduanya untung)',
-      'Simbiosis parasitisme (hiu dirugikan)',
-      'Pemangsaan ikan hiu'
-    ],
-    correctIndex: 0,
-    explanation: 'Ikan remora untung mendapat sisa makanan, sedangkan hiu tidak merasa terganggu atau dirugikan sama sekali.',
-    concept: 'Simbiosis Komensalisme'
-  },
-  // 16. Simbiosis Parasitisme (Menerapkan - C3)
-  {
-    id: 'post-16',
-    question: 'Kutu yang mengisap darah kucing hingga kucing gatal dan kurus tergolong hubungan...',
-    options: [
-      'Simbiosis parasitisme (kutu untung, kucing dirugikan)',
-      'Simbiosis mutualisme (keduanya senang)',
-      'Simbiosis komensalisme (kucing tidak apa-apa)',
-      'Perkembangbiakan alami kucing'
-    ],
-    correctIndex: 0,
-    explanation: 'Kutu mengisap darah inangnya dan menyebabkan gatal, luka, atau penyakit sehingga disebut parasit.',
-    concept: 'Simbiosis Parasitisme'
-  },
-  // 17. Ekosistem Alami vs Buatan (Memahami - C2)
-  {
-    id: 'post-17',
-    question: 'Manakah di bawah ini yang merupakan contoh ekosistem ALAMI yang terbentuk tanpa campur tangan manusia?',
-    options: [
-      'Hutan hujan tropis dan laut terumbu karang',
-      'Kolam ikan lele di pekarangan rumah',
-      'Sawah padi berpetak-petak',
-      'Kebun sayur hidroponik'
-    ],
-    correctIndex: 0,
-    explanation: 'Hutan alami dan laut lepas terbentuk secara alami, bukan buatan manusia.',
-    concept: 'Ekosistem Alami'
-  },
-  // 18. Bahaya Sampah Plastik (Menalar - C4 HOTS)
-  {
-    id: 'post-18',
+    id: 'post-9',
     question: 'Mengapa jaring nelayan bekas dan tali plastik yang tertinggal di laut sangat berbahaya bagi lumba-lumba?',
     options: [
       'Sirip lumba-lumba bisa terjerat sehingga tidak bisa berenang ke permukaan untuk bernapas',
@@ -1091,23 +826,9 @@ export const POSTTEST_QUESTIONS: QuizQuestion[] = [
     explanation: 'Lumba-lumba adalah mamalia air yang butuh bernapas di permukaan. Jeratan jaring plastik membuatnya tenggelam.',
     concept: 'Bahaya Sampah Plastik'
   },
-  // 19. Dampak Pestisida Kimia (Menalar - C4 HOTS)
+  // 10. Menjaga Keseimbangan Ekosistem (Menerapkan - C3)
   {
-    id: 'post-19',
-    question: 'Cara paling ramah lingkungan bagi petani untuk mengendalikan hama tikus tanpa merusak tanah dan air adalah...',
-    options: [
-      'Memasang rumah burung hantu (rubuha) di tengah sawah',
-      'Membakar seluruh jerami padi dan menebang semua pohon',
-      'Menyemprotkan racun kimia mematikan lima kali sehari',
-      'Menutup seluruh parit sawah dengan aspal jalan'
-    ],
-    correctIndex: 0,
-    explanation: 'Burung hantu dan ular sawah adalah musuh alami tikus yang mengendalikan hama tanpa mencemari tanah dan air.',
-    concept: 'Pengendalian Hama Alami'
-  },
-  // 20. Menjaga Keseimbangan Ekosistem (Menerapkan - C3)
-  {
-    id: 'post-20',
+    id: 'post-10',
     question: 'Aksi nyata yang bisa kita lakukan di rumah untuk mencegah pencemaran ekosistem sungai adalah...',
     options: [
       'Tidak membuang minyak goreng bekas dan sampah plastik ke selokan',

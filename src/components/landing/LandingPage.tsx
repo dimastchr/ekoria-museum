@@ -339,7 +339,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 Penyimpanan Daring (Cloud) & Dasbor Guru
               </h3>
               <p className="text-sm text-[#0F3D2E]/80 font-medium leading-relaxed">
-                Progres belajar, nilai pre-test dan post-test 20 soal tersimpan aman di Cloud Firestore. Guru dapat memantau capaian kelas dan analisis N-Gain.
+                Progres belajar, nilai pre-test dan post-test 10 soal tersimpan aman di Cloud Firestore. Guru dapat memantau capaian kelas dan analisis N-Gain.
               </p>
             </div>
 
@@ -433,6 +433,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               Masuk Museum
             </button>
           </div>
+        </div>
+        {/* Kredit pengembang */}
+        <div className="max-w-6xl mx-auto px-4 mt-6 pt-5 border-t border-[#1B5E3F]/10 text-center md:text-left">
+          <p className="text-[11px] font-black uppercase tracking-wider text-[#3FA34D]">Tentang Pengembang</p>
+          <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[#0F3D2E]/80 break-words">
+            <span className="block font-extrabold text-[#0F3D2E]">Dikembangkan oleh Dimas Yuli Rakasiwi, S.Pd</span>
+            <span className="block">Guru Kelas V SDN Ngadimulyo Sukorejo</span>
+            <span className="block">Prigen, Pasuruan, Jawa Timur</span>
+          </p>
         </div>
       </footer>
 

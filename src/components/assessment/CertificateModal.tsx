@@ -156,6 +156,11 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             </div>
           </div>
 
+          {/* Kredit pengembang */}
+          <p className="pt-2 text-[11px] sm:text-xs text-[#627D98] font-semibold">
+            Pengembang: Dimas Yuli Rakasiwi, S.Pd
+          </p>
+
         </div>
 
       </div>

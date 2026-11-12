@@ -391,6 +391,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile, progress, o
               <LogOut className="w-5 h-5" /> Keluar Akun
             </button>
           )}
+          <p className="pt-1 pb-2 text-center text-[11px] leading-snug text-[#52796F] break-words">
+            Dikembangkan oleh Dimas Yuli Rakasiwi, S.Pd — Guru Kelas V SDN Ngadimulyo Sukorejo, Prigen, Pasuruan, Jawa Timur
+          </p>
         </div>
       </div>
       {confirmLogout && onLogout && (

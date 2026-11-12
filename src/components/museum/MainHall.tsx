@@ -329,7 +329,7 @@ export const MainHall: React.FC<MainHallProps> = ({
                 Kuis Latihan
               </div>
               <p className="text-xs sm:text-sm font-bold text-purple-800 line-clamp-2">
-                Tes Awal dan Tes Akhir, masing-masing 20 soal berhadiah XP.
+                Tes Awal dan Tes Akhir, masing-masing 10 soal berhadiah XP.
               </p>
             </div>
 

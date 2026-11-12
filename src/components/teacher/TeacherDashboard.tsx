@@ -118,8 +118,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
       'Total XP',
       'Total Bintang',
       'Lencana',
-      'Skor Pre-Test (20 Soal)',
-      'Skor Post-Test (20 Soal)',
+      'Skor Pre-Test (10 Soal)',
+      'Skor Post-Test (10 Soal)',
       'N-Gain',
       'Kategori N-Gain',
       'Waktu Belajar (Menit)',
@@ -175,7 +175,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onBack }) =>
             Dasbor Pemantauan & Analisis Kelas
           </h2>
           <p className="text-base text-[#334E68] mt-1 max-w-xl font-medium">
-            Analisis perbandingan Pre-Test vs Post-Test (20 soal setara), nilai N-Gain efektivitas belajar, dan sinkronisasi Cloud Firestore.
+            Analisis perbandingan Pre-Test vs Post-Test (10 soal setara), nilai N-Gain efektivitas belajar, dan sinkronisasi Cloud Firestore.
           </p>
         </div>
 

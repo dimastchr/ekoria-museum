@@ -47,7 +47,7 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
     setIsSubmitted(true);
     onComplete(score, reflectionText);
     audioManager.speak(
-      `Kamu sudah menyelesaikan 20 soal dengan skor ${score} dari seratus. Ayo, lanjutkan petualanganmu!`
+      `Kamu sudah menyelesaikan 10 soal dengan skor ${score} dari seratus. Ayo, lanjutkan petualanganmu!`
     );
   };
 
@@ -72,15 +72,15 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1E7A50] text-white text-sm font-bold mb-2 shadow-sm">
             <Trophy className="w-4 h-4 text-amber-300" />
-            {type === 'pretest' ? 'Kuis Awal Petualangan (20 Soal)' : 'Tantangan Akhir Ekosistem (20 Soal)'}
+            {type === 'pretest' ? 'Kuis Awal Petualangan (10 Soal)' : 'Tantangan Akhir Ekosistem (10 Soal)'}
           </div>
           <h2 className="font-['Outfit'] text-2xl sm:text-3xl font-extrabold text-[#1F2D3D]">
             {type === 'pretest' ? 'Tes Awal: Pemahaman Awal Ekosistem' : 'Tes Akhir: Penguasaan Harmoni Ekosistem'}
           </h2>
           <p className="text-lg text-[#334E68] mt-1.5 max-w-2xl font-medium">
             {type === 'pretest'
-              ? 'Yuk, jawab 20 pertanyaan seru ini untuk mengukur pemahaman awalmu sebelum menjelajahi museum!'
-              : 'Hebat, kamu sudah menuntaskan semua zona! Buktikan seberapa jauh pemahamanmu berkembang lewat 20 soal ini!'}
+              ? 'Yuk, jawab 10 pertanyaan seru ini untuk mengukur pemahaman awalmu sebelum menjelajahi museum!'
+              : 'Hebat, kamu sudah menuntaskan semua zona! Buktikan seberapa jauh pemahamanmu berkembang lewat 10 soal ini!'}
           </p>
         </div>
 
@@ -166,7 +166,7 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
               className="min-h-[48px] px-6 py-2.5 rounded-2xl bg-[#FEF7EC] border-2 border-amber-300 text-[#9C4221] font-bold text-base hover:bg-amber-100 transition-colors cursor-pointer inline-flex items-center gap-2"
             >
               <HelpCircle className="w-5 h-5 text-amber-600" />
-              {showReview ? 'Sembunyikan Pembahasan Soal' : 'Lihat Pembahasan 20 Soal'}
+              {showReview ? 'Sembunyikan Pembahasan Soal' : 'Lihat Pembahasan 10 Soal'}
             </button>
           </div>
 
@@ -174,7 +174,7 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
           {showReview && (
             <div className="text-left space-y-4 pt-4 border-t-2 border-slate-100">
               <h4 className="font-['Outfit'] text-xl font-bold text-[#1F2D3D] mb-3">
-                Pembahasan Jawaban Lengkap (20 Soal):
+                Pembahasan Jawaban Lengkap (10 Soal):
               </h4>
               <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
                 {questions.map((q, idx) => {
@@ -370,7 +370,7 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
                 disabled={Object.keys(answers).length < questions.length}
                 className="min-h-[48px] flex-1 sm:flex-none px-7 py-3 rounded-2xl bg-[#1E7A50] hover:bg-[#16603E] disabled:opacity-40 disabled:hover:bg-[#1E7A50] text-white font-extrabold text-base sm:text-lg shadow-lg cursor-pointer transition-transform hover:scale-102 flex items-center justify-center gap-2"
               >
-                <span>Kirim 20 Jawaban</span>
+                <span>Kirim 10 Jawaban</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>

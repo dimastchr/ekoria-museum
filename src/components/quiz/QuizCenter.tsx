@@ -161,7 +161,7 @@ export const QuizCenter: React.FC<QuizCenterProps> = ({
               selectedCategory === 'pretest' ? 'bg-[#0F3D2E] text-white shadow' : 'bg-white text-[#0F3D2E] border border-[#E8DEC9]'
             }`}
           >
-            Tes Awal (20 Soal)
+            Tes Awal (10 Soal)
           </button>
           <button
             onClick={() => { setSelectedCategory('posttest'); handleRestartQuiz(); }}
@@ -169,7 +169,7 @@ export const QuizCenter: React.FC<QuizCenterProps> = ({
               selectedCategory === 'posttest' ? 'bg-[#0F3D2E] text-white shadow' : 'bg-white text-[#0F3D2E] border border-[#E8DEC9]'
             }`}
           >
-            Tes Akhir (20 Soal)
+            Tes Akhir (10 Soal)
           </button>
           {MUSEUM_ZONES.map(z => (
             <button
