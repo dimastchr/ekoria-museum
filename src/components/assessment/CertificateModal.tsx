@@ -152,7 +152,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 Dimas Yuli Rakasiwi, S.Pd
               </div>
               <div className="w-36 border-t-2 border-[#1E7A50] mx-auto pt-1 font-bold">
-                Guru Pembimbing IPAS
+                Guru Kelas
               </div>
               <div className="text-xs text-[#627D98]">{currentDate}</div>
             </div>
