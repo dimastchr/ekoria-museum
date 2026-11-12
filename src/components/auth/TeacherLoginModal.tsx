@@ -44,7 +44,7 @@ export const TeacherLoginModal: React.FC<TeacherLoginModalProps> = ({
       studentId: 'tch-001',
       username: 'guru_ipas',
       pin: '9999',
-      fullName: 'Ibu Rahayu, S.Pd.',
+      fullName: 'Dimas Yuli Rakasiwi, S.Pd',
       className: 'Guru Pembimbing IPAS',
       avatar: '👩‍🏫',
       role: 'teacher' as const
@@ -154,7 +154,7 @@ export const TeacherLoginModal: React.FC<TeacherLoginModalProps> = ({
                 <span className="text-2xl">👩‍🏫</span>
                 <div>
                   <div className="font-black text-sm text-[#0F2F57] font-['Fredoka']">
-                    Ibu Rahayu, S.Pd.
+                    Dimas Yuli Rakasiwi, S.Pd
                   </div>
                   <div className="text-xs text-amber-800 font-bold">
                     Guru Pembimbing IPAS

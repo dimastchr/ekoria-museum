@@ -17,7 +17,7 @@ const DEFAULT_PROFILES: StudentProfile[] = [
     studentId: 'tch-001',
     username: 'guru_ipas',
     pin: '9999',
-    fullName: 'Ibu Rahayu, S.Pd.',
+    fullName: 'Dimas Yuli Rakasiwi, S.Pd',
     className: 'Guru Pembimbing IPAS',
     avatar: '👩‍🏫',
     role: 'teacher'
