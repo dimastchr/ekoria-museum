@@ -53,10 +53,19 @@ function sanitizeChildPrompt(text: string): string {
     .trim();
 }
 
-function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+/**
+ * Runs a Gemini call with a hard time limit. The AbortController is handed to the
+ * SDK (config.abortSignal) so a call that runs too long is really cancelled instead
+ * of continuing in the background.
+ */
+function withTimeout<T>(run: (signal: AbortSignal) => Promise<T>, ms: number, label: string): Promise<T> {
+  const controller = new AbortController();
   return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error(`${label}_TIMEOUT`)), ms);
-    promise.then(
+    const timer = setTimeout(() => {
+      controller.abort();
+      reject(new Error(`${label}_TIMEOUT after ${ms} ms`));
+    }, ms);
+    run(controller.signal).then(
       (v) => { clearTimeout(timer); resolve(v); },
       (e) => { clearTimeout(timer); reject(e); }
     );
@@ -81,16 +90,28 @@ if (apiKey && apiKey !== 'MY_GEMINI_API_KEY') {
   console.warn('[EkoRia Server] GEMINI_API_KEY belum diatur: Ozi memakai mode offline dan suara TTS nonaktif.');
 }
 
-// Model ids verified against https://ai.google.dev/gemini-api/docs/models (Nov 2026).
+// Model ids verified against https://ai.google.dev/gemini-api/docs/models (Nov 2026);
+// all of them are available on the AI Studio free tier.
 // The first entry can be overridden with GEMINI_MODEL / GEMINI_TTS_MODEL.
-const CHAT_MODELS = Array.from(new Set([
-  process.env.GEMINI_MODEL || 'gemini-3.8-flash',
-  'gemini-3.5-flash-lite'
-]));
+//  - gemini-3.8-flash: the model AI Studio's own generated app used (default thinking
+//    "medium" is slow, so we ask for thinking level LOW).
+//  - gemini-3.5-flash-lite: fast fallback (thinking MINIMAL) when 3.8 Flash is busy/slow.
+type ChatModel = { model: string; thinkingLevel: 'LOW' | 'MINIMAL' };
+const CHAT_MODELS: ChatModel[] = ([
+  { model: process.env.GEMINI_MODEL || 'gemini-3.8-flash', thinkingLevel: 'LOW' },
+  { model: 'gemini-3.5-flash-lite', thinkingLevel: 'MINIMAL' }
+] as ChatModel[]).filter((m, i, all) => all.findIndex((x) => x.model === m.model) === i);
 const TTS_MODELS = Array.from(new Set([
   process.env.GEMINI_TTS_MODEL || 'gemini-3.8-flash-tts',
   'gemini-3.8-flash-lite-tts'
 ]));
+
+// Whole budget for one Ozi answer (the browser waits 35 s). The main model gets most
+// of it; whatever is left (at least 6 s) goes to the fast fallback model.
+const CHAT_BUDGET_MS = 25000;
+const CHAT_PRIMARY_TIMEOUT_MS = 18000;
+const CHAT_MIN_FALLBACK_MS = 6000;
+const TTS_TIMEOUT_MS = 25000;
 const TTS_VOICE = process.env.GEMINI_TTS_VOICE || 'Leda'; // "Youthful" in the prebuilt voice list
 const TTS_STYLE = 'Bacakan dengan suara anak perempuan usia 10 tahun yang ceria, jelas, dan pelan';
 
@@ -174,33 +195,45 @@ app.post('/api/ecobot/chat', async (req, res) => {
   const contents = buildContents(req.body?.history, message);
   let lastError = 'unknown';
 
-  const askGemini = (model: string, withThinkingConfig: boolean) =>
+  // Same call style as the original AI Studio app: aiClient.models.generateContent
+  // with systemInstruction + safetySettings in config.
+  const askGemini = (model: string, thinkingLevel: string | null, timeoutMs: number) =>
     withTimeout(
-      aiClient!.models.generateContent({
-        model,
-        contents,
-        config: {
-          systemInstruction: SYSTEM_INSTRUCTION,
-          temperature: 0.6,
-          // Thinking tokens count toward maxOutputTokens, so leave room for them.
-          maxOutputTokens: 1024,
-          ...(withThinkingConfig ? { thinkingConfig: { thinkingLevel: 'LOW' as any } } : {}),
-          safetySettings: SAFETY_SETTINGS
-        }
-      }),
-      20000,
+      (signal) =>
+        aiClient!.models.generateContent({
+          model,
+          contents,
+          config: {
+            systemInstruction: SYSTEM_INSTRUCTION,
+            temperature: 0.6,
+            // Thinking tokens count toward maxOutputTokens, so leave room for them.
+            maxOutputTokens: 1024,
+            ...(thinkingLevel ? { thinkingConfig: { thinkingLevel: thinkingLevel as any } } : {}),
+            safetySettings: SAFETY_SETTINGS,
+            abortSignal: signal
+          }
+        }),
+      timeoutMs,
       'AI'
     );
 
-  for (const model of CHAT_MODELS) {
+  const startedAt = Date.now();
+  for (let i = 0; i < CHAT_MODELS.length; i++) {
+    const { model, thinkingLevel } = CHAT_MODELS[i];
+    const remaining = CHAT_BUDGET_MS - (Date.now() - startedAt);
+    const isLast = i === CHAT_MODELS.length - 1;
+    const timeoutMs = isLast ? Math.max(remaining, CHAT_MIN_FALLBACK_MS) : Math.min(CHAT_PRIMARY_TIMEOUT_MS, remaining);
+    if (timeoutMs <= 0) break;
+    const t0 = Date.now();
     try {
       let response;
       try {
-        response = await askGemini(model, true);
+        response = await askGemini(model, thinkingLevel, timeoutMs);
       } catch (err) {
-        // Some models reject thinkingConfig: retry once without it
-        if (/thinking/i.test(err instanceof Error ? err.message : String(err))) {
-          response = await askGemini(model, false);
+        // Some models reject thinkingConfig: retry once without it (inside the same budget)
+        const msg = err instanceof Error ? err.message : String(err);
+        if (/thinking/i.test(msg) && !/TIMEOUT/.test(msg)) {
+          response = await askGemini(model, null, Math.max(timeoutMs - (Date.now() - t0), 3000));
         } else {
           throw err;
         }
@@ -208,6 +241,7 @@ app.post('/api/ecobot/chat', async (req, res) => {
 
       const replyText = response.text?.trim();
       if (replyText) {
+        console.log(`[Ozi] ${model} answered in ${Date.now() - t0} ms`);
         return res.json({ reply: replyText, source: 'gemini', model, fallbackNeeded: false });
       }
 
@@ -222,7 +256,7 @@ app.post('/api/ecobot/chat', async (req, res) => {
       console.warn(`[Ozi] ${model} returned no text: ${lastError}`);
     } catch (error) {
       lastError = error instanceof Error ? error.message : String(error);
-      console.warn(`[Ozi] Gemini error with ${model}:`, lastError);
+      console.warn(`[Ozi] Gemini error with ${model} after ${Date.now() - t0} ms:`, lastError);
     }
   }
 
@@ -273,20 +307,23 @@ async function synthesize(text: string): Promise<Buffer> {
     try {
       // Gemini 3.8 TTS reads `text` verbatim, so the style goes in speechMetadata.
       // Older TTS models take the style instruction as a prefix of the prompt.
+      // Same client and generateContent call style as the chat endpoint.
+      // No languageCode: Gemini TTS detects the (Indonesian) language from the text.
       const callTts = (part: any) =>
         withTimeout(
-          aiClient!.models.generateContent({
-            model,
-            contents: [{ role: 'user', parts: [part] }],
-            config: {
-              responseModalities: ['AUDIO' as any],
-              speechConfig: {
-                languageCode: 'id',
-                voiceConfig: { prebuiltVoiceConfig: { voiceName: TTS_VOICE } }
+          (signal) =>
+            aiClient!.models.generateContent({
+              model,
+              contents: [{ role: 'user', parts: [part] }],
+              config: {
+                responseModalities: ['AUDIO' as any],
+                speechConfig: {
+                  voiceConfig: { prebuiltVoiceConfig: { voiceName: TTS_VOICE } }
+                },
+                abortSignal: signal
               }
-            }
-          }),
-          30000,
+            }),
+          TTS_TIMEOUT_MS,
           'TTS'
         );
       const isVerbatimModel = /^gemini-3\.8/.test(model);
@@ -296,7 +333,7 @@ async function synthesize(text: string): Promise<Buffer> {
           response = await callTts({ text, speechMetadata: { style: TTS_STYLE } });
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
-          if (!/speech_?metadata|unknown name|invalid json payload/i.test(msg)) throw err;
+          if (!/speech_?metadata|unknown name|invalid json payload|invalid.?argument|\b400\b/i.test(msg)) throw err;
           // Endpoint does not accept speechMetadata: send plain text (style dropped, never read aloud)
           response = await callTts({ text });
         }
@@ -380,3 +417,6 @@ async function startServer() {
 }
 
 startServer();
+if (aiClient) {
+  console.log(`[EkoRia Server] Gemini aktif. Chat: ${CHAT_MODELS.map((m) => m.model).join(' -> ')}; TTS: ${TTS_MODELS.join(' -> ')} (suara ${TTS_VOICE}).`);
+}

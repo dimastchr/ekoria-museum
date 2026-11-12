@@ -91,7 +91,7 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
     try {
       // Call Server-Side Express API (/api/ecobot/chat) — the Gemini key stays on the server
       const controller = new AbortController();
-      const timer = window.setTimeout(() => controller.abort(), 25000);
+      const timer = window.setTimeout(() => controller.abort(), 35000);
       try {
         const response = await fetch('/api/ecobot/chat', {
           method: 'POST',

@@ -15,6 +15,10 @@ const STORAGE_KEY_MUTED = 'ekoria_muted_v1';
 
 type HabitatType = 'hutan' | 'sungai' | 'laut' | 'sawah' | 'padang' | 'alam' | 'none';
 
+// 0.05 s of silence (8 kHz, 8-bit mono WAV) used to unlock audio playback on the first tap.
+const SILENT_WAV =
+  'data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+
 class MuseumAudioManager {
   private audioCtx: AudioContext | null = null;
   private ambientGain: GainNode | null = null;
@@ -33,6 +37,11 @@ class MuseumAudioManager {
 
   // Gemini TTS playback state
   private currentAudio: HTMLAudioElement | null = null;
+  // One reusable <audio> element for Ozi's voice. It is "unlocked" during the first
+  // tap/click, so iPad/iPhone Safari and Chrome on Android allow it to play the TTS
+  // answer later, after the (slow) network request has finished.
+  private speechEl: HTMLAudioElement | null = null;
+  private speechElUnlocked = false;
   private currentAbort: AbortController | null = null;
   private currentOnEnd: (() => void) | null = null;
   private speechToken: number = 0;
@@ -76,6 +85,35 @@ class MuseumAudioManager {
     }
     if (this.audioCtx && this.audioCtx.state === 'suspended') {
       this.audioCtx.resume();
+    }
+    this.unlockSpeechElement();
+  }
+
+  /** Must run inside a user gesture (initAudio is called from playClick etc.). */
+  private unlockSpeechElement() {
+    if (typeof window === 'undefined' || typeof Audio === 'undefined') return;
+    if (!this.speechEl) {
+      this.speechEl = new Audio();
+      this.speechEl.preload = 'auto';
+    }
+    if (this.speechElUnlocked || this.isSpeaking) return;
+    this.speechElUnlocked = true;
+    try {
+      const el = this.speechEl;
+      el.muted = true;
+      el.src = SILENT_WAV;
+      const p = el.play();
+      const done = () => {
+        // Only stop the silent clip, never real speech that started in the meantime
+        if (el.src === SILENT_WAV) {
+          try { el.pause(); } catch {}
+          el.muted = false;
+        }
+      };
+      if (p && typeof p.then === 'function') p.then(done, () => { el.muted = false; this.speechElUnlocked = false; });
+      else done();
+    } catch {
+      this.speechElUnlocked = false;
     }
   }
 
@@ -555,7 +593,9 @@ class MuseumAudioManager {
     this.fetchTtsUrl(cleanText, abort.signal)
       .then((url) => {
         if (token !== this.speechToken || this.isMuted) return;
-        const audio = new Audio(url);
+        const audio = this.speechEl || new Audio();
+        audio.muted = false;
+        audio.src = url;
         audio.volume = this.volume;
         this.currentAudio = audio;
         audio.onended = () => this.finishSpeech(token);

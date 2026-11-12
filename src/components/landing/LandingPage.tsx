@@ -12,6 +12,8 @@ interface LandingPageProps {
   onOpenTeacherLogin?: () => void;
   onOpenTeacherPortal?: () => void;
   onOpenOzi?: () => void;
+  /** Opens "Profil Saya" for the pupil who is logged in (never an account switcher). */
+  onOpenProfile?: () => void;
   studentName?: string;
 }
 
@@ -21,6 +23,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenTeacherLogin,
   onOpenTeacherPortal,
   onOpenOzi,
+  onOpenProfile,
   studentName
 }) => {
   const handleTeacherPortal = onOpenTeacherPortal || onOpenTeacherLogin || onOpenLogin;
@@ -98,13 +101,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <SoundToggle variant="light" className="rounded-full" />
             <button
+              type="button"
               onClick={() => {
                 audioManager.playClick();
-                onOpenLogin();
+                if (studentName && onOpenProfile) onOpenProfile();
+                else onOpenLogin();
               }}
-              className="hidden sm:flex items-center min-h-[44px] px-4 rounded-full border-2 border-[#1B5E3F] text-[#1B5E3F] hover:bg-[#1B5E3F] hover:text-white font-bold text-xs sm:text-sm cursor-pointer transition-all"
+              aria-label={studentName ? 'Profil saya' : 'Masuk'}
+              className={`${studentName ? 'flex' : 'hidden sm:flex'} items-center justify-center gap-1.5 min-h-[44px] min-w-[44px] px-3 sm:px-4 rounded-full border-2 border-[#1B5E3F] text-[#1B5E3F] hover:bg-[#1B5E3F] hover:text-white font-bold text-xs sm:text-sm cursor-pointer transition-all`}
             >
-              {studentName ? `Akun (${studentName})` : 'Masuk'}
+              {studentName ? (
+                <>
+                  <span aria-hidden="true">👤</span>
+                  <span className="hidden sm:inline">Profil ({studentName})</span>
+                </>
+              ) : (
+                'Masuk'
+              )}
             </button>
 
             <button

@@ -130,6 +130,17 @@ export default function App() {
     setCurrentView('zone-view');
   };
 
+  // "Profil" everywhere: a logged-in pupil always gets Profil Saya (no account switching).
+  // Only teachers (or nobody logged in) see the login/account dialog.
+  const handleOpenAccount = () => {
+    if (activeUser && activeUser.role === 'student') {
+      setIsLoginOpen(false);
+      setIsProfileOpen(true);
+    } else {
+      setIsLoginOpen(true);
+    }
+  };
+
   const handleOpenOzi = (query?: string) => {
     audioManager.playClick();
     setOziQuery(query);
@@ -228,6 +239,7 @@ export default function App() {
           onOpenLogin={() => setIsLoginOpen(true)}
           onOpenTeacherPortal={() => setIsTeacherLoginOpen(true)}
           onOpenOzi={() => handleOpenOzi()}
+          onOpenProfile={handleOpenAccount}
           studentName={activeUser ? activeUser.fullName.split(' ')[0] : undefined}
         />
       )}
@@ -436,6 +448,7 @@ export default function App() {
           profile={activeUser}
           progress={progress}
           onClose={() => setIsProfileOpen(false)}
+          onLogout={handleLogout}
           onGoToJournal={() => {
             setIsProfileOpen(false);
             setCurrentView('journal');
@@ -454,7 +467,7 @@ export default function App() {
         />
       )}
 
-      {isLoginOpen && (
+      {isLoginOpen && !(activeUser && activeUser.role === 'student') && (
         <LoginModal
           onClose={() => setIsLoginOpen(false)}
           activeUser={activeUser}
@@ -462,6 +475,7 @@ export default function App() {
           onUserChange={(newUser) => {
             setActiveUser(newUser);
             if (newUser) {
+              setIsLoginOpen(false);
               const p = StorageService.getProgress(newUser.studentId);
               setProgress(p);
               setCurrentViewRaw(newUser.role === 'teacher' ? 'teacher-dashboard' : 'dashboard');

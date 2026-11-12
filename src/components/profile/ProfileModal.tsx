@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   X,
   ArrowLeft,
@@ -13,10 +13,12 @@ import {
   Sparkles,
   Leaf,
   ClipboardCheck,
+  LogOut,
 } from 'lucide-react';
 import { StudentProfile, StudentProgress } from '../../types';
 import { MUSEUM_ZONES, MUSEUM_BADGES } from '../../data/museumZonesData';
 import { EkoHeart, EkoZoneIcon } from '../common/EkoIcons';
+import { LogoutConfirmDialog } from '../common/AppNav';
 
 interface ProfileModalProps {
   profile: StudentProfile;
@@ -24,6 +26,8 @@ interface ProfileModalProps {
   onClose: () => void;
   onGoToJournal?: () => void;
   onGoToQuiz?: () => void;
+  /** Optional "Keluar Akun" button (with the child-safe confirmation). */
+  onLogout?: () => void;
 }
 
 /** Badge ids that the app awards but that have no card in MUSEUM_BADGES. */
@@ -68,7 +72,8 @@ const EmptyNote: React.FC<{ children: React.ReactNode }> = ({ children }) => (
  * "Profil Saya": the logged-in pupil's own learning progress.
  * Reads only fields that StorageService already stores in StudentProfile / StudentProgress.
  */
-export const ProfileModal: React.FC<ProfileModalProps> = ({ profile, progress, onClose, onGoToJournal, onGoToQuiz }) => {
+export const ProfileModal: React.FC<ProfileModalProps> = ({ profile, progress, onClose, onGoToJournal, onGoToQuiz, onLogout }) => {
+  const [confirmLogout, setConfirmLogout] = useState(false);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -377,8 +382,28 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ profile, progress, o
               <ArrowLeft className="w-5 h-5" /> Kembali
             </button>
           </div>
+          {onLogout && (
+            <button
+              type="button"
+              onClick={() => setConfirmLogout(true)}
+              className="w-full min-h-[48px] rounded-2xl bg-white border-2 border-rose-300 text-rose-700 font-bold flex items-center justify-center gap-2"
+            >
+              <LogOut className="w-5 h-5" /> Keluar Akun
+            </button>
+          )}
         </div>
       </div>
+      {confirmLogout && onLogout && (
+        <div onClick={(e) => e.stopPropagation()}>
+          <LogoutConfirmDialog
+            onCancel={() => setConfirmLogout(false)}
+            onConfirm={() => {
+              setConfirmLogout(false);
+              onLogout();
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
