@@ -2,6 +2,7 @@ import React from 'react';
 import { Award, Printer, ArrowLeft, CheckCircle, ShieldCheck, Star, MapPin } from 'lucide-react';
 import { StudentProfile, StudentProgress } from '../../types';
 import { audioManager } from '../../utils/audioManager';
+import ttdPengembang from '../../assets/images/ttd_pengembang.png';
 
 interface CertificateModalProps {
   activeUser: StudentProfile | null;
@@ -146,8 +147,9 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             </div>
 
             <div className="text-center">
+              <img src={ttdPengembang} alt="Tanda tangan Dimas Yuli Rakasiwi, S.Pd" className="h-14 w-auto mx-auto -mb-1 object-contain" />
               <div className="font-['Outfit'] font-bold text-lg text-[#1E7A50] mb-1">
-                Ibu Rahayu, S.Pd.
+                Dimas Yuli Rakasiwi, S.Pd
               </div>
               <div className="w-36 border-t-2 border-[#1E7A50] mx-auto pt-1 font-bold">
                 Guru Pembimbing IPAS
