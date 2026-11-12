@@ -15,6 +15,10 @@ interface Message {
   isSystem?: boolean;
 }
 
+// The server gives up after 20 s; the browser waits at most 25 s, then shows the
+// offline answer. Ozi must never stay stuck on "Ozi sedang berpikir...".
+const CHAT_CLIENT_TIMEOUT_MS = 25000;
+
 const OFFLINE_PREFIX = 'Maaf, Ozi sedang tidak tersambung ke internet, jadi Ozi belum bisa menjawab dengan lengkap.';
 
 interface EcoBotModalProps {
@@ -53,15 +57,70 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
     scrollToBottom();
   }, [messages, isLoading]);
 
+  // The modal can close while Ozi is still thinking: never update state afterwards.
+  const mountedRef = useRef(true);
+  // Only the newest question may end the "berpikir" state.
+  const requestIdRef = useRef(0);
+
   const sentInitialRef = useRef(false);
   useEffect(() => {
+    mountedRef.current = true;
     if (initialQuery && !sentInitialRef.current) {
       sentInitialRef.current = true;
       handleSendMessage(initialQuery);
     }
     // Stop Ozi's voice when the chat closes
-    return () => audioManager.stopSpeaking();
+    return () => {
+      mountedRef.current = false;
+      requestIdRef.current++;
+      audioManager.stopSpeaking();
+    };
   }, []);
+
+  /**
+   * Asks the server for Ozi's answer. ALWAYS settles within CHAT_CLIENT_TIMEOUT_MS,
+   * even when the fetch itself never settles (the AI Studio preview routes fetch()
+   * through its own proxy, where an aborted or slow request can hang forever and an
+   * AbortController alone is not enough). Never throws: returns null on any failure.
+   */
+  const askOziServer = (message: string, history: Array<{ role: string; text: string }>): Promise<string | null> => {
+    const controller = new AbortController();
+    const request = (async (): Promise<string | null> => {
+      const response = await fetch('/api/ecobot/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, history }),
+        cache: 'no-store',
+        signal: controller.signal
+      });
+      const data = await response.json().catch(() => null);
+      if (data && typeof data.reply === 'string' && data.reply.trim()) {
+        // Gemini answer, or the server's own friendly message (e.g. "pelan-pelan" rate limit)
+        return data.reply.trim();
+      }
+      if (data?.fallbackNeeded) {
+        console.warn('Ozi server could not reach Gemini:', data.reason || data.error);
+      } else {
+        console.warn('Ozi server gave no answer (HTTP ' + response.status + ')');
+      }
+      return null;
+    })().catch((err) => {
+      // Handled here so a late failure never becomes an "Unhandled Rejection"
+      if (!controller.signal.aborted) console.warn('Ozi server unreachable:', err);
+      return null;
+    });
+
+    let timer = 0;
+    const timeout = new Promise<null>((resolve) => {
+      timer = window.setTimeout(() => {
+        console.warn(`Ozi server did not answer within ${CHAT_CLIENT_TIMEOUT_MS / 1000} s, using offline answer`);
+        try { controller.abort(); } catch {}
+        resolve(null);
+      }, CHAT_CLIENT_TIMEOUT_MS);
+    });
+
+    return Promise.race([request, timeout]).finally(() => window.clearTimeout(timer));
+  };
 
   const handleSendMessage = async (queryText?: string) => {
     const textToSend = queryText || inputText;
@@ -84,68 +143,64 @@ export const EcoBotModal: React.FC<EcoBotModalProps> = ({ onClose, initialQuery 
     setMessages((prev) => [...prev, userMsg]);
     setInputText('');
     setIsLoading(true);
+    const requestId = ++requestIdRef.current;
 
     let botReply: string | null = null;
     let isOfflineReply = false;
 
     try {
-      // Call Server-Side Express API (/api/ecobot/chat) — the Gemini key stays on the server
-      const controller = new AbortController();
-      const timer = window.setTimeout(() => controller.abort(), 35000);
-      try {
-        const response = await fetch('/api/ecobot/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: textToSend, history }),
-          signal: controller.signal
-        });
-        const data = await response.json().catch(() => null);
-        if (data && typeof data.reply === 'string' && data.reply.trim()) {
-          // Gemini answer, or the server's own friendly message (e.g. "pelan-pelan" rate limit)
-          botReply = data.reply.trim();
-        } else if (data?.fallbackNeeded) {
-          console.warn('Ozi server could not reach Gemini:', data.reason || data.error);
-        }
-      } catch (err) {
-        console.warn('Ozi server unreachable:', err);
-      } finally {
-        window.clearTimeout(timer);
-      }
-
-      // Offline fallback only when the API truly failed — and say so honestly
-      if (!botReply) {
-        isOfflineReply = true;
-        const match = findOfflineEcoBotAnswer(textToSend);
-        botReply = match
-          ? `${OFFLINE_PREFIX} Tapi Ozi punya catatan yang mirip dengan pertanyaanmu: ${match}`
-          : `${OFFLINE_PREFIX} Coba tanyakan lagi sebentar lagi, atau tanyakan kepada gurumu, ya! 🌱`;
-      }
-
-      const botMsg: Message = {
-        id: `ozi-${Date.now()}`,
-        sender: 'ozi',
-        text: botReply,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        // Offline notices are not real conversation turns for Gemini
-        isSystem: isOfflineReply
-      };
-
-      setMessages((prev) => [...prev, botMsg]);
-
-      // Speak the answer with Ozi's voice (audioManager stays silent when sound is muted)
-      if (!audioManager.getIsMuted()) {
-        audioManager.speak(botReply);
-      }
+      // Server-side Express API (/api/ecobot/chat) — the Gemini key stays on the server
+      botReply = await askOziServer(textToSend, history);
     } catch (err) {
-      console.error('Error getting Ozi answer:', err);
-    } finally {
-      setIsLoading(false);
+      console.warn('Ozi answer failed:', err);
+      botReply = null;
+    }
+
+    // Chat closed or reset meanwhile: drop this answer
+    if (!mountedRef.current || requestId !== requestIdRef.current) return;
+
+    // Offline fallback only when the API truly failed — and say so honestly
+    if (!botReply) {
+      isOfflineReply = true;
+      const match = findOfflineEcoBotAnswer(textToSend);
+      botReply = match
+        ? `${OFFLINE_PREFIX} Tapi Ozi punya catatan yang mirip dengan pertanyaanmu: ${match}`
+        : `${OFFLINE_PREFIX} Coba tanyakan lagi sebentar lagi, atau tanyakan kepada gurumu, ya! 🌱`;
+    }
+
+    const botMsg: Message = {
+      id: `ozi-${Date.now()}`,
+      sender: 'ozi',
+      text: botReply,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      // Offline notices are not real conversation turns for Gemini
+      isSystem: isOfflineReply
+    };
+
+    setMessages((prev) => [...prev, botMsg]);
+    setIsLoading(false);
+
+    // Speak the answer with Ozi's voice once it is on screen. audioManager stays silent
+    // when sound is muted, and a TTS failure is silent too (never blocks the chat).
+    if (!audioManager.getIsMuted()) {
+      const toSpeak = botReply;
+      window.setTimeout(() => {
+        if (!mountedRef.current || requestId !== requestIdRef.current) return;
+        try {
+          audioManager.speak(toSpeak);
+        } catch (err) {
+          console.warn('[Ozi] Voice unavailable:', err);
+        }
+      }, 0);
     }
   };
 
   const handleResetChat = () => {
     audioManager.playClick();
     audioManager.stopSpeaking();
+    // A question still on its way is dropped; the chat is usable again at once
+    requestIdRef.current++;
+    setIsLoading(false);
     setMessages([
       {
         id: `m-${Date.now()}`,

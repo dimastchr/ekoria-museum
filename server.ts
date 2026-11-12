@@ -92,26 +92,32 @@ if (apiKey && apiKey !== 'MY_GEMINI_API_KEY') {
 
 // Model ids verified against https://ai.google.dev/gemini-api/docs/models (Nov 2026);
 // all of them are available on the AI Studio free tier.
-// The first entry can be overridden with GEMINI_MODEL / GEMINI_TTS_MODEL.
-//  - gemini-3.8-flash: the model AI Studio's own generated app used (default thinking
-//    "medium" is slow, so we ask for thinking level LOW).
-//  - gemini-3.5-flash-lite: fast fallback (thinking MINIMAL) when 3.8 Flash is busy/slow.
+//  - gemini-3.5-flash-lite (thinking MINIMAL): PRIMARY for Ozi chat. It answers in
+//    under a second, which keeps the whole request far below the limits of the
+//    AI Studio preview proxy (a request that hangs ~19 s never reached the browser).
+//    Override with GEMINI_FAST_MODEL.
+//  - gemini-3.8-flash (thinking LOW): backup only, when the fast model fails or is
+//    busy. Override with GEMINI_MODEL.
 type ChatModel = { model: string; thinkingLevel: 'LOW' | 'MINIMAL' };
 const CHAT_MODELS: ChatModel[] = ([
-  { model: process.env.GEMINI_MODEL || 'gemini-3.8-flash', thinkingLevel: 'LOW' },
-  { model: 'gemini-3.5-flash-lite', thinkingLevel: 'MINIMAL' }
+  { model: process.env.GEMINI_FAST_MODEL || 'gemini-3.5-flash-lite', thinkingLevel: 'MINIMAL' },
+  { model: process.env.GEMINI_MODEL || 'gemini-3.8-flash', thinkingLevel: 'LOW' }
 ] as ChatModel[]).filter((m, i, all) => all.findIndex((x) => x.model === m.model) === i);
 const TTS_MODELS = Array.from(new Set([
   process.env.GEMINI_TTS_MODEL || 'gemini-3.8-flash-tts',
   'gemini-3.8-flash-lite-tts'
 ]));
 
-// Whole budget for one Ozi answer (the browser waits 35 s). The main model gets most
-// of it; whatever is left (at least 6 s) goes to the fast fallback model.
-const CHAT_BUDGET_MS = 25000;
-const CHAT_PRIMARY_TIMEOUT_MS = 18000;
-const CHAT_MIN_FALLBACK_MS = 6000;
-const TTS_TIMEOUT_MS = 25000;
+// Whole server budget for one Ozi answer: 20 s (the browser gives up at 25 s and then
+// shows the offline answer). The fast primary model gets at most 10 s; the backup
+// model gets whatever is left of the 20 s (at least 4 s, otherwise it is skipped).
+const CHAT_BUDGET_MS = 20000;
+const CHAT_PRIMARY_TIMEOUT_MS = 10000;
+const CHAT_MIN_FALLBACK_MS = 4000;
+// Whole server budget for one TTS clip (the browser gives up at 25 s): first TTS model
+// at most 14 s, the second one gets the rest.
+const TTS_BUDGET_MS = 20000;
+const TTS_PRIMARY_TIMEOUT_MS = 14000;
 const TTS_VOICE = process.env.GEMINI_TTS_VOICE || 'Leda'; // "Youthful" in the prebuilt voice list
 const TTS_STYLE = 'Bacakan dengan suara anak perempuan usia 10 tahun yang ceria, jelas, dan pelan';
 
@@ -195,6 +201,17 @@ app.post('/api/ecobot/chat', async (req, res) => {
   const contents = buildContents(req.body?.history, message);
   let lastError = 'unknown';
 
+  // Never answer twice, never write to a closed connection, and stop trying more
+  // models once the browser has gone away.
+  let clientGone = false;
+  res.on('close', () => { if (!res.writableEnded) clientGone = true; });
+  const sendOnce = (body: Record<string, unknown>) => {
+    if (res.headersSent || res.writableEnded || clientGone) return;
+    // No proxy/browser caching or buffering of the answer
+    res.setHeader('Cache-Control', 'no-store');
+    res.json(body);
+  };
+
   // Same call style as the original AI Studio app: aiClient.models.generateContent
   // with systemInstruction + safetySettings in config.
   const askGemini = (model: string, thinkingLevel: string | null, timeoutMs: number) =>
@@ -221,9 +238,9 @@ app.post('/api/ecobot/chat', async (req, res) => {
   for (let i = 0; i < CHAT_MODELS.length; i++) {
     const { model, thinkingLevel } = CHAT_MODELS[i];
     const remaining = CHAT_BUDGET_MS - (Date.now() - startedAt);
-    const isLast = i === CHAT_MODELS.length - 1;
-    const timeoutMs = isLast ? Math.max(remaining, CHAT_MIN_FALLBACK_MS) : Math.min(CHAT_PRIMARY_TIMEOUT_MS, remaining);
-    if (timeoutMs <= 0) break;
+    const timeoutMs = i === 0 ? Math.min(CHAT_PRIMARY_TIMEOUT_MS, remaining) : remaining;
+    if (timeoutMs < (i === 0 ? 1000 : CHAT_MIN_FALLBACK_MS)) break;
+    if (clientGone) break;
     const t0 = Date.now();
     try {
       let response;
@@ -232,8 +249,9 @@ app.post('/api/ecobot/chat', async (req, res) => {
       } catch (err) {
         // Some models reject thinkingConfig: retry once without it (inside the same budget)
         const msg = err instanceof Error ? err.message : String(err);
-        if (/thinking/i.test(msg) && !/TIMEOUT/.test(msg)) {
-          response = await askGemini(model, null, Math.max(timeoutMs - (Date.now() - t0), 3000));
+        const left = timeoutMs - (Date.now() - t0);
+        if (/thinking/i.test(msg) && !/TIMEOUT/.test(msg) && left >= 2000) {
+          response = await askGemini(model, null, left);
         } else {
           throw err;
         }
@@ -241,8 +259,8 @@ app.post('/api/ecobot/chat', async (req, res) => {
 
       const replyText = response.text?.trim();
       if (replyText) {
-        console.log(`[Ozi] ${model} answered in ${Date.now() - t0} ms`);
-        return res.json({ reply: replyText, source: 'gemini', model, fallbackNeeded: false });
+        console.log(`[Ozi] ${model} answered in ${Date.now() - t0} ms (total ${Date.now() - startedAt} ms)`);
+        return sendOnce({ reply: replyText, source: 'gemini', model, fallbackNeeded: false });
       }
 
       const blocked =
@@ -250,7 +268,7 @@ app.post('/api/ecobot/chat', async (req, res) => {
         response.candidates?.[0]?.finishReason === 'SAFETY' ||
         response.candidates?.[0]?.finishReason === 'PROHIBITED_CONTENT';
       if (blocked) {
-        return res.json({ reply: SAFE_BLOCKED_REPLY, source: 'gemini', model, fallbackNeeded: false });
+        return sendOnce({ reply: SAFE_BLOCKED_REPLY, source: 'gemini', model, fallbackNeeded: false });
       }
       lastError = `empty_reply (${response.candidates?.[0]?.finishReason || 'no_candidate'})`;
       console.warn(`[Ozi] ${model} returned no text: ${lastError}`);
@@ -260,7 +278,7 @@ app.post('/api/ecobot/chat', async (req, res) => {
     }
   }
 
-  return res.json({ reply: null, fallbackNeeded: true, error: lastError.slice(0, 200) });
+  return sendOnce({ reply: null, fallbackNeeded: true, error: lastError.slice(0, 200) });
 });
 
 // ---------------------------------------------------------------------------
@@ -303,7 +321,13 @@ function toWav(data: Buffer, mimeType?: string): Buffer {
 async function synthesize(text: string): Promise<Buffer> {
   if (!aiClient) throw new Error('api_key_missing');
   let lastError: unknown = null;
-  for (const model of TTS_MODELS) {
+  const startedAt = Date.now();
+  for (let i = 0; i < TTS_MODELS.length; i++) {
+    const model = TTS_MODELS[i];
+    const remaining = TTS_BUDGET_MS - (Date.now() - startedAt);
+    const timeoutMs = i === 0 ? Math.min(TTS_PRIMARY_TIMEOUT_MS, remaining) : remaining;
+    if (timeoutMs < 2000) break;
+    const modelStart = Date.now();
     try {
       // Gemini 3.8 TTS reads `text` verbatim, so the style goes in speechMetadata.
       // Older TTS models take the style instruction as a prefix of the prompt.
@@ -323,7 +347,7 @@ async function synthesize(text: string): Promise<Buffer> {
                 abortSignal: signal
               }
             }),
-          TTS_TIMEOUT_MS,
+          Math.max(timeoutMs - (Date.now() - modelStart), 1000),
           'TTS'
         );
       const isVerbatimModel = /^gemini-3\.8/.test(model);
@@ -391,8 +415,15 @@ app.post('/api/tts', async (req, res) => {
     res.setHeader('X-TTS-Cache', 'miss');
     return res.send(wav);
   } catch (err) {
+    if (res.headersSent || res.writableEnded) return;
     return res.status(502).json({ error: 'tts_failed', detail: err instanceof Error ? err.message.slice(0, 200) : 'unknown' });
   }
+});
+
+// A stray rejected promise (for example a Gemini call that is aborted after its
+// timeout) must never crash the server or leave a request hanging: log it instead.
+process.on('unhandledRejection', (reason) => {
+  console.warn('[EkoRia Server] Unhandled rejection (ignored):', reason instanceof Error ? reason.message : reason);
 });
 
 // Vite Middleware for Development / Static for Production

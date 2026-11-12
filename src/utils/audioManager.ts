@@ -12,6 +12,9 @@
  */
 
 const STORAGE_KEY_MUTED = 'ekoria_muted_v1';
+// The server gives up on a TTS clip after 20 s; the browser waits at most 25 s and
+// then stays silent (the text answer is already on screen).
+const TTS_CLIENT_TIMEOUT_MS = 25000;
 
 type HabitatType = 'hutan' | 'sungai' | 'laut' | 'sawah' | 'padang' | 'alam' | 'none';
 
@@ -84,7 +87,8 @@ class MuseumAudioManager {
       }
     }
     if (this.audioCtx && this.audioCtx.state === 'suspended') {
-      this.audioCtx.resume();
+      // resume() rejects when called outside a user gesture on some browsers
+      this.audioCtx.resume().catch(() => {});
     }
     this.unlockSpeechElement();
   }
@@ -515,31 +519,63 @@ class MuseumAudioManager {
       .trim();
   }
 
-  private async fetchTtsUrl(cleanText: string, signal: AbortSignal): Promise<string> {
+  /**
+   * Fetches the TTS clip. Always settles within TTS_CLIENT_TIMEOUT_MS, even when the
+   * fetch itself never settles (the AI Studio preview proxies fetch(), where a slow
+   * request can hang without honouring the AbortSignal).
+   */
+  private fetchTtsUrl(cleanText: string, signal: AbortSignal): Promise<string> {
     const cached = this.ttsUrlCache.get(cleanText);
-    if (cached) return cached;
-    const response = await fetch('/api/tts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: cleanText }),
-      signal
-    });
-    if (!response.ok) {
-      throw new Error(`TTS HTTP ${response.status}`);
-    }
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    this.ttsUrlCache.set(cleanText, url);
-    // Keep the browser-side cache small
-    if (this.ttsUrlCache.size > 60) {
-      const oldestKey = this.ttsUrlCache.keys().next().value;
-      if (oldestKey !== undefined) {
-        const oldUrl = this.ttsUrlCache.get(oldestKey);
-        if (oldUrl) URL.revokeObjectURL(oldUrl);
-        this.ttsUrlCache.delete(oldestKey);
+    if (cached) return Promise.resolve(cached);
+
+    const local = new AbortController();
+    const onOuterAbort = () => local.abort();
+    signal.addEventListener('abort', onOuterAbort, { once: true });
+
+    const request = (async () => {
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: cleanText }),
+        signal: local.signal
+      });
+      if (!response.ok) {
+        throw new Error(`TTS HTTP ${response.status}`);
       }
-    }
-    return url;
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      this.ttsUrlCache.set(cleanText, url);
+      // Keep the browser-side cache small
+      if (this.ttsUrlCache.size > 60) {
+        const oldestKey = this.ttsUrlCache.keys().next().value;
+        if (oldestKey !== undefined) {
+          const oldUrl = this.ttsUrlCache.get(oldestKey);
+          if (oldUrl) URL.revokeObjectURL(oldUrl);
+          this.ttsUrlCache.delete(oldestKey);
+        }
+      }
+      return url;
+    })();
+    // A late failure of the losing promise must not become an "Unhandled Rejection"
+    request.catch(() => {});
+
+    let timer = 0;
+    const timeout = new Promise<string>((_, reject) => {
+      timer = window.setTimeout(() => {
+        local.abort();
+        reject(new Error(`TTS_TIMEOUT after ${TTS_CLIENT_TIMEOUT_MS} ms`));
+      }, TTS_CLIENT_TIMEOUT_MS);
+    });
+    const aborted = new Promise<string>((_, reject) => {
+      if (signal.aborted) reject(new Error('TTS_ABORTED'));
+      else signal.addEventListener('abort', () => reject(new Error('TTS_ABORTED')), { once: true });
+    });
+    aborted.catch(() => {});
+
+    return Promise.race([request, timeout, aborted]).finally(() => {
+      window.clearTimeout(timer);
+      signal.removeEventListener('abort', onOuterAbort);
+    });
   }
 
   private restoreAmbient() {
